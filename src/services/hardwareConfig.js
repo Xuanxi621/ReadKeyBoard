@@ -1,5 +1,7 @@
 // EasyInput 研读工作台可用动作注册表
 export const EASYINPUT_ACTIONS = {
+  deleteDoc: { name: '删除当前文档', icon: 'trash-2' },
+  enterReading: { name: '进入阅读模式 (Enter Reading)', icon: 'book-open' },
   nextPage: { name: '翻到下一页 (Next Page)', icon: 'chevron-down' },
   prevPage: { name: '翻到上一页 (Prev Page)', icon: 'chevron-up' },
   zoomIn: { name: '放大文档视图 (Zoom In)', icon: 'zoom-in' },
@@ -8,7 +10,8 @@ export const EASYINPUT_ACTIONS = {
   aiSummary: { name: 'AI 核心要点提炼', icon: 'sparkles' },
   aiChat: { name: 'AI 研读问答聚焦', icon: 'message-square' },
   toggleDeepMode: { name: '深度精读模式开关', icon: 'brain' },
-  toggleView: { name: '全屏研读 / 返回主页', icon: 'orbit' },
+  returnHome: { name: '返回星轨主页 (Return Home)', icon: 'orbit' },
+  toggleView: { name: '阅读模式 / 返回主页', icon: 'orbit' },
   importPdf: { name: '上传 PDF 文档 (Upload PDF)', icon: 'plus' },
   highlightTool: { name: '划线批注工具切换', icon: 'highlighter' }
 };
@@ -18,14 +21,14 @@ export const DEFAULT_HARDWARE_MAP = {
   // 旋转编码器 (A/B: GPIO 17/16, 按压: GPIO 18)
   ENC_RIGHT: { label: '旋钮顺时针 (CW)', action: 'nextPage', pin: 'GPIO16/17', type: 'encoder', fallbackKey: 'ArrowRight', hidName: 'ArrowRight' },
   ENC_LEFT: { label: '旋钮逆时针 (CCW)', action: 'prevPage', pin: 'GPIO16/17', type: 'encoder', fallbackKey: 'ArrowLeft', hidName: 'ArrowLeft' },
-  ENC_PRESS: { label: '旋钮下按 (Click)', action: 'toggleView', pin: 'GPIO18', type: 'encoder', fallbackKey: 'Escape', hidName: 'Escape' },
+  ENC_PRESS: { label: '旋钮下按 (Click)', action: 'enterReading', pin: 'GPIO18', type: 'encoder', fallbackKey: 'Escape', hidName: 'Escape' },
 
   // 8 个独立机械物理按键 S1 ~ S8 (按原厂 EasyInput V2 丝印与硬件 GPIO 严谨对应)
   KEY1: { label: 'S1 按键 (Key 1)', action: 'importPdf', pin: 'GPIO2', type: 'key', fallbackKey: 'u', hidName: 'Ctrl+Shift+Space' },
-  KEY2: { label: 'S2 按键 (Key 2)', action: 'nextPage', pin: 'GPIO47', type: 'key', fallbackKey: 'Enter', hidName: 'Enter' },
+  KEY2: { label: 'S2 按键 (Key 2)', action: 'deleteDoc', actionVersion: 1, pin: 'GPIO47', type: 'key', fallbackKey: 'Enter', hidName: 'Enter' },
   KEY3: { label: 'S3 按键 (Key 3)', action: 'zoomIn', pin: 'GPIO38', type: 'key', fallbackKey: '=', hidName: 'Ctrl+Shift+E' },
   KEY4: { label: 'S4 按键 (Key 4)', action: 'zoomOut', pin: 'GPIO41', type: 'key', fallbackKey: '-', hidName: 'Backspace' },
-  KEY5: { label: 'S5 按键 (Key 5)', action: 'toggleView', pin: 'GPIO1', type: 'key', fallbackKey: 'Space', hidName: 'Ctrl+A' },
+  KEY5: { label: 'S5 按键 (Key 5)', action: 'returnHome', pin: 'GPIO1', type: 'key', fallbackKey: 'Space', hidName: 'Ctrl+A' },
   KEY6: { label: 'S6 按键 (Key 6)', action: 'toggleDeepMode', pin: 'GPIO6', type: 'key', fallbackKey: 'd', hidName: 'Ctrl+C' },
   KEY7: { label: 'S7 按键 (Key 7)', action: 'prevPage', pin: 'GPIO7', type: 'key', fallbackKey: 'PageUp', hidName: 'Ctrl+V' },
   KEY8: { label: 'S8 按键 (Key 8)', action: 'resetZoom', pin: 'GPIO48', type: 'key', fallbackKey: '0', hidName: 'Ctrl+Z/Ctrl+Tab' }
@@ -38,23 +41,28 @@ export function loadStoredHardwareMap() {
     const raw = localStorage.getItem(STORAGE_KEY_MAP);
     if (raw) {
       const parsed = JSON.parse(raw);
-      // 保证 S1 默认始终为 importPdf (上传 PDF 文件)
-      if (!parsed.KEY1 || parsed.KEY1.action !== 'importPdf') {
-        parsed.KEY1 = { ...DEFAULT_HARDWARE_MAP.KEY1, action: 'importPdf' };
-      }
-      // 保证 S2 默认始终为 nextPage (翻到下一页)，严禁误置为 importPdf (上传 PDF)
-      if (!parsed.KEY2 || parsed.KEY2.action !== 'nextPage') {
-        parsed.KEY2 = { ...DEFAULT_HARDWARE_MAP.KEY2, action: 'nextPage' };
-      }
-      // 保证 S7 默认对应 prevPage (翻到上一页)
-      if (!parsed.KEY7 || parsed.KEY7.action !== 'prevPage') {
-        parsed.KEY7 = { ...DEFAULT_HARDWARE_MAP.KEY7, action: 'prevPage' };
-      }
-      // 保证 S5 默认对应 toggleView (全屏研读 / 返回主页)
-      if (!parsed.KEY5 || parsed.KEY5.action !== 'toggleView') {
-        parsed.KEY5 = { ...DEFAULT_HARDWARE_MAP.KEY5, action: 'toggleView' };
-      }
-      return { ...DEFAULT_HARDWARE_MAP, ...parsed };
+      const merged = { ...DEFAULT_HARDWARE_MAP };
+
+      Object.keys(DEFAULT_HARDWARE_MAP).forEach(token => {
+        if (parsed[token]) {
+          const item = { ...DEFAULT_HARDWARE_MAP[token], ...parsed[token] };
+          // Apply the S2 deletion preset once while preserving its recorded signal.
+          if (token === 'KEY2' && parsed[token].actionVersion !== 1) {
+            item.action = 'deleteDoc';
+            item.actionVersion = 1;
+          }
+          // 清理可能误录入的纯修饰键
+          if (['Control', 'Shift', 'Alt', 'Meta', 'undefined', 'null'].includes(item.fallbackKey)) {
+            item.fallbackKey = DEFAULT_HARDWARE_MAP[token].fallbackKey;
+          }
+          // 确保动作合法
+          if (!item.action || !EASYINPUT_ACTIONS[item.action]) {
+            item.action = DEFAULT_HARDWARE_MAP[token].action;
+          }
+          merged[token] = item;
+        }
+      });
+      return merged;
     }
   } catch (e) {}
   return JSON.parse(JSON.stringify(DEFAULT_HARDWARE_MAP));
@@ -75,4 +83,13 @@ export function normalizeToken(token) {
   const m = str.match(/^(KEY|S|K)?([1-8])$/);
   if (m) return 'KEY' + m[2];
   return str;
+}
+
+export function resolveHardwareToken(rawToken, map) {
+  const normalized = normalizeToken(rawToken);
+  // A recorded device signal takes priority, including UUIDs and named keys.
+  const binding = Object.entries(map).find(([, item]) =>
+    item.fallbackKey && normalizeToken(item.fallbackKey) === normalized
+  );
+  return binding?.[0] || normalized;
 }

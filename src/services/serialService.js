@@ -99,7 +99,7 @@ export function parseSerialLineToToken(raw) {
   // 4. 旋转编码器
   if (/\b(ENC_LEFT|ENCODER_LEFT|ENC_CCW|ROTARY_CCW|CCW)\b/i.test(line) || /step\s*=\s*-\d+/i.test(line)) return 'ENC_LEFT';
   if (/\b(ENC_RIGHT|ENCODER_RIGHT|ENC_CW|ROTARY_CW|CW)\b/i.test(line) || /step\s*=\s*\+?[1-9]\d*/i.test(line)) return 'ENC_RIGHT';
-  if (/\b(ENC_PRESS|ENCODER_PRESS|ROTARY_PRESS|ENC_CLICK|CLICK)\b/i.test(line)) return 'ENC_PRESS';
+  if (/\b(ENC_PRESS|ENCODER_PRESS|ROTARY_PRESS|ENC_CLICK|CLICK)\b/i.test(line) || /\bENC_(?:scroll|cursor)\s+axis=/i.test(line)) return 'ENC_PRESS';
 
   // 5. 纯数字整行上报 (如某些固件发送 "1" ~ "8")
   if (/^[1-8]$/.test(line)) {
