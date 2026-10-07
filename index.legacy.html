@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PDF 智能星轨</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons Local -->
+  <script src="lucide.min.js"></script>
+  <!-- PDF.js Local Engine -->
+  <script src="pdf.min.js"></script>
+  <script>
+    if (window.pdfjsLib) {
+      pdfjsLib.GlobalWorkerOptions.workerSrc = 'pdf.worker.min.js';
+    }
+  </script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="h-full bg-[#FFFFFF] text-neutral-800 font-sans transition-colors duration-200 antialiased overflow-hidden select-none">
+
+  <!-- Main View Container -->
+  <div class="relative w-full h-full flex flex-col z-10">
+
+    <!-- ================================================================= -->
+    <!-- VIEW 1: 纯粹星轨主界面 (无任何假数据、无顶栏标题、只显示用户上传的PDF) -->
+    <!-- ================================================================= -->
+    <div id="viewUniverse" class="relative flex-1 flex flex-col justify-between overflow-hidden">
+
+      <!-- Minimal top area with EasyInput 按键设置 button -->
+      <header class="w-full px-8 py-5 flex items-center justify-end z-30 flex-shrink-0">
+        <button onclick="openKeySettingsModal()" class="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl border border-neutral-200 hover:border-neutral-300 bg-white hover:bg-neutral-50 text-neutral-800 text-xs font-semibold shadow-xs transition">
+          <i data-lucide="keyboard" class="w-3.5 h-3.5 text-orange-500"></i>
+          <span>按键设置</span>
+        </button>
+      </header>
+
+      <!-- ============================================================= -->
+      <!-- 3D ORBIT ARENA: 用户上传的零碎卡片环绕 + 居中控制台 -->
+      <!-- ============================================================= -->
+      <div id="orbitStage" class="relative flex-1 w-full flex items-center justify-center select-none overflow-hidden" onmousedown="handleOrbitDragStart(event)" ontouchstart="handleOrbitDragStart(event)">
+        
+        <!-- Central Floating Console (纯白居中核心输入卡片) -->
+        <div id="centralConsole" class="z-20 w-full max-w-xl px-4 flex flex-col items-center pointer-events-auto">
+          
+          <!-- Hero Title -->
+          <h1 class="text-3xl md:text-4xl font-extrabold text-neutral-900 tracking-tight mb-5 text-center">
+            今天你想研读什么？
+          </h1>
+
+          <!-- Prompt Box -->
+          <div class="w-full bg-white rounded-2xl border border-neutral-200/90 shadow-xl shadow-neutral-200/40 p-4 focus-within:border-neutral-400 focus-within:ring-2 focus-within:ring-neutral-100 transition relative">
+            
+            <!-- Drop Overlay -->
+            <div id="dropOverlay" class="absolute inset-0 bg-orange-500/10 backdrop-blur-xs rounded-2xl border-2 border-dashed border-orange-500 flex items-center justify-center text-orange-600 font-semibold text-xs hidden z-30 pointer-events-none">
+              <i data-lucide="upload-cloud" class="w-6 h-6 mr-2 animate-bounce"></i>
+              松开鼠标，立即解析并生成环绕卡片
+            </div>
+
+            <!-- Uploaded file chip -->
+            <div id="attachedFileBadge" class="hidden mb-2 inline-flex items-center gap-2 px-2.5 py-1 rounded-lg bg-orange-50 border border-orange-200 text-xs text-orange-800">
+              <i data-lucide="file-text" class="w-3.5 h-3.5 text-orange-600"></i>
+              <span id="attachedFileName" class="font-medium max-w-[240px] truncate">document.pdf</span>
+              <span id="attachedFileSize" class="text-[10px] text-orange-600/70">1.2 MB</span>
+              <button onclick="clearAttachedFile(event)" class="hover:text-orange-950 ml-1">
+                <i data-lucide="x" class="w-3 h-3"></i>
+              </button>
+            </div>
+
+            <!-- Textarea -->
+            <textarea id="mainPromptInput" rows="2" placeholder="点击下方「上传 PDF」或直接将 PDF 拖入此处，零碎卡片将环绕飞舞..." class="w-full resize-none bg-transparent outline-none text-neutral-800 placeholder-neutral-400 text-xs md:text-sm leading-relaxed no-scrollbar"></textarea>
+
+            <!-- Bottom Toolbar Inside Card -->
+            <div class="flex items-center justify-between pt-3 mt-1 border-t border-neutral-100">
+              <div class="flex items-center gap-2">
+                <!-- 按键设置 按钮 (连接 EasyInput) -->
+                <button onclick="openKeySettingsModal()" class="p-1.5 px-3 rounded-lg border border-neutral-200 hover:bg-neutral-50 text-neutral-700 flex items-center gap-1.5 text-xs font-semibold transition" title="连接与配置 EasyInput 按键映射">
+                  <i data-lucide="keyboard" class="w-4 h-4 text-orange-500"></i>
+                  <span>按键设置</span>
+                </button>
+                <input type="file" id="pdfFileInput" accept="application/pdf" multiple class="hidden" onchange="handleFileUpload(event)">
+
+                <!-- 深度精读胶囊开关 -->
+                <div class="flex items-center gap-1.5 px-2 py-1 rounded-lg bg-neutral-100 cursor-pointer select-none" onclick="toggleDeepMode()">
+                  <span class="text-xs font-medium text-neutral-600">深度精读</span>
+                  <div id="deepModeToggle" class="w-7 h-4 bg-orange-500 rounded-full flex items-center p-0.5 transition-colors">
+                    <div id="deepModeKnob" class="w-3 h-3 bg-white rounded-full shadow-sm transform translate-x-3 transition-transform"></div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="flex items-center gap-2">
+                <button onclick="showToast('语音研读指令已待命')" class="p-1.5 rounded-md text-neutral-400 hover:text-neutral-700 hover:bg-neutral-100">
+                  <i data-lucide="mic" class="w-4 h-4"></i>
+                </button>
+
+                <!-- 黑底白箭头提交按钮 -->
+                <button onclick="handleStartReading()" class="w-7 h-7 rounded-full bg-neutral-900 hover:bg-neutral-800 text-white flex items-center justify-center transition shadow-sm" title="开始研读">
+                  <i data-lucide="arrow-up" class="w-4 h-4"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Tags -->
+          <div class="flex flex-wrap items-center justify-center gap-2 mt-4 text-xs">
+            <button onclick="applyQuickPrompt('请提炼当前 PDF 的核心 Executive Summary 与关键论点')" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white border border-neutral-200/90 text-neutral-700 hover:border-neutral-400 transition shadow-2xs">
+              <i data-lucide="sparkles" class="w-3.5 h-3.5 text-orange-500"></i>
+              <span>核心提炼</span>
+            </button>
+            <button onclick="applyQuickPrompt('请对比文档中的不同方案与技术优劣势')" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white border border-neutral-200/90 text-neutral-700 hover:border-neutral-400 transition shadow-2xs">
+              <i data-lucide="layout-grid" class="w-3.5 h-3.5 text-blue-500"></i>
+              <span>方案对比</span>
+            </button>
+            <button onclick="applyQuickPrompt('提取全文专业术语表与数学推导')" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white border border-neutral-200/90 text-neutral-700 hover:border-neutral-400 transition shadow-2xs">
+              <i data-lucide="book-marked" class="w-3.5 h-3.5 text-emerald-500"></i>
+              <span>术语辞典</span>
+            </button>
+            <button onclick="applyQuickPrompt('为本文档生成思维导图结构')" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white border border-neutral-200/90 text-neutral-700 hover:border-neutral-400 transition shadow-2xs">
+              <i data-lucide="network" class="w-3.5 h-3.5 text-purple-500"></i>
+              <span>知识脑图</span>
+            </button>
+          </div>
+
+        </div>
+
+        <!-- Empty State Prompt (仅在用户未上传任何 PDF 时轻巧提示) -->
+        <div id="emptyOrbitHint" class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none z-10 transition-opacity duration-300">
+          <div class="mt-80 p-3 rounded-xl bg-neutral-50/80 border border-neutral-200/60 text-xs text-neutral-400 flex items-center gap-2 shadow-2xs">
+            <i data-lucide="upload-cloud" class="w-4 h-4 text-orange-400"></i>
+            <span>暂无文档 · 点击上方「上传 PDF」或拖拽文件投入星轨</span>
+          </div>
+        </div>
+
+        <!-- ORBITING CARDS CONTAINER (仅渲染用户真实上传的 PDF 卡片/页面碎片) -->
+        <div id="orbitCardsContainer" class="absolute inset-0 pointer-events-none">
+          <!-- Populated only by user-uploaded PDFs -->
+        </div>
+
+      </div>
+
+      <!-- Bottom Hint -->
+      <div class="w-full px-8 pb-4 flex items-center justify-center text-xs text-neutral-400 z-20 pointer-events-auto">
+        <span id="orbitStatusText">拖拽或上传本地 PDF 即可生成不规则环绕卡片</span>
+      </div>
+
+    </div>
+
+    <!-- ================================================================= -->
+    <!-- VIEW 2: 沉浸式 PDF 阅读工作台 (左右分屏：真实PDF渲染 + AI Copilot) -->
+    <!-- ================================================================= -->
+    <div id="viewWorkspace" class="hidden absolute inset-0 bg-[#F4F4F6] flex flex-col z-40">
+      
+      <!-- Topbar -->
+      <div class="h-12 bg-white border-b border-neutral-200 px-5 flex items-center justify-between flex-shrink-0 text-xs">
+        <div class="flex items-center gap-3">
+          <button onclick="switchView('universe')" class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl hover:bg-neutral-100 text-neutral-700 font-semibold transition" title="返回星轨">
+            <i data-lucide="arrow-left" class="w-4 h-4 text-orange-500"></i>
+            <span>返回主页</span>
+          </button>
+          <div class="h-4 w-px bg-neutral-200"></div>
+          <div class="flex items-center gap-2">
+            <span class="text-[10px] font-bold text-white bg-orange-600 px-1.5 py-0.5 rounded">PDF</span>
+            <span id="workspaceDocTitle" class="font-bold text-neutral-900 max-w-[280px] md:max-w-[420px] truncate">
+              我的文档.pdf
+            </span>
+            <span id="docMetaBadge" class="text-[11px] text-neutral-500 bg-neutral-100 px-2 py-0.5 rounded-full">
+              -- 页
+            </span>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <button onclick="openKeySettingsModal()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-neutral-200 hover:border-neutral-300 bg-white hover:bg-neutral-50 text-neutral-700 font-semibold transition" title="EasyInput 按键设置与连接">
+            <i data-lucide="keyboard" class="w-3.5 h-3.5 text-orange-500"></i>
+            <span>按键设置</span>
+          </button>
+          <button onclick="triggerPdfUpload()" class="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-neutral-100 hover:bg-neutral-200 text-neutral-700 font-medium">
+            <i data-lucide="upload" class="w-3.5 h-3.5"></i>
+            <span>上传其他 PDF</span>
+          </button>
+          <button onclick="exportReadingNotes()" class="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-orange-500 hover:bg-orange-600 text-white font-semibold shadow-sm transition">
+            <i data-lucide="download" class="w-3.5 h-3.5"></i>
+            <span>导出研读报告</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Split View Body -->
+      <div class="flex-1 flex overflow-hidden">
+
+        <!-- LEFT: Real PDF Canvas -->
+        <div class="flex-1 flex flex-col bg-neutral-200/70 border-r border-neutral-300 relative overflow-hidden">
+          
+          <div class="h-10 bg-white border-b border-neutral-200 px-4 flex items-center justify-between text-xs z-10 flex-shrink-0">
+            <div class="flex items-center gap-1.5">
+              <button onclick="prevPage()" class="p-1 rounded-md hover:bg-neutral-100 text-neutral-600" title="上一页">
+                <i data-lucide="chevron-up" class="w-4 h-4"></i>
+              </button>
+              <div class="flex items-center gap-1 text-neutral-700 font-medium">
+                <input type="number" id="currentPageInput" value="1" min="1" class="w-10 text-center bg-neutral-100 border border-neutral-300 rounded py-0.5 text-xs font-semibold" onchange="jumpToPage(this.value)">
+                <span class="text-neutral-400">/</span>
+                <span id="totalPagesSpan" class="text-neutral-500">1</span>
+              </div>
+              <button onclick="nextPage()" class="p-1 rounded-md hover:bg-neutral-100 text-neutral-600" title="下一页">
+                <i data-lucide="chevron-down" class="w-4 h-4"></i>
+              </button>
+            </div>
+
+            <div class="flex items-center gap-1.5">
+              <button onclick="zoomOut()" class="p-1 rounded hover:bg-neutral-100 text-neutral-600" title="缩小">
+                <i data-lucide="zoom-out" class="w-3.5 h-3.5"></i>
+              </button>
+              <span id="zoomLevelDisplay" class="text-[11px] font-semibold text-neutral-500 w-12 text-center">115%</span>
+              <button onclick="zoomIn()" class="p-1 rounded hover:bg-neutral-100 text-neutral-600" title="放大">
+                <i data-lucide="zoom-in" class="w-3.5 h-3.5"></i>
+              </button>
+              <button onclick="fitWidth()" class="p-1 rounded hover:bg-neutral-100 text-neutral-600" title="自适应宽度">
+                <i data-lucide="maximize-2" class="w-3.5 h-3.5"></i>
+              </button>
+              <div class="h-3 w-px bg-neutral-200 mx-1"></div>
+              <button id="highlightToolBtn" onclick="toggleHighlightTool()" class="flex items-center gap-1 px-2 py-0.5 rounded text-neutral-600 hover:bg-neutral-100" title="划线批注模式">
+                <i data-lucide="highlighter" class="w-3.5 h-3.5 text-amber-500"></i>
+                <span class="text-[11px]">批注</span>
+              </button>
+            </div>
+          </div>
+
+          <div id="pdfScrollContainer" class="flex-1 overflow-auto p-4 flex flex-col items-center justify-start relative">
+            <div id="canvasWrapper" class="relative shadow-xl rounded-sm transition-all bg-white">
+              <canvas id="pdfCanvas" class="block"></canvas>
+              <div id="textLayer" class="absolute inset-0 pointer-events-auto"></div>
+            </div>
+
+            <div id="pdfLoadingSpinner" class="hidden absolute inset-0 bg-white/80 flex flex-col items-center justify-center backdrop-blur-xs z-30">
+              <div class="w-8 h-8 border-3 border-orange-500 border-t-transparent rounded-full animate-spin mb-2"></div>
+              <span class="text-xs font-semibold text-neutral-700">正在解析 PDF 页面...</span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- RIGHT: AI Copilot -->
+        <div id="aiSidebar" class="w-[420px] xl:w-[460px] flex-shrink-0 bg-white flex flex-col border-l border-neutral-200 transition-all">
+          
+          <div class="flex items-center border-b border-neutral-200 px-2 pt-2 flex-shrink-0 bg-neutral-50/60">
+            <button onclick="switchAiTab('chat')" id="tabBtnChat" class="flex-1 pb-2 text-xs font-semibold border-b-2 border-orange-500 text-orange-600 flex items-center justify-center gap-1.5">
+              <i data-lucide="message-square" class="w-3.5 h-3.5"></i>
+              <span>AI 研读问答</span>
+            </button>
+            <button onclick="switchAiTab('summary')" id="tabBtnSummary" class="flex-1 pb-2 text-xs font-semibold border-b-2 border-transparent text-neutral-500 hover:text-neutral-900 flex items-center justify-center gap-1.5">
+              <i data-lucide="file-text" class="w-3.5 h-3.5"></i>
+              <span>要点提炼</span>
+            </button>
+            <button onclick="switchAiTab('mindmap')" id="tabBtnMindmap" class="flex-1 pb-2 text-xs font-semibold border-b-2 border-transparent text-neutral-500 hover:text-neutral-900 flex items-center justify-center gap-1.5">
+              <i data-lucide="network" class="w-3.5 h-3.5"></i>
+              <span>知识脑图</span>
+            </button>
+            <button onclick="switchAiTab('notes')" id="tabBtnNotes" class="flex-1 pb-2 text-xs font-semibold border-b-2 border-transparent text-neutral-500 hover:text-neutral-900 flex items-center justify-center gap-1.5">
+              <i data-lucide="highlighter" class="w-3.5 h-3.5"></i>
+              <span>笔记批注</span>
+            </button>
+          </div>
+
+          <!-- TAB 1: Chat -->
+          <div id="aiTabChat" class="flex-1 flex flex-col overflow-hidden">
+            <div id="chatMessagesContainer" class="flex-1 overflow-y-auto p-4 space-y-3.5 text-xs">
+              <div class="flex gap-2.5 items-start">
+                <div class="w-6 h-6 rounded-md bg-gradient-to-tr from-orange-500 to-amber-500 text-white flex items-center justify-center flex-shrink-0 text-[10px] font-bold shadow-xs">
+                  AI
+                </div>
+                <div class="flex-1 space-y-1.5">
+                  <div class="bg-neutral-100 p-3 rounded-2xl rounded-tl-sm text-neutral-800 leading-relaxed">
+                    你好！我已载入你上传的 PDF 文档并完成全文索引，你可以直接向我提问，或点击推荐问题：
+                  </div>
+                  <div class="flex flex-wrap gap-1.5 pt-1">
+                    <button onclick="sendChatMessage('请用通俗语言概括这篇文章的核心创新点？')" class="px-2 py-1 rounded-lg bg-orange-50 text-orange-700 border border-orange-200 hover:bg-orange-100 text-[11px] transition">
+                      💡 核心创新点与背景
+                    </button>
+                    <button onclick="sendChatMessage('文章中的关键实验与数据表现如何？')" class="px-2 py-1 rounded-lg bg-orange-50 text-orange-700 border border-orange-200 hover:bg-orange-100 text-[11px] transition">
+                      📊 关键实验数据
+                    </button>
+                    <button onclick="sendChatMessage('作者指出了哪些局限性或未来研究方向？')" class="px-2 py-1 rounded-lg bg-orange-50 text-orange-700 border border-orange-200 hover:bg-orange-100 text-[11px] transition">
+                      🔭 局限性与展望
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="p-3 border-t border-neutral-200 bg-white">
+              <div class="relative bg-neutral-100 rounded-xl p-2 border border-neutral-200 focus-within:border-orange-500">
+                <textarea id="chatInputText" rows="2" placeholder="问关于本文档的任何问题 (例如：解释第1页公式、归纳核心论点)..." class="w-full bg-transparent resize-none text-xs outline-none text-neutral-800 placeholder-neutral-400 leading-relaxed" onkeydown="handleChatKeydown(event)"></textarea>
+                <div class="flex items-center justify-between pt-1">
+                  <div class="flex items-center gap-1.5 text-neutral-400 text-[11px]">
+                    <span class="flex items-center gap-1"><i data-lucide="compass" class="w-3 h-3 text-orange-500"></i> 精准引用定位</span>
+                  </div>
+                  <button onclick="submitChat()" class="p-1.5 rounded-lg bg-orange-500 hover:bg-orange-600 text-white transition shadow-sm">
+                    <i data-lucide="send" class="w-3.5 h-3.5"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB 2: Summary -->
+          <div id="aiTabSummary" class="hidden flex-1 overflow-y-auto p-4 space-y-4 text-xs">
+            <div class="p-3.5 rounded-xl bg-orange-50 border border-orange-200 space-y-1.5">
+              <div class="font-bold text-orange-900 flex items-center gap-1.5">
+                <i data-lucide="sparkles" class="w-4 h-4 text-orange-500"></i>
+                <span>一句话总结 (Executive Summary)</span>
+              </div>
+              <p id="summaryOneLiner" class="text-neutral-700 leading-relaxed">
+                正在提炼当前文档核心纲要...
+              </p>
+            </div>
+
+            <div class="space-y-3">
+              <h3 class="font-bold text-neutral-900 flex items-center gap-1.5">
+                <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-500"></i>
+                <span>核心论点与突破点</span>
+              </h3>
+              <div id="summaryPointsList" class="space-y-2"></div>
+            </div>
+
+            <div class="pt-2">
+              <h3 class="font-bold text-neutral-900 flex items-center gap-1.5 mb-2">
+                <i data-lucide="list-ordered" class="w-4 h-4 text-blue-500"></i>
+                <span>章节大纲导航</span>
+              </h3>
+              <div id="documentOutlineList" class="space-y-1"></div>
+            </div>
+          </div>
+
+          <!-- TAB 3: Mindmap -->
+          <div id="aiTabMindmap" class="hidden flex-1 overflow-y-auto p-4 space-y-3 text-xs">
+            <div class="flex items-center justify-between mb-2">
+              <span class="font-bold text-neutral-900">文档层级概念拓扑</span>
+              <button onclick="generateMindmap()" class="text-orange-600 hover:underline flex items-center gap-1 text-[11px]">
+                <i data-lucide="refresh-cw" class="w-3 h-3"></i>
+                <span>重新生成</span>
+              </button>
+            </div>
+            <div id="mindmapContainer" class="p-3 bg-neutral-50 rounded-xl border border-neutral-200 space-y-2 font-mono"></div>
+          </div>
+
+          <!-- TAB 4: Notes -->
+          <div id="aiTabNotes" class="hidden flex-1 flex flex-col overflow-hidden p-4 text-xs">
+            <div class="flex items-center justify-between mb-3">
+              <span class="font-bold text-neutral-900">高亮批注与个人笔记</span>
+              <button onclick="addManualNote()" class="text-orange-600 hover:text-orange-700 font-semibold flex items-center gap-1">
+                <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+                <span>记一条</span>
+              </button>
+            </div>
+            <div id="notesListContainer" class="flex-1 overflow-y-auto space-y-2.5"></div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  <!-- EasyInput AI 官方同款 键盘连接与按键设置窗口 (合一设计) -->
+  <div id="keySettingsModal" class="fixed inset-0 bg-black/45 backdrop-blur-xs flex items-center justify-center z-50 hidden p-3 md:p-6">
+    <div class="bg-white w-full max-w-6xl rounded-2xl shadow-2xl border border-neutral-200 overflow-hidden flex flex-col md:flex-row relative min-h-[620px] max-h-[94vh]">
+      
+      <!-- Close Button (Top-Right) -->
+      <button onclick="closeKeySettingsModal()" class="absolute top-4 right-4 text-neutral-400 hover:text-neutral-700 p-1.5 rounded-lg hover:bg-neutral-100 z-30 transition cursor-pointer" title="关闭窗口">
+        <i data-lucide="x" class="w-4 h-4"></i>
+      </button>
+
+      <!-- LEFT: Main Showcase & Combined Key Actions (硬件图与映射合一) -->
+      <div class="flex-1 flex flex-col bg-white overflow-hidden">
+        
+        <!-- Top Header -->
+        <div class="px-6 py-4 md:px-8 md:pt-6 md:pb-3 border-b border-neutral-100 flex items-center justify-between flex-shrink-0">
+          <div>
+            <div class="flex items-center gap-2.5">
+              <h2 class="text-xl md:text-2xl font-extrabold text-[#1a1a1a] tracking-tight">
+                连接与配置 EasyInput AI
+              </h2>
+              <span id="headerConnBadge" class="text-[11px] px-2.5 py-0.5 rounded-full font-semibold bg-neutral-100 text-neutral-600 flex items-center gap-1.5 border border-neutral-200">
+                <span id="headerConnDot" class="w-2 h-2 rounded-full bg-neutral-400"></span>
+                <span id="headerConnText">未连接</span>
+              </span>
+            </div>
+            <p class="text-xs text-[#737373] mt-1">
+              硬件外观与按键功能无缝合一：点击键帽或下方卡片均可调配，物理按键与旋钮实时联动高亮。
+            </p>
+          </div>
+
+          <div class="flex items-center gap-2 mr-8">
+            <button onclick="resetDefaultKeybindings()" class="px-3 py-1.5 rounded-xl border border-neutral-200 hover:border-neutral-300 hover:bg-neutral-50 text-neutral-700 text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer" title="恢复官方推荐默认键位设置">
+              <i data-lucide="rotate-ccw" class="w-3.5 h-3.5 text-neutral-500"></i>
+              <span>恢复默认</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Scrollable Combined Body -->
+        <div class="flex-1 overflow-y-auto px-6 py-4 md:px-8 space-y-6">
+          
+          <!-- PART 1: 3D Hardware Keyboard Showcase (图上带半透明按键徽章) -->
+          <div class="bg-neutral-50/70 border border-neutral-200/80 rounded-2xl p-4 md:p-5 flex flex-col items-center select-none shadow-xs">
+            <div class="w-full flex items-center justify-between text-xs text-neutral-500 mb-2 px-1">
+              <span class="font-bold text-neutral-800 flex items-center gap-1.5">
+                <i data-lucide="cpu" class="w-3.5 h-3.5 text-orange-500"></i>
+                <span>EasyInput AI 硬件实时态 (8 机械键 + 1 无级旋转编码器)</span>
+              </span>
+              <span class="text-[11px] text-neutral-400 hidden sm:inline">点击键帽直接定位配置 · 物理按键触发时实时发光</span>
+            </div>
+
+            <!-- Keyboard Graphic with Interactive Frosted Keycaps (100% 像素精确对齐) -->
+            <div class="relative w-full max-w-[560px] aspect-[620/320] select-none my-1 rounded-2xl overflow-hidden shadow-xs">
+              <!-- Background Image of EasyInput Hardware -->
+              <img src="easyinput-device.png" alt="EasyInput AI 键盘" class="w-full h-full object-fill block pointer-events-none">
+
+              <!-- Keycaps: Top Row S1 ~ S4 (精确贴合实体键帽) -->
+              <div id="keyHotspot_KEY1" onclick="focusKeyCard('KEY1')" class="absolute left-[10.32%] top-[24.06%] w-[14.19%] h-[26.88%] rounded-xl cursor-pointer hover:bg-orange-500/15 border-2 border-transparent hover:border-orange-500 transition-all flex flex-col items-center justify-center group" title="S1 (Key 1): 上一页 (点击下方编辑)">
+                <span class="text-[10px] font-extrabold text-neutral-800 bg-white/80 backdrop-blur-xs px-1.5 py-0.5 rounded shadow-2xs group-hover:text-orange-600 transition">S1</span>
+                <span id="label_KEY1" class="text-[9px] text-neutral-600 font-semibold truncate max-w-[90%] px-1 mt-0.5 bg-white/70 rounded">上一页</span>
+              </div>
+
+              <div id="keyHotspot_KEY2" onclick="focusKeyCard('KEY2')" class="absolute left-[25.00%] top-[24.06%] w-[14.03%] h-[26.88%] rounded-xl cursor-pointer hover:bg-orange-500/15 border-2 border-transparent hover:border-orange-500 transition-all flex flex-col items-center justify-center group" title="S2 (Key 2): 下一页 (点击下方编辑)">
+                <span class="text-[10px] font-extrabold text-neutral-800 bg-white/80 backdrop-blur-xs px-1.5 py-0.5 rounded shadow-2xs group-hover:text-orange-600 transition">S2</span>
+                <span id="label_KEY2" class="text-[9px] text-neutral-600 font-semibold truncate max-w-[90%] px-1 mt-0.5 bg-white/70 rounded">下一页</span>
+              </div>
+
+              <div id="keyHotspot_KEY3" onclick="focusKeyCard('KEY3')" class="absolute left-[39.68%] top-[24.06%] w-[13.87%] h-[26.88%] rounded-xl cursor-pointer hover:bg-orange-500/15 border-2 border-transparent hover:border-orange-500 transition-all flex flex-col items-center justify-center group" title="S3 (Key 3): 放大 (点击下方编辑)">
+                <span class="text-[10px] font-extrabold text-neutral-800 bg-white/80 backdrop-blur-xs px-1.5 py-0.5 rounded shadow-2xs group-hover:text-orange-600 transition">S3</span>
+                <span id="label_KEY3" class="text-[9px] text-neutral-600 font-semibold truncate max-w-[90%] px-1 mt-0.5 bg-white/70 rounded">放大</span>
+              </div>
+
+              <div id="keyHotspot_KEY4" onclick="focusKeyCard('KEY4')" class="absolute left-[54.19%] top-[24.06%] w-[13.87%] h-[26.88%] rounded-xl cursor-pointer hover:bg-orange-500/15 border-2 border-transparent hover:border-orange-500 transition-all flex flex-col items-center justify-center group" title="S4 (Key 4): 缩小 (点击下方编辑)">
+                <span class="text-[10px] font-extrabold text-neutral-800 bg-white/80 backdrop-blur-xs px-1.5 py-0.5 rounded shadow-2xs group-hover:text-orange-600 transition">S4</span>
+                <span id="label_KEY4" class="text-[9px] text-neutral-600 font-semibold truncate max-w-[90%] px-1 mt-0.5 bg-white/70 rounded">缩小</span>
+              </div>
+
+              <!-- Keycaps: Bottom Row S5 ~ S8 (精确贴合实体键帽) -->
+              <div id="keyHotspot_KEY5" onclick="focusKeyCard('KEY5')" class="absolute left-[10.32%] top-[52.50%] w-[14.19%] h-[26.88%] rounded-xl cursor-pointer hover:bg-orange-500/15 border-2 border-transparent hover:border-orange-500 transition-all flex flex-col items-center justify-center group" title="S5 (Key 5): AI 核心要点 (点击下方编辑)">
+                <span class="text-[10px] font-extrabold text-neutral-800 bg-white/80 backdrop-blur-xs px-1.5 py-0.5 rounded shadow-2xs group-hover:text-orange-600 transition">S5</span>
+                <span id="label_KEY5" class="text-[9px] text-neutral-600 font-semibold truncate max-w-[90%] px-1 mt-0.5 bg-white/70 rounded">AI要点</span>
+              </div>
+
+              <div id="keyHotspot_KEY6" onclick="focusKeyCard('KEY6')" class="absolute left-[25.00%] top-[52.50%] w-[14.03%] h-[26.88%] rounded-xl cursor-pointer hover:bg-orange-500/15 border-2 border-transparent hover:border-orange-500 transition-all flex flex-col items-center justify-center group" title="S6 (Key 6): 深度精读 (点击下方编辑)">
+                <span class="text-[10px] font-extrabold text-neutral-800 bg-white/80 backdrop-blur-xs px-1.5 py-0.5 rounded shadow-2xs group-hover:text-orange-600 transition">S6</span>
+                <span id="label_KEY6" class="text-[9px] text-neutral-600 font-semibold truncate max-w-[90%] px-1 mt-0.5 bg-white/70 rounded">精读</span>
+              </div>
+
+              <div id="keyHotspot_KEY7" onclick="focusKeyCard('KEY7')" class="absolute left-[39.68%] top-[52.50%] w-[13.87%] h-[26.88%] rounded-xl cursor-pointer hover:bg-orange-500/15 border-2 border-transparent hover:border-orange-500 transition-all flex flex-col items-center justify-center group" title="S7 (Key 7): 导入 PDF (点击下方编辑)">
+                <span class="text-[10px] font-extrabold text-neutral-800 bg-white/80 backdrop-blur-xs px-1.5 py-0.5 rounded shadow-2xs group-hover:text-orange-600 transition">S7</span>
+                <span id="label_KEY7" class="text-[9px] text-neutral-600 font-semibold truncate max-w-[90%] px-1 mt-0.5 bg-white/70 rounded">导入</span>
+              </div>
+
+              <div id="keyHotspot_KEY8" onclick="focusKeyCard('KEY8')" class="absolute left-[54.19%] top-[52.50%] w-[13.71%] h-[26.88%] rounded-xl cursor-pointer hover:bg-orange-500/15 border-2 border-transparent hover:border-orange-500 transition-all flex flex-col items-center justify-center group" title="S8 (Key 8): 自适应宽度 (点击下方编辑)">
+                <span class="text-[10px] font-extrabold text-neutral-800 bg-white/80 backdrop-blur-xs px-1.5 py-0.5 rounded shadow-2xs group-hover:text-orange-600 transition">S8</span>
+                <span id="label_KEY8" class="text-[9px] text-neutral-600 font-semibold truncate max-w-[90%] px-1 mt-0.5 bg-white/70 rounded">自适应</span>
+              </div>
+
+              <!-- Knob Hotspot: 精确贴合金属无级旋转盘 -->
+              <div id="keyHotspot_ENC" onclick="focusKeyCard('ENC')" class="absolute left-[72.58%] top-[25.00%] w-[18.55%] h-[37.50%] rounded-full cursor-pointer hover:bg-orange-500/15 border-2 border-transparent hover:border-orange-500 transition-all flex flex-col items-center justify-center group" title="旋转编码器: 顺时针翻页 / 逆时针翻页 / 按压全屏">
+                <span class="text-[10px] font-extrabold text-neutral-800 bg-white/85 backdrop-blur-xs px-2 py-0.5 rounded-full shadow-2xs group-hover:text-orange-600 transition">旋钮</span>
+                <span class="text-[8px] text-neutral-600 font-bold mt-1 bg-white/75 px-1.5 py-0.2 rounded-full">翻页·下按</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- PART 2: Interactive Key Action Matrix (按键功能调配矩阵 - 同屏呈现) -->
+          <div class="space-y-4">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <i data-lucide="sliders" class="w-4 h-4 text-orange-500"></i>
+                <h3 class="font-bold text-sm text-neutral-900">按键动作调配矩阵</h3>
+                <span class="text-[11px] text-neutral-400">选择下拉动作即时生效</span>
+              </div>
+              <button onclick="toggleSerialMonitor()" class="text-[11px] text-neutral-500 hover:text-orange-600 flex items-center gap-1 font-medium transition cursor-pointer">
+                <i data-lucide="terminal" class="w-3.5 h-3.5"></i>
+                <span id="serialMonitorToggleText">查看串口日志</span>
+              </button>
+            </div>
+
+            <!-- 8 Keys Grid (Row 1: S1~S4, Row 2: S5~S8) -->
+            <div id="unifiedKeysGrid" class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+              <!-- Dynamically rendered by app.js (S1 ~ S8) -->
+            </div>
+
+            <!-- Rotary Encoder Card (旋钮 3-in-1 功能卡) -->
+            <div id="unifiedKnobCard" class="p-3.5 rounded-xl bg-orange-50/40 border border-orange-200/80 space-y-2.5">
+              <!-- Dynamically rendered by app.js -->
+            </div>
+
+            <!-- Collapsible Serial Log Terminal -->
+            <div id="serialMonitorContainer" class="hidden p-3 bg-neutral-950 text-emerald-400 font-mono text-[11px] rounded-xl max-h-36 overflow-y-auto space-y-0.5 shadow-inner select-text">
+              <div class="text-neutral-500">// COM3 串口原始报文监视器 (波特率 115200)...</div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Fixed Bottom Status Bar -->
+        <div class="px-6 py-3 md:px-8 border-t border-neutral-100 flex items-center justify-between flex-shrink-0 text-xs text-[#737373] bg-[#FCFCFD]">
+          <div class="flex items-center gap-2 font-medium">
+            <span id="easyInputStatusDot" class="w-2.5 h-2.5 rounded-full bg-neutral-300"></span>
+            <span id="easyInputConnectionStatusText">尚未连接键盘</span>
+            <span class="text-neutral-300 mx-1">|</span>
+            <span class="text-neutral-500 hidden sm:inline">默认串口: COM3 · 波特率: 115200</span>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <span class="text-[11px] text-neutral-400">硬件信号:</span>
+            <span id="liveSerialSignal" class="font-mono text-[11px] font-bold text-neutral-700 px-2 py-0.5 rounded bg-neutral-100 border border-neutral-200">无输入</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- RIGHT: Connection Guide Sidebar (匹配用户官方同款图右侧栏) -->
+      <div class="w-full md:w-[350px] xl:w-[370px] border-t md:border-t-0 md:border-l border-neutral-100 bg-[#FAFAFA] p-6 md:p-8 flex flex-col justify-between flex-shrink-0">
+        
+        <div>
+          <!-- Header with Cable Icon -->
+          <div class="flex items-center gap-2 pb-5 border-b border-neutral-200/60">
+            <i data-lucide="cable" class="w-4 h-4 text-[#ba4d33]"></i>
+            <span class="font-bold text-sm text-[#262626]">键盘连接</span>
+          </div>
+
+          <!-- Section 1: USB Direct -->
+          <div class="mt-5 space-y-1">
+            <div class="flex items-center gap-2 text-xs font-bold text-[#262626]">
+              <i data-lucide="usb" class="w-3.5 h-3.5 text-neutral-600"></i>
+              <span>USB 直接连接</span>
+            </div>
+            <p class="text-xs text-[#737373] leading-relaxed pl-5">
+              用 USB 数据线连接键盘和电脑，App 会自动检测。
+            </p>
+          </div>
+
+          <!-- Section 2: Bluetooth Wireless -->
+          <div class="mt-5 space-y-1">
+            <div class="flex items-center gap-2 text-xs font-bold text-[#262626]">
+              <i data-lucide="bluetooth" class="w-3.5 h-3.5 text-neutral-600"></i>
+              <span>蓝牙无线连接</span>
+            </div>
+            <p class="text-xs text-[#737373] leading-relaxed pl-5">
+              打开键盘，在系统蓝牙中选择 “EasyInput AI”。首次使用可直接配对；已配对设备请点击重新连接。
+            </p>
+          </div>
+
+          <!-- Subtext Note -->
+          <p class="mt-5 text-[11px] text-[#999999] leading-relaxed">
+            蓝牙麦克风不需要配网。Wi-Fi 麦克风与无线开机音效需要键盘网络，连接后可在“网络”页设置。
+          </p>
+
+          <!-- Help Accordion -->
+          <details class="mt-5 group text-xs text-[#525252]">
+            <summary class="cursor-pointer list-none flex items-center gap-1 font-medium hover:text-[#1a1a1a]">
+              <i data-lucide="chevron-right" class="w-3.5 h-3.5 transition-transform group-open:rotate-90"></i>
+              <span>键盘无法连接？</span>
+            </summary>
+            <div class="mt-2 text-[11px] text-[#737373] space-y-1.5 pl-4 border-l-2 border-neutral-200 py-1">
+              <p>• 确保使用支持数据传输的 Type-C 数据线</p>
+              <p>• 确认设备管理器中 COM3 端口正常就绪</p>
+              <p>• 避免其他串口助手程序同时占用 COM3</p>
+            </div>
+          </details>
+        </div>
+
+        <!-- Bottom Action Buttons (Signature #BA4D33 Button + Secondary Re-detect Button) -->
+        <div class="mt-6 pt-4 border-t border-neutral-200/60 space-y-2">
+          <!-- Primary Signature Button: Connect COM3 / Disconnect -->
+          <button id="btnConnectUsbSerial" onclick="toggleConnectEasyInputSerial()" class="w-full py-2.5 px-4 rounded-xl bg-[#ba4d33] hover:bg-[#a6422b] text-white font-semibold text-xs shadow-xs transition flex items-center justify-center gap-2 cursor-pointer active:scale-98">
+            <i data-lucide="usb" class="w-3.5 h-3.5"></i>
+            <span id="btnConnectPrimaryText">连接 USB 串口 (COM3)</span>
+          </button>
+
+          <!-- Bluetooth system settings -->
+          <button onclick="handlePrimaryConnectClick()" class="w-full py-2 px-4 rounded-xl bg-white hover:bg-neutral-50 border border-neutral-200 text-[#404040] font-medium text-xs transition flex items-center justify-center gap-1.5 cursor-pointer active:scale-98">
+            <i data-lucide="bluetooth" class="w-3.5 h-3.5 text-blue-500"></i>
+            <span>打开系统蓝牙设置</span>
+          </button>
+
+          <!-- Re-detect -->
+          <button onclick="recheckEasyInputConnection()" class="w-full py-2 px-4 rounded-xl bg-white hover:bg-neutral-50 border border-neutral-200 text-[#404040] font-medium text-xs transition flex items-center justify-center gap-1.5 cursor-pointer active:scale-98">
+            <i data-lucide="rotate-cw" class="w-3.5 h-3.5 text-neutral-500"></i>
+            <span>重新检测</span>
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- EasyInput 随行状态胶囊 (常驻底部悬浮) -->
+  <div id="easyInputFloatingCapsule" onclick="openKeySettingsModal()" class="fixed bottom-4 left-6 z-30 bg-white/95 backdrop-blur-md border border-neutral-200/90 hover:border-orange-400 shadow-md hover:shadow-lg rounded-full px-3.5 py-1.5 flex items-center gap-2.5 text-xs text-neutral-700 font-medium cursor-pointer transition-all duration-200 hover:scale-102 select-none group" title="点击查看 EasyInput 键盘连接与按键配置">
+    <span id="capsuleDot" class="w-2 h-2 rounded-full bg-neutral-400"></span>
+    <span id="capsuleText" class="font-bold text-neutral-800">EasyInput 未连接</span>
+    <span class="text-neutral-300">|</span>
+    <span id="capsuleHint" class="text-[11px] text-neutral-500 group-hover:text-neutral-700 truncate max-w-[220px] md:max-w-[320px]">点击设置按键或连接 COM3</span>
+    <i data-lucide="sliders-horizontal" class="w-3.5 h-3.5 text-neutral-400 group-hover:text-orange-500 transition-colors ml-0.5 flex-shrink-0"></i>
+
+
+  <!-- EasyInput HUD (Hardware Trigger Floating Pill) -->
+  <div id="easyInputHud" class="fixed top-5 left-1/2 transform -translate-x-1/2 z-50 bg-neutral-900/90 backdrop-blur-md text-white px-4 py-2 rounded-full shadow-2xl border border-neutral-700/50 text-xs font-semibold flex items-center gap-2.5 pointer-events-none transition-all duration-200 opacity-0 -translate-y-4">
+    <div class="w-2 h-2 rounded-full bg-orange-400 animate-pulse"></div>
+    <span id="easyInputHudText">EasyInput 触发</span>
+  </div>
+
+  <!-- Toast -->
+  <div id="toastNotification" class="fixed bottom-6 right-6 z-50 bg-neutral-900 text-white px-4 py-2.5 rounded-xl shadow-xl text-xs font-semibold flex items-center gap-2 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
+    <i data-lucide="info" class="w-4 h-4 text-orange-400"></i>
+    <span id="toastMessage">操作成功</span>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
