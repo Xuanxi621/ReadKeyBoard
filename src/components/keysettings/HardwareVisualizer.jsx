@@ -21,10 +21,10 @@ export default function HardwareVisualizer({
       <div className="w-full flex items-center justify-between text-xs text-neutral-500 mb-2 px-1">
         <span className="font-bold text-neutral-800 flex items-center gap-1.5">
           <Cpu className="w-3.5 h-3.5 text-orange-500" />
-          <span>EasyInput AI 硬件实时态 (8 机械键 + 1 无级旋转编码器)</span>
+          <span>设备预览 · 8 按键 + 1 旋钮</span>
         </span>
         <span className="text-[11px] text-neutral-400 hidden sm:inline">
-          点击键帽直接触发与定位 · 物理按键触发时实时发光
+          点击键帽测试动作并定位设置
         </span>
       </div>
 

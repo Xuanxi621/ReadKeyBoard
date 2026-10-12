@@ -1,6 +1,6 @@
 // EasyInput 研读工作台可用动作注册表
 export const EASYINPUT_ACTIONS = {
-  voiceToText: { name: '语音转文字 (Voice to Text)', icon: 'mic' },
+  voiceInput: { name: '语音输入', icon: 'mic' },
   deleteDoc: { name: '删除当前文档', icon: 'trash-2' },
   enterReading: { name: '进入阅读模式 (Enter Reading)', icon: 'book-open' },
   nextPage: { name: '翻到下一页 (Next Page)', icon: 'chevron-down' },
@@ -26,7 +26,7 @@ export const DEFAULT_HARDWARE_MAP = {
 
   // 8 个独立机械物理按键 S1 ~ S8 (按原厂 EasyInput V2 丝印与硬件 GPIO 严谨对应)
   KEY1: { label: 'S1 按键 (Key 1)', action: 'importPdf', pin: 'GPIO2', type: 'key', fallbackKey: 'u', hidName: 'Ctrl+Shift+Space' },
-  KEY2: { label: 'S2 按键 (Key 2)', action: 'voiceToText', actionVersion: 2, pin: 'GPIO47', type: 'key', fallbackKey: 'Enter', hidName: 'Enter' },
+  KEY2: { label: 'S2 按键 (Key 2)', action: 'voiceInput', actionVersion: 2, pin: 'GPIO47', type: 'key', fallbackKey: 'Enter', hidName: 'Enter' },
   KEY3: { label: 'S3 按键 (Key 3)', action: 'zoomIn', pin: 'GPIO38', type: 'key', fallbackKey: '=', hidName: 'Ctrl+Shift+E' },
   KEY4: { label: 'S4 按键 (Key 4)', action: 'zoomOut', pin: 'GPIO41', type: 'key', fallbackKey: '-', hidName: 'Backspace' },
   KEY5: { label: 'S5 按键 (Key 5)', action: 'returnHome', pin: 'GPIO1', type: 'key', fallbackKey: 'Space', hidName: 'Ctrl+A' },
@@ -47,9 +47,9 @@ export function loadStoredHardwareMap() {
       Object.keys(DEFAULT_HARDWARE_MAP).forEach(token => {
         if (parsed[token]) {
           const item = { ...DEFAULT_HARDWARE_MAP[token], ...parsed[token] };
-          // Apply the S2 voiceToText preset once while preserving its recorded signal.
+          // Apply the requested S2 voice preset once, retaining recorded signals.
           if (token === 'KEY2' && parsed[token].actionVersion !== 2) {
-            item.action = 'voiceToText';
+            item.action = 'voiceInput';
             item.actionVersion = 2;
           }
           // 清理可能误录入的纯修饰键

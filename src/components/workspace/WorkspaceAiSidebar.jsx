@@ -1,4 +1,5 @@
 import React from 'react';
+import { useVoiceInput } from '../../hooks/useVoiceInput.js';
 import {
   MessageSquare,
   FileText,
@@ -11,7 +12,8 @@ import {
   CheckCircle2,
   ListOrdered,
   RefreshCw,
-  Plus
+  Plus,
+  Mic
 } from 'lucide-react';
 
 export default function WorkspaceAiSidebar({
@@ -32,6 +34,7 @@ export default function WorkspaceAiSidebar({
   addNote,
   showToast
 }) {
+  const voice = useVoiceInput(setChatInput, showToast, () => setActiveAiTab('chat'));
   return (
     <div className="w-[420px] xl:w-[460px] flex-shrink-0 bg-white flex flex-col border-l border-neutral-200 transition-all">
       {/* AI Tabs */}
@@ -151,6 +154,9 @@ export default function WorkspaceAiSidebar({
 
           {/* Chat Input */}
           <div className="p-3 border-t border-neutral-200 bg-white">
+            <p role="status" className="mb-2 text-[11px] text-orange-700">
+              {voice.state === 'idle' ? 'S2 语音输入 · 使用电脑麦克风' : voice.state === 'starting' ? '正在启动麦克风…' : '正在听写…再次按 S2 或点击停止'}
+            </p>
             <form
               onSubmit={handleChatSubmit}
               className="relative bg-neutral-100 rounded-xl p-2 border border-neutral-200 focus-within:border-orange-500"
@@ -165,6 +171,7 @@ export default function WorkspaceAiSidebar({
               />
               <div className="flex items-center justify-between pt-1">
                 <div className="flex items-center gap-1.5 text-neutral-400 text-[11px]">
+                  <button type="button" onClick={voice.toggle} aria-label={voice.state === 'idle' ? '开始语音输入' : '停止语音输入'} aria-pressed={voice.state !== 'idle'} className={`p-1.5 rounded-lg ${voice.state === 'idle' ? 'hover:bg-neutral-200' : 'bg-red-50 text-red-600 animate-pulse'}`}><Mic className="w-4 h-4" /></button>
                   <span className="flex items-center gap-1">
                     <Compass className="w-3 h-3 text-orange-500" /> 精准引用定位
                   </span>

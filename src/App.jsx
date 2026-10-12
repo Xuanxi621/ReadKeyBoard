@@ -6,7 +6,6 @@ import FloatingCapsule from './components/FloatingCapsule.jsx';
 import HudNotification from './components/HudNotification.jsx';
 import ToastNotification from './components/ToastNotification.jsx';
 import UploadModal from './components/UploadModal.jsx';
-import VoiceTranscriptionOverlay from './components/VoiceTranscriptionOverlay.jsx';
 
 import { useDocuments } from './hooks/useDocuments.js';
 import { useHardwareController } from './hooks/useHardwareController.js';
@@ -194,9 +193,6 @@ export default function App() {
 
       {/* EasyInput Hardware HUD */}
       <HudNotification message={hudMessage} visible={hudVisible} />
-
-      {/* Voice Transcription Floating Overlay */}
-      <VoiceTranscriptionOverlay />
 
       {/* Toast Notification */}
       <ToastNotification toast={toast} />

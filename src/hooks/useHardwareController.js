@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { createModifierTapTracker, isModifierKey } from '../services/modifierTap.js';
+import { VOICE_INPUT_EVENT } from '../services/voiceInput.js';
 import {
   EASYINPUT_ACTIONS,
   DEFAULT_HARDWARE_MAP,
@@ -18,11 +19,6 @@ import {
   closeHidConnection,
   tryAutoConnectHid
 } from '../services/hidService.js';
-import {
-  toggleSpeechRecognition,
-  stopSpeechRecognition,
-  isCurrentlyListening
-} from '../services/speechService.js';
 
 export function useHardwareController({
   handleDeleteDoc,
@@ -87,32 +83,15 @@ export function useHardwareController({
     }
 
     switch (actionName) {
-      case 'voiceToText': {
-        const isListening = isCurrentlyListening();
-        if (isListening) {
-          stopSpeechRecognition();
-          showToast('🎤 语音输入已结束');
-        } else {
-          const started = toggleSpeechRecognition({
-            onResult: (text) => {
-              window.dispatchEvent(new CustomEvent('orbit-voice-input', { detail: { text } }));
-            },
-            onStatusChange: (listening) => {
-              if (listening) {
-                showToast('🎙️ 语音输入中... 请说话 (再次按 S2 结束)');
-              }
-            },
-            onError: (err) => {
-              showToast(`语音提示: ${err}`);
-            }
-          });
-          if (!started) {
-            showToast('当前浏览器不支持或未开启麦克风权限');
-          }
+      case 'voiceInput':
+        setIsKeyModalOpen(false);
+        isKeyModalOpenRef.current = false;
+        if (isUploadModalOpenRef.current) {
+          showToast('请先完成或关闭文件上传，再使用语音输入');
+          break;
         }
+        window.dispatchEvent(new Event(VOICE_INPUT_EVENT));
         break;
-      }
-
       case 'deleteDoc': {
         const targetDoc = viewRef.current === 'workspace'
           ? currentDocRef.current
@@ -610,17 +589,17 @@ export function useHardwareController({
       if (customBinding) {
         e.preventDefault();
         e.stopPropagation();
-        if (e.repeat && customBinding[1].action === 'deleteDoc') return;
+        if (e.repeat && ['deleteDoc', 'voiceInput'].includes(customBinding[1].action)) return;
         onHardwareTrigger(customBinding[0], '自定义快捷键');
         return;
       }
       let matchedToken = null;
       let matchedLabel = null;
 
-      // 1. S2: 删除当前文档 (Enter / 2 / NumpadEnter)
+      // 1. S2: 用户配置动作 (Enter / 2 / NumpadEnter)
       if (e.key === 'Enter' || e.code === 'Enter' || e.code === 'NumpadEnter' || (!e.ctrlKey && !e.metaKey && e.key === '2')) {
         matchedToken = 'KEY2';
-        matchedLabel = 'S2 (删除文档)';
+        matchedLabel = 'S2';
       }
       // 2. S7: 上一页 (Ctrl+V / PageUp / 7)
       else if (((e.ctrlKey || e.metaKey) && (e.key === 'v' || e.key === 'V')) || e.key === 'PageUp' || (!e.ctrlKey && !e.metaKey && e.key === '7')) {
@@ -686,7 +665,7 @@ export function useHardwareController({
       if (matchedToken) {
         e.preventDefault();
         e.stopPropagation();
-        if (e.repeat && hardwareMap[matchedToken]?.action === 'deleteDoc') return;
+        if (e.repeat && ['deleteDoc', 'voiceInput'].includes(hardwareMap[matchedToken]?.action)) return;
         if (activeEl && activeEl.blur) activeEl.blur();
         onHardwareTrigger(matchedToken, matchedLabel || hardwareMap[matchedToken]?.label);
         return;

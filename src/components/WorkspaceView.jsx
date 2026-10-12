@@ -39,18 +39,6 @@ export default function WorkspaceView({
   const textLayerRef = useRef(null);
   const chatScrollRef = useRef(null);
 
-  // 接收 S2 语音听写文本并填入 AI 输入框
-  useEffect(() => {
-    const handleVoice = (e) => {
-      if (e.detail?.text) {
-        setChatInput(e.detail.text);
-        setActiveAiTab('chat');
-      }
-    };
-    window.addEventListener('orbit-voice-input', handleVoice);
-    return () => window.removeEventListener('orbit-voice-input', handleVoice);
-  }, [setActiveAiTab]);
-
   // Render current PDF page
   useEffect(() => {
     if (!currentDoc || !currentDoc.pdfJsInstance || !canvasRef.current) return;

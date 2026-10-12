@@ -1,4 +1,5 @@
 import React, { useRef } from 'react';
+import { useVoiceInput } from '../../hooks/useVoiceInput.js';
 import {
   Keyboard,
   UploadCloud,
@@ -26,6 +27,7 @@ export default function CentralConsole({
   showToast
 }) {
   const fileInputRef = useRef(null);
+  const voice = useVoiceInput(setPromptText, showToast);
 
   const handleFileInputChange = (e) => {
     if (e.target.files && e.target.files.length > 0) {
@@ -77,6 +79,9 @@ export default function CentralConsole({
         )}
 
         {/* Textarea */}
+        <p role="status" className="mb-2 text-[11px] text-orange-700">
+          {voice.state === 'idle' ? 'S2 语音输入 · 使用电脑麦克风' : voice.state === 'starting' ? '正在启动麦克风…再次按 S2 可停止' : '正在听写…再次按 S2 或点击麦克风停止'}
+        </p>
         <textarea
           rows={2}
           value={promptText}
@@ -148,8 +153,12 @@ export default function CentralConsole({
 
           <div className="flex items-center gap-2">
             <button
-              onClick={() => showToast('语音研读指令已待命')}
-              className="p-1.5 rounded-md text-neutral-400 hover:text-neutral-700 hover:bg-neutral-100 cursor-pointer"
+              type="button"
+              onClick={voice.toggle}
+              aria-label={voice.state === 'idle' ? '开始语音输入' : '停止语音输入'}
+              aria-pressed={voice.state !== 'idle'}
+              title="S2 语音输入：开始 / 停止"
+              className={`p-1.5 rounded-md cursor-pointer ${voice.state === 'idle' ? 'text-neutral-500 hover:bg-neutral-100' : 'text-red-600 bg-red-50 animate-pulse'}`}
             >
               <Mic className="w-4 h-4" />
             </button>

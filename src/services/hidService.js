@@ -27,33 +27,52 @@ export async function openHidConnection(onTokenReceived, onLogReceived, onStatus
   }
 
   // 1. 尝试复用已授权设备
+  // 1. 获取已授权设备
   const existingDevices = await navigator.hid.getDevices();
-  let matched = existingDevices.find(d => d.vendorId === 0x303a);
+  let matchedList = existingDevices.filter(d => d.vendorId === 0x303a);
 
   // 2. 若无历史设备，弹窗供用户选择
-  if (!matched) {
+  if (matchedList.length === 0) {
     const selected = await navigator.hid.requestDevice({
       filters: [{ vendorId: 0x303a }]
     });
     if (!selected || selected.length === 0) return false;
-    matched = selected[0];
+    matchedList = selected;
   }
 
-  if (!matched) return false;
+  if (matchedList.length === 0) return false;
 
-  if (!matched.opened) {
-    await matched.open();
+  // 寻找拥有 Feature Report 0x10 或 vendor usage page 0xFF00 的集合设备
+  let targetDevice = matchedList.find(d => 
+    d.collections?.some(c => 
+      c.usagePage === 0xFF00 || 
+      c.featureReports?.some(r => r.reportId === 0x10)
+    )
+  ) || matchedList[0];
+
+  // 打开匹配到的所有 EasyInput 集合节点，确保按键上报和配网配置双通
+  for (const dev of matchedList) {
+    if (!dev.opened) {
+      try {
+        await dev.open();
+      } catch (e) {
+        console.warn('HID 打开失败:', dev, e);
+      }
+    }
   }
 
-  hidDevice = matched;
+  hidDevice = targetDevice;
   hidConnected = true;
   if (onStatusChanged) onStatusChanged(true);
 
   if (onLogReceived) {
-    onLogReceived(`[WebHID] 已成功连接 EasyInput: ${matched.productName || 'ESP32-S3'} (VID: 0x${matched.vendorId.toString(16)}, PID: 0x${matched.productId.toString(16)})`);
+    onLogReceived(`[WebHID] 已连接 EasyInput: ${targetDevice.productName || 'ESP32-S3'} (VID: 0x${targetDevice.vendorId.toString(16)}, PID: 0x${targetDevice.productId.toString(16)}, 集合数: ${matchedList.length})`);
   }
 
-  attachInputListener(matched, onTokenReceived, onLogReceived);
+  // 为所有打开的设备挂载输入监听
+  for (const dev of matchedList) {
+    attachInputListener(dev, onTokenReceived, onLogReceived);
+  }
 
   return true;
 }
@@ -115,6 +134,20 @@ function attachInputListener(device, onTokenReceived, onLogReceived) {
           onTokenReceived(actionStr, 'WebHID 指令');
         }
       }
+
+      // 3. Config ACK (cmdKind 0x01)
+      if (cmdKind === 0x01 && data.byteLength >= 8) {
+        const ok = data.getUint8(2) === 1;
+        const saved = data.getUint8(7) === 1;
+        onLogReceived?.(`[WebHID 配置回执] 固件写入: ${ok ? '成功' : '失败'}, 已持久化: ${saved ? '是' : '否'}`);
+      }
+
+      // 4. Status Response JSON (cmdKind 0x04)
+      if (cmdKind === 0x04 && data.byteLength >= 13) {
+        const chunkIndex = data.getUint8(10);
+        const totalChunks = data.getUint8(11);
+        onLogReceived?.(`[WebHID 状态响应] 分片 ${chunkIndex + 1}/${totalChunks}`);
+      }
     }
   };
   device.addEventListener('inputreport', inputReportHandler);
@@ -157,4 +190,8 @@ export async function closeHidConnection(onStatusChanged) {
 
 export function isHidConnected() {
   return hidConnected;
+}
+
+export function getHidDevice() {
+  return hidDevice;
 }

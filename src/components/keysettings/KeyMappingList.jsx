@@ -26,18 +26,18 @@ export default function KeyMappingList({
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <Sliders className="w-4 h-4 text-orange-500" />
-          <h3 className="font-bold text-sm text-neutral-900">按键动作调配矩阵</h3>
-          <span className="text-[11px] text-neutral-400">选择下拉动作即时生效</span>
+          <h3 className="font-bold text-sm text-neutral-900">按键与旋钮映射</h3>
+          <span className="text-[11px] text-neutral-400">修改后在本网页生效</span>
         </div>
         <button
           onClick={() => setShowSerialMonitor(!showSerialMonitor)}
           className="text-[11px] text-neutral-500 hover:text-orange-600 flex items-center gap-1 font-medium transition cursor-pointer"
         >
           <Terminal className="w-3.5 h-3.5" />
-          <span>{showSerialMonitor ? '隐藏串口日志' : '查看串口日志'}</span>
+          <span>{showSerialMonitor ? '收起输入日志' : '查看输入日志'}</span>
         </button>
       </div>
 
@@ -169,12 +169,11 @@ export default function KeyMappingList({
               <RotateCw className="w-4 h-4" />
             </div>
             <div>
-              <span className="font-bold text-xs text-neutral-900 hover:text-orange-600 transition-colors">无级旋转编码器 (Knob Encoder)</span>
-              <span className="text-[10px] text-neutral-500 ml-2">引脚: GPIO16/17 (旋转) · GPIO18 (按压)</span>
+              <span className="font-bold text-xs text-neutral-900 hover:text-orange-600 transition-colors">旋钮操作</span>
             </div>
           </div>
           <span className="text-[10px] text-orange-600 bg-orange-100/80 font-bold px-2 py-0.5 rounded-full">
-            3 向复合操控
+            旋转 · 按下
           </span>
         </div>
 
