@@ -128,15 +128,16 @@ export default function UniverseView({
 
   return (
     <div
-      className="relative flex-1 flex flex-col justify-between overflow-hidden bg-gradient-to-b from-[#EBF4FC] via-[#F4F9FE] to-[#FBFBFD] select-none"
+      className="relative flex-1 flex flex-col justify-between overflow-hidden bg-gradient-to-b from-[#E7F3FE] via-[#F2F8FD] to-[#FAFBFD] select-none"
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
     >
-      {/* Ethereal Light-Blue Ambient Aurora Spheres */}
-      <div className="absolute top-[-15%] left-[25%] w-[680px] h-[520px] bg-sky-200/40 rounded-full blur-[140px] pointer-events-none" />
-      <div className="absolute bottom-[-15%] right-[10%] w-[620px] h-[520px] bg-indigo-100/35 rounded-full blur-[130px] pointer-events-none" />
-      <div className="absolute top-[35%] left-[-12%] w-[480px] h-[480px] bg-blue-100/35 rounded-full blur-[110px] pointer-events-none" />
+      {/* Ethereal Apple Light-Blue Ambient Aurora Mesh */}
+      <div className="absolute top-[-20%] left-[20%] w-[780px] h-[580px] bg-sky-200/45 rounded-full blur-[140px] pointer-events-none" />
+      <div className="absolute bottom-[-15%] right-[8%] w-[680px] h-[560px] bg-indigo-100/40 rounded-full blur-[140px] pointer-events-none" />
+      <div className="absolute top-[25%] left-[-15%] w-[520px] h-[520px] bg-blue-100/40 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_40%,rgba(186,230,253,0.3)_0%,rgba(240,249,255,0)_70%)] pointer-events-none" />
 
       {/* Top Area */}
       <header className="w-full px-8 py-5 flex items-center justify-end z-30 flex-shrink-0 font-ui">
@@ -162,15 +163,15 @@ export default function UniverseView({
           <svg className="w-[1040px] h-[660px] overflow-visible max-w-none" viewBox="0 0 1000 650" fill="none">
             <defs>
               <linearGradient id="orbitArcGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="#0071E3" stopOpacity="0.45" />
-                <stop offset="35%" stopColor="#38BDF8" stopOpacity="0.28" />
-                <stop offset="70%" stopColor="#818CF8" stopOpacity="0.38" />
-                <stop offset="100%" stopColor="#0071E3" stopOpacity="0.12" />
+                <stop offset="0%" stopColor="#0071E3" stopOpacity="0.55" />
+                <stop offset="30%" stopColor="#38BDF8" stopOpacity="0.35" />
+                <stop offset="70%" stopColor="#818CF8" stopOpacity="0.45" />
+                <stop offset="100%" stopColor="#0071E3" stopOpacity="0.20" />
               </linearGradient>
               <linearGradient id="orbitArcGrad2" x1="100%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" stopColor="#38BDF8" stopOpacity="0.32" />
-                <stop offset="50%" stopColor="#818CF8" stopOpacity="0.15" />
-                <stop offset="100%" stopColor="#0284C7" stopOpacity="0.28" />
+                <stop offset="0%" stopColor="#38BDF8" stopOpacity="0.38" />
+                <stop offset="50%" stopColor="#818CF8" stopOpacity="0.18" />
+                <stop offset="100%" stopColor="#0284C7" stopOpacity="0.32" />
               </linearGradient>
               <filter id="orbitGlowEffect" x="-20%" y="-20%" width="140%" height="140%">
                 <feGaussianBlur stdDeviation="3.5" result="blur" />
@@ -181,48 +182,49 @@ export default function UniverseView({
               </filter>
             </defs>
 
-            {/* Outer Primary Orbital Track Arc */}
+            {/* Primary Matched Orbital Track Arc (与卡片真实3D轨迹严密贴合) */}
             <ellipse
               cx="500"
-              cy="325"
-              rx="440"
-              ry="260"
+              cy="313"
+              rx="430"
+              ry="150"
               stroke="url(#orbitArcGrad1)"
-              strokeWidth="1.8"
-              strokeDasharray="8 6"
+              strokeWidth="2"
+              strokeDasharray="9 7"
               filter="url(#orbitGlowEffect)"
               className="orbit-arc-breathing"
             />
 
-            {/* Secondary Auxiliary Orbit Arc */}
+            {/* Outer Secondary Auxiliary Orbit Arc */}
             <ellipse
               cx="500"
-              cy="325"
-              rx="348"
-              ry="206"
+              cy="313"
+              rx="475"
+              ry="165"
               stroke="url(#orbitArcGrad2)"
               strokeWidth="1.2"
-              strokeDasharray="5 7"
-              opacity="0.65"
+              strokeDasharray="5 9"
+              opacity="0.60"
               className="orbit-arc-breathing-delayed"
             />
 
-            {/* Inner Core Focus Track */}
+            {/* Inner Resonant Focus Track */}
             <ellipse
               cx="500"
-              cy="325"
-              rx="245"
-              ry="145"
-              stroke="rgba(0, 113, 227, 0.16)"
+              cy="313"
+              rx="330"
+              ry="115"
+              stroke="rgba(0, 113, 227, 0.18)"
               strokeWidth="1"
-              strokeDasharray="3 5"
+              strokeDasharray="4 6"
             />
 
-            {/* Luminous Orbital Celestial Nodes */}
-            <circle cx="940" cy="325" r="3" fill="#0071E3" opacity="0.65" className="animate-ping" />
-            <circle cx="60" cy="325" r="2.5" fill="#38BDF8" opacity="0.75" />
-            <circle cx="500" cy="65" r="3" fill="#818CF8" opacity="0.65" />
-            <circle cx="500" cy="585" r="2.5" fill="#0071E3" opacity="0.55" />
+            {/* Luminous Orbital Celestial Nodes (星轨呼吸光点) */}
+            <circle cx="930" cy="313" r="3.5" fill="#0071E3" opacity="0.75" className="animate-ping" />
+            <circle cx="930" cy="313" r="2.5" fill="#38BDF8" />
+            <circle cx="70" cy="313" r="3" fill="#38BDF8" opacity="0.80" />
+            <circle cx="500" cy="163" r="2.5" fill="#818CF8" opacity="0.65" />
+            <circle cx="500" cy="463" r="3.5" fill="#0071E3" opacity="0.75" />
           </svg>
         </div>
 

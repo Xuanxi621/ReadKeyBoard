@@ -76,7 +76,7 @@ body {
 
 /* Orbit Stage */
 #orbitStage {
-  perspective: 1400px;
+  perspective: 1200px;
   transform-style: preserve-3d;
   touch-action: pan-y;
   cursor: grab;
@@ -85,7 +85,7 @@ body {
   cursor: grabbing;
 }
 
-/* Scattered Fragmented Paper Cards (零碎纸质卡片) */
+/* Scattered Fragmented Paper Cards (零碎纸质卡片) with Optical 3D DOF */
 .orbit-card {
   position: absolute;
   top: 50%;
@@ -93,7 +93,7 @@ body {
   transform-style: preserve-3d;
   cursor: pointer;
   pointer-events: auto;
-  will-change: transform, opacity, z-index;
+  will-change: transform, opacity, z-index, filter;
   user-select: none;
   -webkit-user-select: none;
   transition: box-shadow 0.25s ease, border-color 0.25s ease;

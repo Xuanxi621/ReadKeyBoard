@@ -23,22 +23,42 @@ export default function OrbitCard({
   };
 
   const cardAngle = orbitAngle + cProps.orbitOffset;
-  const waveX = Math.sin(cardAngle * 2 + index) * 20;
-  const waveY = Math.cos(cardAngle * 2 + index) * 15;
+  const waveX = Math.sin(cardAngle * 2 + index) * 16;
+  const waveY = Math.cos(cardAngle * 2 + index) * 12;
   const rx = cProps.radiusX + waveX;
   const ry = cProps.radiusY + waveY;
-  const x = Math.cos(cardAngle) * rx;
-  const y = Math.sin(cardAngle) * ry;
   const sinA = Math.sin(cardAngle);
-  const dynamicTilt = cProps.baseTilt + -Math.cos(cardAngle) * 16;
+  const cosA = Math.cos(cardAngle);
+
+  // 3D Spatial Position: cards travel along an inclined celestial ellipse
+  const x = cosA * rx;
+  const y = sinA * (ry * 0.58) - 12;
+  // True Z-depth: -240px (deep background behind console) to +220px (foreground in front of console)
+  const z = sinA * 230;
+
+  // Depth ratio: 0 (furthest back) to 1 (closest front)
   const depthRatio = (sinA + 1) / 2;
+
   const isHovered = hoveredCardIndex === index;
   const isSelected = selectedDocIndex === index;
   const isCardActive = isHovered || isSelected;
 
-  const scale = isCardActive ? 1.30 : 0.88 + depthRatio * 0.24;
-  const zIndex = isCardActive ? 75 : sinA > 0.08 ? 35 : 10;
-  const opacity = isCardActive ? 1 : 0.88 + depthRatio * 0.12;
+  // 3D Spatial Perspective Rotation (Yaw, Pitch, Roll)
+  const rotY = cosA * -18; // yaw towards camera/focus
+  const rotX = 12 - sinA * 8; // subtle perspective pitch
+  const rotZ = cProps.baseTilt + -cosA * 12; // dynamic roll tilt
+
+  // Optical 3D Depth of Field (景深):
+  // Background cards suffer optical Gaussian blur and lower contrast; foreground and active cards are razor sharp
+  const blurPx = isCardActive ? 0 : Math.max(0, (1 - depthRatio) * 5.2);
+  const brightness = isCardActive ? 1.04 : 0.86 + depthRatio * 0.16;
+  const contrast = isCardActive ? 1.02 : 0.88 + depthRatio * 0.14;
+
+  // Perspective Scale & Opacity
+  const scale = isCardActive ? 1.28 : 0.72 + depthRatio * 0.40;
+  // Precise z-index: background cards (<20) travel physically behind console (z-20); foreground cards (>25) pass in front
+  const zIndex = isCardActive ? 90 : Math.round(depthRatio * 50) + 10;
+  const opacity = isCardActive ? 1 : 0.58 + depthRatio * 0.42;
 
   const handleCardClick = (e) => {
     e.stopPropagation();
@@ -54,17 +74,23 @@ export default function OrbitCard({
         height: `${cProps.h}px`,
         marginTop: `-${cProps.h / 2}px`,
         marginLeft: `-${cProps.w / 2}px`,
-        transform: `translate3d(${x}px, ${y}px, 0px) rotate(${dynamicTilt}deg) scale(${scale})`,
+        transform: `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, ${z.toFixed(1)}px) rotateX(${rotX.toFixed(1)}deg) rotateY(${rotY.toFixed(1)}deg) rotateZ(${rotZ.toFixed(1)}deg) scale(${scale.toFixed(2)})`,
+        filter: blurPx > 0.1
+          ? `blur(${blurPx.toFixed(1)}px) brightness(${brightness.toFixed(2)}) contrast(${contrast.toFixed(2)})`
+          : `brightness(${brightness.toFixed(2)}) contrast(${contrast.toFixed(2)})`,
         zIndex: zIndex,
-        opacity: opacity
+        opacity: opacity,
+        transition: isHovered || isSelected ? 'box-shadow 0.25s ease, filter 0.2s ease, border-color 0.2s ease' : 'none'
       }}
       onClick={handleCardClick}
     >
       <div
         className={`orbit-card-inner group transition-all duration-200 ${
           isCardActive
-            ? 'ring-4 ring-[#0071E3]/85 shadow-[0_20px_45px_rgba(0,113,227,0.22)] border-[#0071E3]'
-            : ''
+            ? 'ring-4 ring-[#0071E3]/85 shadow-[0_24px_50px_rgba(0,113,227,0.25)] border-[#0071E3]'
+            : depthRatio > 0.65
+            ? 'shadow-[0_16px_36px_-6px_rgba(0,0,0,0.12),0_4px_12px_rgba(0,0,0,0.04)] border-black/[0.08]'
+            : 'shadow-[0_6px_18px_-4px_rgba(0,0,0,0.05)] border-black/[0.04]'
         }`}
         onMouseEnter={() => {
           onHoverCard(index);
