@@ -112,14 +112,14 @@ export function useDocuments({ showToast, setView, viewRef }) {
           const pdf = await loadPdfDocument(arrayBuffer);
           const coverThumbnail = await generateCoverThumbnail(pdf);
 
-          const baseW = 120 + (Math.random() * 16 - 8);
-          const baseH = baseW * 1.36;
+          const baseW = 136 + (Math.random() * 12 - 6);
+          const baseH = baseW * 1.35;
           const cardProps = {
             w: Math.round(baseW),
             h: Math.round(baseH),
-            baseTilt: Math.random() * 40 - 20,
-            radiusX: 430 + (Math.random() * 40 - 20),
-            radiusY: 260 + (Math.random() * 30 - 15),
+            baseTilt: Math.random() * 24 - 12,
+            radiusX: 590 + (Math.random() * 30 - 15),
+            radiusY: 260 + (Math.random() * 20 - 10),
             orbitOffset: Math.random() * Math.PI * 2
           };
 

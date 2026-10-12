@@ -158,9 +158,9 @@ export default function UniverseView({
         onTouchStart={handleStageMouseDown}
         className="relative flex-1 w-full flex items-center justify-center overflow-hidden"
       >
-        {/* Luminous Orbital Trajectory Arc Rings (星轨椭圆弧线与呼吸光环) */}
+        {/* Luminous Orbital Trajectory Arc Rings (大幅扩容星轨半径，完全绕开中央对话框与标题) */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
-          <svg className="w-[1040px] h-[660px] overflow-visible max-w-none" viewBox="0 0 1000 650" fill="none">
+          <svg className="w-[1440px] h-[780px] overflow-visible max-w-none" viewBox="0 0 1440 780" fill="none">
             <defs>
               <linearGradient id="orbitArcGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
                 <stop offset="0%" stopColor="#0071E3" stopOpacity="0.55" />
@@ -182,49 +182,49 @@ export default function UniverseView({
               </filter>
             </defs>
 
-            {/* Primary Matched Orbital Track Arc (与卡片真实3D轨迹严密贴合) */}
+            {/* Primary Matched Orbital Track Arc (与卡片真实3D轨迹严密贴合，完全绕开中央输入框) */}
             <ellipse
-              cx="500"
-              cy="313"
-              rx="430"
-              ry="150"
+              cx="720"
+              cy="382"
+              rx="590"
+              ry="260"
               stroke="url(#orbitArcGrad1)"
               strokeWidth="2"
-              strokeDasharray="9 7"
+              strokeDasharray="10 8"
               filter="url(#orbitGlowEffect)"
               className="orbit-arc-breathing"
             />
 
             {/* Outer Secondary Auxiliary Orbit Arc */}
             <ellipse
-              cx="500"
-              cy="313"
-              rx="475"
-              ry="165"
+              cx="720"
+              cy="382"
+              rx="645"
+              ry="285"
               stroke="url(#orbitArcGrad2)"
               strokeWidth="1.2"
-              strokeDasharray="5 9"
+              strokeDasharray="6 10"
               opacity="0.60"
               className="orbit-arc-breathing-delayed"
             />
 
             {/* Inner Resonant Focus Track */}
             <ellipse
-              cx="500"
-              cy="313"
-              rx="330"
-              ry="115"
+              cx="720"
+              cy="382"
+              rx="535"
+              ry="235"
               stroke="rgba(0, 113, 227, 0.18)"
               strokeWidth="1"
               strokeDasharray="4 6"
             />
 
             {/* Luminous Orbital Celestial Nodes (星轨呼吸光点) */}
-            <circle cx="930" cy="313" r="3.5" fill="#0071E3" opacity="0.75" className="animate-ping" />
-            <circle cx="930" cy="313" r="2.5" fill="#38BDF8" />
-            <circle cx="70" cy="313" r="3" fill="#38BDF8" opacity="0.80" />
-            <circle cx="500" cy="163" r="2.5" fill="#818CF8" opacity="0.65" />
-            <circle cx="500" cy="463" r="3.5" fill="#0071E3" opacity="0.75" />
+            <circle cx="1310" cy="382" r="3.5" fill="#0071E3" opacity="0.75" className="animate-ping" />
+            <circle cx="1310" cy="382" r="2.5" fill="#38BDF8" />
+            <circle cx="130" cy="382" r="3" fill="#38BDF8" opacity="0.80" />
+            <circle cx="720" cy="122" r="2.5" fill="#818CF8" opacity="0.65" />
+            <circle cx="720" cy="642" r="3.5" fill="#0071E3" opacity="0.75" />
           </svg>
         </div>
 

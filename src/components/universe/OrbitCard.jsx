@@ -14,27 +14,33 @@ export default function OrbitCard({
   onDeleteDoc
 }) {
   const cProps = doc.cardProps || {
-    w: 120,
-    h: 160,
+    w: 136,
+    h: 184,
     baseTilt: 0,
-    radiusX: 430,
+    radiusX: 590,
     radiusY: 260,
     orbitOffset: (index / Math.max(1, totalDocs)) * Math.PI * 2
   };
 
   const cardAngle = orbitAngle + cProps.orbitOffset;
-  const waveX = Math.sin(cardAngle * 2 + index) * 16;
-  const waveY = Math.cos(cardAngle * 2 + index) * 12;
-  const rx = cProps.radiusX + waveX;
-  const ry = cProps.radiusY + waveY;
+  const waveX = Math.sin(cardAngle * 2 + index) * 14;
+  const waveY = Math.cos(cardAngle * 2 + index) * 10;
+
+  // Enforce spacious orbit dimensions so cards orbit gracefully outside the central dialog box without covering it
+  const cardW = Math.max(132, cProps.w || 136);
+  const cardH = Math.max(178, cProps.h || 184);
+  const baseRx = Math.max(590, (cProps.radiusX ? cProps.radiusX * 1.38 : 590));
+  const baseRy = Math.max(260, (cProps.radiusY ? cProps.radiusY * 1.02 : 260));
+  const rx = baseRx + waveX;
+  const ry = baseRy + waveY;
   const sinA = Math.sin(cardAngle);
   const cosA = Math.cos(cardAngle);
 
-  // 3D Spatial Position: cards travel along an inclined celestial ellipse
+  // 3D Spatial Position: cards travel along a wide inclined celestial ellipse completely outside the dialog box
   const x = cosA * rx;
-  const y = sinA * (ry * 0.58) - 12;
-  // True Z-depth: -240px (deep background behind console) to +220px (foreground in front of console)
-  const z = sinA * 230;
+  const y = sinA * ry - 8;
+  // Z-depth: -180px (deep background behind console) to +180px (foreground in front of console)
+  const z = sinA * 180;
 
   // Depth ratio: 0 (furthest back) to 1 (closest front)
   const depthRatio = (sinA + 1) / 2;
@@ -44,21 +50,21 @@ export default function OrbitCard({
   const isCardActive = isHovered || isSelected;
 
   // 3D Spatial Perspective Rotation (Yaw, Pitch, Roll)
-  const rotY = cosA * -18; // yaw towards camera/focus
-  const rotX = 12 - sinA * 8; // subtle perspective pitch
-  const rotZ = cProps.baseTilt + -cosA * 12; // dynamic roll tilt
+  const rotY = cosA * -15; // gentle yaw towards camera/focus
+  const rotX = 10 - sinA * 6; // subtle perspective pitch
+  const rotZ = (cProps.baseTilt || 0) * 0.65 + -cosA * 10; // controlled roll tilt
 
   // Optical 3D Depth of Field (景深):
-  // Background cards suffer optical Gaussian blur and lower contrast; foreground and active cards are razor sharp
-  const blurPx = isCardActive ? 0 : Math.max(0, (1 - depthRatio) * 5.2);
-  const brightness = isCardActive ? 1.04 : 0.86 + depthRatio * 0.16;
-  const contrast = isCardActive ? 1.02 : 0.88 + depthRatio * 0.14;
+  // Very gentle softening (max 0.6px ~ 0.8px) so document cover and text NEVER get blurry or illegible!
+  const blurPx = isCardActive ? 0 : Math.max(0, (1 - depthRatio) * 0.7);
+  const brightness = isCardActive ? 1.02 : 0.94 + depthRatio * 0.08;
+  const contrast = isCardActive ? 1.0 : 0.96 + depthRatio * 0.04;
 
-  // Perspective Scale & Opacity
-  const scale = isCardActive ? 1.28 : 0.72 + depthRatio * 0.40;
+  // Perspective Scale & Opacity: maintain readable, generous size without squishing
+  const scale = isCardActive ? 1.18 : 0.90 + depthRatio * 0.18;
   // Precise z-index: background cards (<20) travel physically behind console (z-20); foreground cards (>25) pass in front
   const zIndex = isCardActive ? 90 : Math.round(depthRatio * 50) + 10;
-  const opacity = isCardActive ? 1 : 0.58 + depthRatio * 0.42;
+  const opacity = isCardActive ? 1 : 0.82 + depthRatio * 0.18;
 
   const handleCardClick = (e) => {
     e.stopPropagation();
@@ -70,10 +76,10 @@ export default function OrbitCard({
       key={doc.id}
       className="orbit-card pointer-events-auto"
       style={{
-        width: `${cProps.w}px`,
-        height: `${cProps.h}px`,
-        marginTop: `-${cProps.h / 2}px`,
-        marginLeft: `-${cProps.w / 2}px`,
+        width: `${cardW}px`,
+        height: `${cardH}px`,
+        marginTop: `-${cardH / 2}px`,
+        marginLeft: `-${cardW / 2}px`,
         transform: `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, ${z.toFixed(1)}px) rotateX(${rotX.toFixed(1)}deg) rotateY(${rotY.toFixed(1)}deg) rotateZ(${rotZ.toFixed(1)}deg) scale(${scale.toFixed(2)})`,
         filter: blurPx > 0.1
           ? `blur(${blurPx.toFixed(1)}px) brightness(${brightness.toFixed(2)}) contrast(${contrast.toFixed(2)})`
@@ -111,7 +117,7 @@ export default function OrbitCard({
         {/* Cover Thumbnail */}
         <div
           className="relative w-full overflow-hidden bg-neutral-50 flex-shrink-0"
-          style={{ height: `${cProps.h - 48}px` }}
+          style={{ height: `${cardH - 48}px` }}
         >
           {doc.coverThumbnail ? (
             <img
