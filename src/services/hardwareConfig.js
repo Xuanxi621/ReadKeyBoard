@@ -26,7 +26,7 @@ export const DEFAULT_HARDWARE_MAP = {
 
   // 8 个独立机械物理按键 S1 ~ S8 (按原厂 EasyInput V2 丝印与硬件 GPIO 严谨对应)
   KEY1: { label: 'S1 按键 (Key 1)', action: 'importPdf', pin: 'GPIO2', type: 'key', fallbackKey: 'u', hidName: 'Ctrl+Shift+Space' },
-  KEY2: { label: 'S2 按键 (Key 2)', action: 'voiceInput', actionVersion: 2, pin: 'GPIO47', type: 'key', fallbackKey: 'Enter', hidName: 'Enter' },
+  KEY2: { label: 'S2 按键 (Key 2)', action: 'voiceInput', actionVersion: 3, pin: 'GPIO47', type: 'key', fallbackKey: 'MetaLeft', hidName: 'MetaLeft / Enter' },
   KEY3: { label: 'S3 按键 (Key 3)', action: 'zoomIn', pin: 'GPIO38', type: 'key', fallbackKey: '=', hidName: 'Ctrl+Shift+E' },
   KEY4: { label: 'S4 按键 (Key 4)', action: 'zoomOut', pin: 'GPIO41', type: 'key', fallbackKey: '-', hidName: 'Backspace' },
   KEY5: { label: 'S5 按键 (Key 5)', action: 'returnHome', pin: 'GPIO1', type: 'key', fallbackKey: 'Space', hidName: 'Ctrl+A' },
@@ -48,9 +48,12 @@ export function loadStoredHardwareMap() {
         if (parsed[token]) {
           const item = { ...DEFAULT_HARDWARE_MAP[token], ...parsed[token] };
           // Apply the requested S2 voice preset once, retaining recorded signals.
-          if (token === 'KEY2' && parsed[token].actionVersion !== 2) {
+          if (token === 'KEY2' && parsed[token].actionVersion !== 3) {
             item.action = 'voiceInput';
-            item.actionVersion = 2;
+            if (item.fallbackKey === 'Enter' || !item.fallbackKey) {
+              item.fallbackKey = 'MetaLeft';
+            }
+            item.actionVersion = 3;
           }
           // 清理可能误录入的纯修饰键
           if (['Control', 'Shift', 'Alt', 'Meta', 'undefined', 'null'].includes(item.fallbackKey)) {
@@ -81,6 +84,7 @@ export function normalizeToken(token) {
   if (str === 'ENCLEFT' || str === 'ENCODERLEFT' || str === 'ENCCCW') return 'ENC_LEFT';
   if (str === 'ENCRIGHT' || str === 'ENCODER_RIGHT' || str === 'ENCCW') return 'ENC_RIGHT';
   if (str === 'ENCPRESS' || str === 'ENCODERPRESS' || str === 'ENCCLICK') return 'ENC_PRESS';
+  if (str === 'METALEFT' || str === 'METARIGHT' || str === 'WIN' || str === 'META') return 'KEY2';
   const m = str.match(/^(KEY|S|K)?([1-8])$/);
   if (m) return 'KEY' + m[2];
   return str;

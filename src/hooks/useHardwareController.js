@@ -51,10 +51,12 @@ export function useHardwareController({
   const [liveSignal, setLiveSignal] = useState('无输入');
 
   const hardwareMapRef = useRef(hardwareMap);
+  const recordingTokenRef = useRef(recordingToken);
   const lastTokenTriggerTimeRef = useRef({});
   const lastAnyTriggerTimeRef = useRef(0);
 
   useEffect(() => { hardwareMapRef.current = hardwareMap; }, [hardwareMap]);
+  useEffect(() => { recordingTokenRef.current = recordingToken; }, [recordingToken]);
 
   // Execute Action triggered by hardware
   const executeAction = useCallback((actionName, sourceLabel = 'EasyInput') => {
@@ -453,6 +455,36 @@ export function useHardwareController({
       const phase = e.type === 'keyup' ? '松开' : '按下';
       setLiveSignal(`键盘${phase}：${signal}`);
       setSerialLogs(prev => [`[键盘${phase}] ${signal} · 焦点=${e.target?.tagName || '未知'}`, ...prev].slice(0, 50));
+
+      // 处于改键录制状态时，在顶层捕获阶段立即完成录制，防止被任何按钮焦点或操作系统快捷键拦截
+      if (recordingTokenRef.current && e.type === 'keydown') {
+        if (e.key === 'Escape' && !e.ctrlKey && !e.altKey && !e.shiftKey && recordingTokenRef.current !== 'ENC_PRESS') {
+          e.preventDefault();
+          e.stopPropagation();
+          setRecordingToken(null);
+          showToast('已取消改键');
+          return;
+        }
+
+        const targetCode = e.code || e.key;
+        e.preventDefault();
+        e.stopPropagation();
+
+        const tokenToUpdate = recordingTokenRef.current;
+        const updated = {
+          ...hardwareMapRef.current,
+          [tokenToUpdate]: {
+            ...hardwareMapRef.current[tokenToUpdate],
+            fallbackKey: targetCode
+          }
+        };
+        hardwareMapRef.current = updated;
+        setHardwareMap(updated);
+        saveStoredHardwareMap(updated);
+        showToast(`已重设 ${updated[tokenToUpdate]?.label || tokenToUpdate} 快捷键为: ${targetCode}`);
+        setRecordingToken(null);
+        return;
+      }
     };
     window.addEventListener('keydown', inspectKey, true);
     window.addEventListener('keyup', inspectKey, true);
@@ -460,7 +492,7 @@ export function useHardwareController({
       window.removeEventListener('keydown', inspectKey, true);
       window.removeEventListener('keyup', inspectKey, true);
     };
-  }, [isKeyModalOpenRef]);
+  }, [isKeyModalOpenRef, showToast]);
 
   useEffect(() => {
     // 键位格式化工具函数
