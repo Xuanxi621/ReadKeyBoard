@@ -90,7 +90,9 @@ export default function App() {
     onHardwareTrigger,
     toggleConnectSerial,
     handleUpdateHardwareAction,
-    handleResetDefaults
+    handleResetDefaults,
+    handleSaveAsDefault,
+    handleResetSingleKey
   } = useHardwareController({
     handleDeleteDoc,
     viewRef,
@@ -207,6 +209,8 @@ export default function App() {
         hardwareMap={hardwareMap}
         onUpdateHardwareAction={handleUpdateHardwareAction}
         onResetDefaults={handleResetDefaults}
+        onSaveAsDefault={handleSaveAsDefault}
+        onResetSingleKey={handleResetSingleKey}
         serialConnected={serialConnected}
         isDeviceConnected={isDeviceConnected}
         onToggleConnectSerial={() => toggleConnectSerial(false)}

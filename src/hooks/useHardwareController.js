@@ -825,8 +825,28 @@ export function useHardwareController({
     const defaults = JSON.parse(JSON.stringify(DEFAULT_HARDWARE_MAP));
     setHardwareMap(defaults);
     saveStoredHardwareMap(defaults);
-    showToast('已恢复 EasyInput 默认推荐键位');
+    showToast('已恢复为默认按键设置');
   }, [showToast]);
+
+  const handleSaveAsDefault = useCallback(() => {
+    saveStoredHardwareMap(hardwareMap);
+    try {
+      localStorage.setItem('orbit_easyinput_user_defaults', JSON.stringify(hardwareMap));
+    } catch (e) {}
+    showToast('已将当前配置设为默认设置');
+  }, [hardwareMap, showToast]);
+
+  const handleResetSingleKey = useCallback((token) => {
+    if (!DEFAULT_HARDWARE_MAP[token]) return;
+    const def = DEFAULT_HARDWARE_MAP[token];
+    const updated = {
+      ...hardwareMap,
+      [token]: { ...def }
+    };
+    setHardwareMap(updated);
+    saveStoredHardwareMap(updated);
+    showToast(`已恢复 ${def.label} 为默认设置`);
+  }, [hardwareMap, showToast]);
 
   return {
     hardwareMap,
@@ -841,6 +861,8 @@ export function useHardwareController({
     onHardwareTrigger,
     toggleConnectSerial,
     handleUpdateHardwareAction,
-    handleResetDefaults
+    handleResetDefaults,
+    handleSaveAsDefault,
+    handleResetSingleKey
   };
 }

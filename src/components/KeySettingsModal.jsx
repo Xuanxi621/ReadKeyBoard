@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { X, RotateCcw, Keyboard, Activity } from 'lucide-react';
+import { X, RotateCcw, Keyboard, Activity, Check } from 'lucide-react';
 import { EASYINPUT_ACTIONS } from '../services/hardwareConfig.js';
 import HardwareVisualizer from './keysettings/HardwareVisualizer.jsx';
 import KeyMappingList from './keysettings/KeyMappingList.jsx';
@@ -7,6 +7,7 @@ import SerialGuideSidebar from './keysettings/SerialGuideSidebar.jsx';
 
 export default function KeySettingsModal({
   isOpen, onClose, hardwareMap, onUpdateHardwareAction, onResetDefaults,
+  onSaveAsDefault, onResetSingleKey,
   serialConnected, isDeviceConnected = false, onToggleConnectSerial,
   onForceSelectPort, serialLogs = [], activeHighlightToken = null,
   liveSignal = '无输入', recordingToken = null, onStartRecording, onHardwareTrigger
@@ -37,16 +38,50 @@ export default function KeySettingsModal({
             <h2 id="key-settings-title" className="text-lg font-bold text-neutral-900">EasyInput 按键设置</h2>
             <p className="text-xs text-neutral-500 mt-1">连接设备，设置适合你的阅读操作</p>
           </div>
-          <button onClick={onResetDefaults} className="flex items-center gap-1.5 rounded-lg border border-neutral-200 px-2.5 py-2 text-xs text-neutral-600 hover:bg-neutral-50" title="恢复默认键位">
-            <RotateCcw className="w-3.5 h-3.5" /><span className="hidden sm:inline">恢复默认</span>
-          </button>
-          <button onClick={onClose} aria-label="关闭按键设置" className="p-2 rounded-lg text-neutral-500 hover:bg-neutral-100 hover:text-neutral-900"><X className="w-5 h-5" /></button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={onResetDefaults}
+              className="flex items-center gap-1.5 rounded-lg border border-neutral-200 px-2.5 sm:px-3 py-1.5 text-xs text-neutral-600 hover:text-orange-600 hover:bg-neutral-50 font-medium transition cursor-pointer"
+              title="恢复全部按键为默认设置"
+            >
+              <RotateCcw className="w-3.5 h-3.5 text-orange-500" />
+              <span>恢复默认设置</span>
+            </button>
+            {onSaveAsDefault && (
+              <button
+                onClick={onSaveAsDefault}
+                className="hidden sm:flex items-center gap-1.5 rounded-lg border border-neutral-200 px-2.5 sm:px-3 py-1.5 text-xs text-neutral-600 hover:text-emerald-600 hover:bg-neutral-50 font-medium transition cursor-pointer"
+                title="将当前配置设为默认设置"
+              >
+                <Check className="w-3.5 h-3.5 text-emerald-500" />
+                <span>设为默认设置</span>
+              </button>
+            )}
+            <button onClick={onClose} aria-label="关闭按键设置" className="p-2 rounded-lg text-neutral-500 hover:bg-neutral-100 hover:text-neutral-900 cursor-pointer">
+              <X className="w-5 h-5" />
+            </button>
+          </div>
         </header>
 
         <div className="flex flex-col lg:flex-row min-h-0 overflow-y-auto lg:overflow-hidden">
           <main className="min-w-0 flex-1 p-4 sm:p-6 space-y-5 lg:overflow-y-auto">
             <HardwareVisualizer scrollToCard={scrollToCard} hoveredToken={hoveredToken} setHoveredToken={setHoveredToken} activeHighlightToken={activeHighlightToken} getActionShortName={getActionShortName} onTriggerToken={onHardwareTrigger} />
-            <KeyMappingList hardwareMap={hardwareMap} recordingToken={recordingToken} onStartRecording={onStartRecording} onUpdateHardwareAction={onUpdateHardwareAction} showSerialMonitor={showSerialMonitor} setShowSerialMonitor={setShowSerialMonitor} cardRefs={cardRefs} setHoveredToken={setHoveredToken} activeHighlightToken={activeHighlightToken} hoveredToken={hoveredToken} onTriggerToken={onHardwareTrigger} />
+            <KeyMappingList
+              hardwareMap={hardwareMap}
+              recordingToken={recordingToken}
+              onStartRecording={onStartRecording}
+              onUpdateHardwareAction={onUpdateHardwareAction}
+              onResetDefaults={onResetDefaults}
+              onSaveAsDefault={onSaveAsDefault}
+              onResetSingleKey={onResetSingleKey}
+              showSerialMonitor={showSerialMonitor}
+              setShowSerialMonitor={setShowSerialMonitor}
+              cardRefs={cardRefs}
+              setHoveredToken={setHoveredToken}
+              activeHighlightToken={activeHighlightToken}
+              hoveredToken={hoveredToken}
+              onTriggerToken={onHardwareTrigger}
+            />
             {showSerialMonitor && (
               <section className="rounded-xl border border-neutral-200 overflow-hidden">
                 <div className="px-3 py-2 bg-neutral-50 flex items-center justify-between text-xs">

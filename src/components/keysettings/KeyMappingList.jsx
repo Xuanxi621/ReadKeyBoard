@@ -1,12 +1,15 @@
 import React from 'react';
-import { Sliders, Terminal, RotateCw, RotateCcw, Disc } from 'lucide-react';
-import { EASYINPUT_ACTIONS } from '../../services/hardwareConfig.js';
+import { Sliders, Terminal, RotateCw, RotateCcw, Check } from 'lucide-react';
+import { EASYINPUT_ACTIONS, DEFAULT_HARDWARE_MAP } from '../../services/hardwareConfig.js';
 
 export default function KeyMappingList({
   hardwareMap,
   recordingToken,
   onStartRecording,
   onUpdateHardwareAction,
+  onResetDefaults,
+  onSaveAsDefault,
+  onResetSingleKey,
   showSerialMonitor,
   setShowSerialMonitor,
   cardRefs,
@@ -32,13 +35,35 @@ export default function KeyMappingList({
           <h3 className="font-bold text-sm text-neutral-900">按键与旋钮映射</h3>
           <span className="text-[11px] text-neutral-400">修改后在本网页生效</span>
         </div>
-        <button
-          onClick={() => setShowSerialMonitor(!showSerialMonitor)}
-          className="text-[11px] text-neutral-500 hover:text-orange-600 flex items-center gap-1 font-medium transition cursor-pointer"
-        >
-          <Terminal className="w-3.5 h-3.5" />
-          <span>{showSerialMonitor ? '收起输入日志' : '查看输入日志'}</span>
-        </button>
+        <div className="flex flex-wrap items-center gap-2">
+          {onResetDefaults && (
+            <button
+              onClick={onResetDefaults}
+              className="text-[11px] text-neutral-600 hover:text-orange-600 flex items-center gap-1 font-medium transition cursor-pointer bg-neutral-100 hover:bg-neutral-200 px-2.5 py-1 rounded-lg border border-neutral-200 shadow-2xs"
+              title="恢复全部按键为默认推荐设置"
+            >
+              <RotateCcw className="w-3 h-3 text-orange-500" />
+              <span>恢复默认设置</span>
+            </button>
+          )}
+          {onSaveAsDefault && (
+            <button
+              onClick={onSaveAsDefault}
+              className="text-[11px] text-neutral-600 hover:text-emerald-600 flex items-center gap-1 font-medium transition cursor-pointer bg-neutral-100 hover:bg-neutral-200 px-2.5 py-1 rounded-lg border border-neutral-200 shadow-2xs"
+              title="将当前配置设为默认设置"
+            >
+              <Check className="w-3 h-3 text-emerald-500" />
+              <span>设为默认设置</span>
+            </button>
+          )}
+          <button
+            onClick={() => setShowSerialMonitor(!showSerialMonitor)}
+            className="text-[11px] text-neutral-500 hover:text-orange-600 flex items-center gap-1 font-medium transition cursor-pointer"
+          >
+            <Terminal className="w-3.5 h-3.5" />
+            <span>{showSerialMonitor ? '收起输入日志' : '查看输入日志'}</span>
+          </button>
+        </div>
       </div>
 
       {/* 实时改键录制提示条 */}
@@ -130,7 +155,18 @@ export default function KeyMappingList({
               </div>
 
               <div>
-                <label className="text-[10px] text-neutral-400 block mb-0.5">触发动作</label>
+                <div className="flex items-center justify-between mb-0.5">
+                  <label className="text-[10px] text-neutral-400 block">触发动作</label>
+                  {(item.action !== DEFAULT_HARDWARE_MAP[token]?.action || item.fallbackKey !== DEFAULT_HARDWARE_MAP[token]?.fallbackKey) && onResetSingleKey && (
+                    <button
+                      onClick={() => onResetSingleKey(token)}
+                      className="text-[9px] text-orange-600 hover:text-orange-700 flex items-center gap-0.5 font-medium transition cursor-pointer"
+                      title={`恢复 ${item.label} 为默认设置`}
+                    >
+                      <RotateCcw className="w-2.5 h-2.5" /> 恢复默认
+                    </button>
+                  )}
+                </div>
                 <select
                   value={item.action || 'nextPage'}
                   onChange={e => onUpdateHardwareAction(token, e.target.value)}
