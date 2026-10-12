@@ -32,11 +32,44 @@ export default function WorkspaceAiSidebar({
   handleChatKeyDown,
   notes,
   addNote,
-  showToast
+  showToast,
+  bailianStatus,
+  customMindmap,
+  customSummary,
+  handleRegenerateMindmap,
+  handleRegenerateSummary
 }) {
   const voice = useVoiceInput(setChatInput, showToast, () => setActiveAiTab('chat'));
   return (
     <div className="w-[420px] xl:w-[460px] flex-shrink-0 bg-white flex flex-col border-l border-neutral-200 transition-all">
+      {/* Bailian bl-cli Status Banner */}
+      <div className="px-3.5 py-1.5 bg-neutral-50/90 border-b border-neutral-200/70 flex items-center justify-between text-[11px]">
+        <div className="flex items-center gap-1.5 min-w-0">
+          <span
+            className={`w-2 h-2 rounded-full flex-shrink-0 ${
+              bailianStatus?.connected
+                ? 'bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.7)] animate-pulse'
+                : 'bg-amber-400'
+            }`}
+          />
+          <span className="font-medium text-neutral-700 truncate">
+            {bailianStatus?.connected
+              ? `已接入本地 bl-cli · ${bailianStatus.model || 'qwen-plus'}`
+              : bailianStatus?.checking
+              ? '正在检测本地 bl-cli...'
+              : 'bl-cli 未连接 (~/.bailian)'}
+          </span>
+        </div>
+        {bailianStatus?.workspace_id && (
+          <span
+            className="text-[10px] text-neutral-400 font-mono ml-2 flex-shrink-0"
+            title={`百炼空间: ${bailianStatus.workspace_id}`}
+          >
+            空间: {bailianStatus.workspace_id.slice(0, 10)}...
+          </span>
+        )}
+      </div>
+
       {/* AI Tabs */}
       <div className="flex items-center border-b border-neutral-200 px-2 pt-2 flex-shrink-0 bg-neutral-50/60">
         <button
@@ -106,8 +139,11 @@ export default function WorkspaceAiSidebar({
                       AI
                     </div>
                     <div className="flex-1 space-y-1.5">
-                      <div className="bg-neutral-100 p-3 rounded-2xl rounded-tl-sm text-neutral-800 leading-relaxed">
-                        {msg.text}
+                      <div className="bg-neutral-100 p-3 rounded-2xl rounded-tl-sm text-neutral-800 leading-relaxed whitespace-pre-wrap">
+                        {msg.text || (msg.isStreaming ? '正在思考中...' : '')}
+                        {msg.isStreaming && (
+                          <span className="inline-block w-1.5 h-3.5 bg-orange-500 animate-pulse ml-1 align-middle" />
+                        )}
                       </div>
                       {msg.suggestions && (
                         <div className="flex flex-wrap gap-1.5 pt-1">
@@ -139,14 +175,14 @@ export default function WorkspaceAiSidebar({
               </div>
             ))}
 
-            {isAiThinking && (
+            {isAiThinking && chatMessages[chatMessages.length - 1]?.sender !== 'ai' && (
               <div className="flex gap-2.5 items-start">
-                <div className="w-6 h-6 rounded-md bg-gradient-to-tr from-orange-500 to-amber-500 text-white flex items-center justify-center flex-shrink-0 text-[10px] font-bold">
+                <div className="w-6 h-6 rounded-md bg-gradient-to-tr from-orange-500 to-amber-500 text-white flex items-center justify-center flex-shrink-0 text-[10px] font-bold shadow-xs">
                   AI
                 </div>
                 <div className="bg-neutral-100 p-2.5 rounded-2xl rounded-tl-sm text-neutral-500 flex items-center gap-1.5">
                   <span className="w-1.5 h-1.5 rounded-full bg-orange-500 animate-ping" />
-                  <span>正在分析你上传的文档...</span>
+                  <span>正在通过 bl-cli 通义千问研读当前第 {currentPage} 页...</span>
                 </div>
               </div>
             )}
@@ -191,13 +227,24 @@ export default function WorkspaceAiSidebar({
       {/* TAB 2: Summary */}
       {activeAiTab === 'summary' && (
         <div className="flex-1 overflow-y-auto p-4 space-y-4 text-xs">
+          <div className="flex items-center justify-between">
+            <span className="font-bold text-neutral-900">文档智能提炼</span>
+            <button
+              onClick={handleRegenerateSummary}
+              className="text-orange-600 hover:underline flex items-center gap-1 text-[11px] cursor-pointer"
+            >
+              <RefreshCw className="w-3 h-3" />
+              <span>通过千问提炼</span>
+            </button>
+          </div>
+
           <div className="p-3.5 rounded-xl bg-orange-50 border border-orange-200 space-y-1.5">
             <div className="font-bold text-orange-900 flex items-center gap-1.5">
               <Sparkles className="w-4 h-4 text-orange-500" />
               <span>一句话总结 (Executive Summary)</span>
             </div>
-            <p className="text-neutral-700 leading-relaxed">
-              {currentDoc.oneLiner || `已成功加载并持久化本地文档《${currentDoc.fileName}》（共 ${currentDoc.pages} 页）。`}
+            <p className="text-neutral-700 leading-relaxed whitespace-pre-wrap">
+              {customSummary || currentDoc.oneLiner || `已成功加载并持久化本地文档《${currentDoc.fileName}》（共 ${currentDoc.pages} 页）。`}
             </p>
           </div>
 
@@ -250,19 +297,16 @@ export default function WorkspaceAiSidebar({
           <div className="flex items-center justify-between mb-2">
             <span className="font-bold text-neutral-900">文档层级概念拓扑</span>
             <button
-              onClick={() => {
-                showToast('正在重构概念拓扑...');
-                setTimeout(() => showToast('知识脑图已更新完毕'), 500);
-              }}
+              onClick={handleRegenerateMindmap}
               className="text-orange-600 hover:underline flex items-center gap-1 text-[11px] cursor-pointer"
             >
               <RefreshCw className="w-3 h-3" />
-              <span>重新生成</span>
+              <span>通过千问重构</span>
             </button>
           </div>
 
           <div className="p-3 bg-neutral-50 rounded-xl border border-neutral-200 space-y-2 font-mono">
-            {(currentDoc.mindmap || [
+            {(customMindmap || currentDoc.mindmap || [
               {
                 title: currentDoc.fileName.replace('.pdf', ''),
                 children: ['文档概览', '核心章节', '实验结论', '参考文献']

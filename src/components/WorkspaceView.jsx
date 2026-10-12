@@ -2,6 +2,12 @@ import React, { useState, useEffect, useRef } from 'react';
 import WorkspaceTopbar from './workspace/WorkspaceTopbar.jsx';
 import WorkspacePdfViewer from './workspace/WorkspacePdfViewer.jsx';
 import WorkspaceAiSidebar from './workspace/WorkspaceAiSidebar.jsx';
+import {
+  fetchBailianStatus,
+  streamReadingQA,
+  generateQuickSummary,
+  generateMindmapStructure
+} from '../services/aiService.js';
 
 export default function WorkspaceView({
   currentDoc,
@@ -23,10 +29,10 @@ export default function WorkspaceView({
   const [chatMessages, setChatMessages] = useState([
     {
       sender: 'ai',
-      text: '你好！我已载入你上传的 PDF 文档并完成全文索引，你可以直接向我提问，或点击推荐问题：',
+      text: '你好！已连接本地 bl-cli（通义千问 Qwen 大模型）研读引擎，并载入文档全文。你可以直接向我提问关于本文档的任何问题：',
       suggestions: [
         '请用通俗语言概括这篇文章的核心创新点？',
-        '文章中的关键实验与数据表现如何？',
+        '结合当前页内容，总结核心论点与关键数据？',
         '作者指出了哪些局限性或未来研究方向？'
       ]
     }
@@ -34,10 +40,45 @@ export default function WorkspaceView({
   const [chatInput, setChatInput] = useState('');
   const [isAiThinking, setIsAiThinking] = useState(false);
   const [isPageLoading, setIsPageLoading] = useState(false);
+  const [bailianStatus, setBailianStatus] = useState({ connected: false, checking: true, model: 'qwen-plus' });
+  const [customMindmap, setCustomMindmap] = useState(null);
+  const [customSummary, setCustomSummary] = useState(null);
 
   const canvasRef = useRef(null);
   const textLayerRef = useRef(null);
   const chatScrollRef = useRef(null);
+
+  // Check Bailian bl-cli connection status on mount
+  useEffect(() => {
+    let active = true;
+    fetchBailianStatus()
+      .then(res => {
+        if (active) {
+          setBailianStatus({ ...res, checking: false });
+        }
+      })
+      .catch(err => {
+        if (active) {
+          setBailianStatus({ connected: false, checking: false, error: err.message });
+        }
+      });
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  // Extract plain text from current PDF page
+  const extractCurrentPageText = async (pageNum = currentPage) => {
+    if (!currentDoc?.pdfJsInstance) return '';
+    try {
+      const page = await currentDoc.pdfJsInstance.getPage(pageNum);
+      const textContent = await page.getTextContent();
+      return textContent.items.map(item => item.str).join(' ').trim();
+    } catch (err) {
+      console.warn('Failed to extract PDF page text:', err);
+      return '';
+    }
+  };
 
   // Render current PDF page
   useEffect(() => {
@@ -141,25 +182,129 @@ export default function WorkspaceView({
     showToast(!highlightActive ? '批注模式已开启，选中文本即可保存批注' : '批注模式已关闭');
   };
 
+  // Auto-scroll chat to bottom
+  useEffect(() => {
+    if (chatScrollRef.current) {
+      chatScrollRef.current.scrollTop = chatScrollRef.current.scrollHeight;
+    }
+  }, [chatMessages, isAiThinking]);
+
   // Chat actions
-  const sendChatMessage = (text) => {
-    if (!text || !text.trim()) return;
+  const sendChatMessage = async (text) => {
+    if (!text || !text.trim() || isAiThinking) return;
     const query = text.trim();
+    const currentQuestionPage = currentPage;
 
     setChatMessages(prev => [...prev, { sender: 'user', text: query }]);
     setIsAiThinking(true);
 
-    setTimeout(() => {
-      setIsAiThinking(false);
-      setChatMessages(prev => [
-        ...prev,
-        {
-          sender: 'ai',
-          text: `已针对你的问题 "${query}" 检索当前文档《${currentDoc.fileName}》：\n\n结合文档第 ${currentPage} 页内容分析，已完成对该段落核心论点的解析与归纳。你可以继续指定具体页码进行深入挖掘。`,
-          pageRef: currentPage
+    // Placeholder AI message
+    setChatMessages(prev => [
+      ...prev,
+      {
+        sender: 'ai',
+        text: '',
+        pageRef: currentQuestionPage,
+        isStreaming: true
+      }
+    ]);
+
+    try {
+      // 1. Extract text of current page for grounding
+      const pageText = await extractCurrentPageText(currentQuestionPage);
+
+      // 2. Stream from Bailian Qwen
+      await streamReadingQA({
+        currentDoc,
+        currentPage: currentQuestionPage,
+        pageText,
+        userQuestion: query,
+        chatHistory: chatMessages,
+        onChunk: (_delta, accumulated) => {
+          setChatMessages(prev => {
+            const next = [...prev];
+            const target = next[next.length - 1];
+            if (target && target.sender === 'ai') {
+              next[next.length - 1] = {
+                ...target,
+                text: accumulated,
+                pageRef: currentQuestionPage,
+                isStreaming: true
+              };
+            }
+            return next;
+          });
         }
-      ]);
-    }, 650);
+      });
+
+      // 3. Mark complete and add suggestions
+      setChatMessages(prev => {
+        const next = [...prev];
+        const target = next[next.length - 1];
+        if (target && target.sender === 'ai') {
+          next[next.length - 1] = {
+            ...target,
+            isStreaming: false,
+            suggestions: [
+              `继续深入分析第 ${currentQuestionPage} 页的关键细节`,
+              '总结这一部分对全文核心结论的支撑作用'
+            ]
+          };
+        }
+        return next;
+      });
+    } catch (err) {
+      console.error('Bailian QA Error:', err);
+      setChatMessages(prev => {
+        const next = [...prev];
+        const target = next[next.length - 1];
+        if (target && target.sender === 'ai') {
+          next[next.length - 1] = {
+            ...target,
+            text: target.text
+              ? target.text + `\n\n⚠️ [回答生成中断: ${err.message}]`
+              : `⚠️ 抱歉，未能完成问答解析：${err.message}。\n请确认本地 bl-cli 配置 (~/.bailian/config.json) 是否有效且网络正常。`,
+            isStreaming: false
+          };
+        }
+        return next;
+      });
+      showToast(`AI 研读请求失败: ${err.message}`);
+    } finally {
+      setIsAiThinking(false);
+    }
+  };
+
+  const handleRegenerateMindmap = async () => {
+    showToast('正在通过 bl-cli 通义千问分析重构概念拓扑...');
+    try {
+      const pageText = await extractCurrentPageText();
+      const nodes = await generateMindmapStructure({ currentDoc, pageText });
+      if (nodes && Array.isArray(nodes) && nodes.length > 0) {
+        setCustomMindmap(nodes);
+        showToast('知识脑图已基于文档实际内容成功更新');
+      } else {
+        showToast('未能生成有效概念分支，保留当前视图');
+      }
+    } catch (err) {
+      console.warn('Mindmap generation failed:', err);
+      showToast(`脑图重构失败: ${err.message}`);
+    }
+  };
+
+  const handleRegenerateSummary = async () => {
+    showToast('正在通过 bl-cli 通义千问提炼核心要点...');
+    try {
+      const pageText = await extractCurrentPageText();
+      const summaryText = await generateQuickSummary({ currentDoc, pageText });
+      if (summaryText) {
+        setCustomSummary(summaryText);
+        showToast('要点提炼已更新');
+      }
+    } catch (err) {
+      console.warn('Summary generation failed:', err);
+      showToast(`提炼失败: ${err.message}`);
+    }
   };
 
   const handleChatSubmit = (e) => {
@@ -261,6 +406,11 @@ export default function WorkspaceView({
           notes={notes}
           addNote={addNote}
           showToast={showToast}
+          bailianStatus={bailianStatus}
+          customMindmap={customMindmap}
+          customSummary={customSummary}
+          handleRegenerateMindmap={handleRegenerateMindmap}
+          handleRegenerateSummary={handleRegenerateSummary}
         />
       </div>
     </div>
