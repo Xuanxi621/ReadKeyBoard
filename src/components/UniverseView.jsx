@@ -128,18 +128,18 @@ export default function UniverseView({
 
   return (
     <div
-      className="relative flex-1 flex flex-col justify-between overflow-hidden bg-white select-none"
+      className="relative flex-1 flex flex-col justify-between overflow-hidden bg-[#FBFBFD] select-none"
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
     >
       {/* Top Area */}
-      <header className="w-full px-8 py-5 flex items-center justify-end z-30 flex-shrink-0">
+      <header className="w-full px-8 py-5 flex items-center justify-end z-30 flex-shrink-0 font-ui">
         <button
           onClick={onOpenKeySettings}
-          className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl border border-neutral-200 hover:border-neutral-300 bg-white hover:bg-neutral-50 text-neutral-800 text-xs font-semibold shadow-xs transition cursor-pointer"
+          className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border border-black/[0.08] hover:border-black/20 bg-white/90 hover:bg-neutral-50 text-neutral-700 text-xs font-medium shadow-2xs transition cursor-pointer active:scale-95"
         >
-          <Keyboard className="w-3.5 h-3.5 text-orange-500" />
+          <Keyboard className="w-3.5 h-3.5 text-neutral-600" />
           <span>按键设置</span>
         </button>
       </header>
@@ -170,9 +170,9 @@ export default function UniverseView({
         {/* Empty State Prompt */}
         {documents.length === 0 && (
           <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none z-10 transition-opacity duration-300">
-            <div className="mt-80 p-3 rounded-xl bg-neutral-50/80 border border-neutral-200/60 text-xs text-neutral-400 flex items-center gap-2 shadow-2xs">
-              <UploadCloud className="w-4 h-4 text-orange-400" />
-              <span>暂无文档 · 点击上方「上传 PDF」或拖拽文件投入星轨</span>
+            <div className="mt-80 p-3 rounded-full bg-white/80 border border-black/[0.06] text-xs text-neutral-400 flex items-center gap-2 shadow-2xs font-editorial">
+              <UploadCloud className="w-4 h-4 text-neutral-400" />
+              <span>拖拽或上传 PDF 即可开启智能研读星轨</span>
             </div>
           </div>
         )}
@@ -195,15 +195,6 @@ export default function UniverseView({
             />
           ))}
         </div>
-      </div>
-
-      {/* Bottom Hint */}
-      <div className="w-full px-8 pb-4 flex items-center justify-center text-xs text-neutral-400 z-20 pointer-events-auto">
-        <span>
-          {documents.length > 0
-            ? `本地已持久化 ${documents.length} 份 PDF 文档在星轨中环绕`
-            : '拖拽或上传本地 PDF 即可生成不规则环绕卡片'}
-        </span>
       </div>
     </div>
   );

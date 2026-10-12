@@ -1,7 +1,7 @@
 import React from 'react';
 import {
-  ChevronUp,
-  ChevronDown,
+  ChevronLeft,
+  ChevronRight,
   ZoomIn,
   ZoomOut,
   Maximize2,
@@ -25,90 +25,94 @@ export default function WorkspacePdfViewer({
   isPageLoading
 }) {
   return (
-    <div className="flex-1 flex flex-col bg-neutral-200/70 border-r border-neutral-300 relative overflow-hidden">
-      {/* Controls bar */}
-      <div className="h-10 bg-white border-b border-neutral-200 px-4 flex items-center justify-between text-xs z-10 flex-shrink-0">
+    <div className="flex-1 flex flex-col bg-[#F2F2F7] border-r border-black/[0.06] relative overflow-hidden select-none">
+      {/* Apple-style Controls bar */}
+      <div className="h-11 bg-white/80 backdrop-blur-md border-b border-black/[0.06] px-4 flex items-center justify-between text-xs z-10 flex-shrink-0 font-ui">
+        {/* Page Nav */}
         <div className="flex items-center gap-1.5">
           <button
             onClick={prevPage}
-            className="p-1 rounded-md hover:bg-neutral-100 text-neutral-600 cursor-pointer"
+            className="p-1 rounded-full hover:bg-black/[0.05] text-neutral-700 cursor-pointer transition active:scale-95"
             title="上一页"
           >
-            <ChevronUp className="w-4 h-4" />
+            <ChevronLeft className="w-4 h-4" />
           </button>
-          <div className="flex items-center gap-1 text-neutral-700 font-medium">
+          <div className="flex items-center gap-1.5 text-[#1D1D1F] font-medium">
             <input
               type="number"
               value={currentPage}
               min={1}
               max={currentDoc.pages}
               onChange={e => jumpToPage(e.target.value)}
-              className="w-10 text-center bg-neutral-100 border border-neutral-300 rounded py-0.5 text-xs font-semibold"
+              className="w-10 text-center bg-white border border-black/[0.08] rounded-md py-0.5 text-xs font-semibold focus:border-[#0071E3] outline-none shadow-2xs"
             />
             <span className="text-neutral-400">/</span>
-            <span className="text-neutral-500">{currentDoc.pages}</span>
+            <span className="text-neutral-500 font-mono text-[11px]">{currentDoc.pages}</span>
           </div>
           <button
             onClick={nextPage}
-            className="p-1 rounded-md hover:bg-neutral-100 text-neutral-600 cursor-pointer"
+            className="p-1 rounded-full hover:bg-black/[0.05] text-neutral-700 cursor-pointer transition active:scale-95"
             title="下一页"
           >
-            <ChevronDown className="w-4 h-4" />
+            <ChevronRight className="w-4 h-4" />
           </button>
         </div>
 
-        <div className="flex items-center gap-1.5">
+        {/* Zoom & Highlight Tools */}
+        <div className="flex items-center gap-1">
           <button
             onClick={zoomOut}
-            className="p-1 rounded hover:bg-neutral-100 text-neutral-600 cursor-pointer"
+            className="p-1.5 rounded-full hover:bg-black/[0.05] text-neutral-700 cursor-pointer transition active:scale-95"
             title="缩小"
           >
             <ZoomOut className="w-3.5 h-3.5" />
           </button>
-          <span className="text-[11px] font-semibold text-neutral-500 w-12 text-center">
+          <span className="text-[11px] font-semibold text-neutral-500 w-11 text-center font-mono">
             {Math.round(pdfScale * 100)}%
           </span>
           <button
             onClick={zoomIn}
-            className="p-1 rounded hover:bg-neutral-100 text-neutral-600 cursor-pointer"
+            className="p-1.5 rounded-full hover:bg-black/[0.05] text-neutral-700 cursor-pointer transition active:scale-95"
             title="放大"
           >
             <ZoomIn className="w-3.5 h-3.5" />
           </button>
           <button
             onClick={fitWidth}
-            className="p-1 rounded hover:bg-neutral-100 text-neutral-600 cursor-pointer"
+            className="p-1.5 rounded-full hover:bg-black/[0.05] text-neutral-700 cursor-pointer transition active:scale-95"
             title="自适应宽度"
           >
             <Maximize2 className="w-3.5 h-3.5" />
           </button>
-          <div className="h-3 w-px bg-neutral-200 mx-1" />
+
+          <div className="h-3 w-px bg-black/[0.08] mx-1.5" />
+
           <button
             onClick={toggleHighlight}
-            className={`flex items-center gap-1 px-2 py-0.5 rounded cursor-pointer ${
+            className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-[11.5px] cursor-pointer transition active:scale-95 ${
               highlightActive
-                ? 'bg-amber-100 text-amber-800'
-                : 'text-neutral-600 hover:bg-neutral-100'
+                ? 'bg-[#FF9500]/15 text-[#D97706] font-medium'
+                : 'text-neutral-600 hover:bg-black/[0.04]'
             }`}
             title="划线批注模式"
           >
-            <Highlighter className="w-3.5 h-3.5 text-amber-500" />
-            <span className="text-[11px]">批注</span>
+            <Highlighter className="w-3.5 h-3.5 text-[#FF9500]" />
+            <span>批注</span>
           </button>
         </div>
       </div>
 
       {/* PDF Canvas Viewport Container */}
-      <div className="flex-1 overflow-auto p-4 flex flex-col items-center justify-start relative">
-        <div id="canvasWrapper" className="relative shadow-xl rounded-sm transition-all bg-white">
+      <div className="flex-1 overflow-auto p-5 flex flex-col items-center justify-start relative select-text">
+        <div id="canvasWrapper" className="relative shadow-[0_12px_36px_rgba(0,0,0,0.08),0_1px_3px_rgba(0,0,0,0.04)] rounded-sm transition-all bg-white border border-black/[0.04]">
           <canvas id="pdfCanvas" ref={canvasRef} className="block" />
           <div id="textLayer" ref={textLayerRef} className="absolute inset-0 pointer-events-auto" />
         </div>
 
         {isPageLoading && (
-          <div className="absolute inset-0 bg-white/80 flex flex-col items-center justify-center backdrop-blur-xs z-30">
-            <div className="w-8 h-8 border-3 border-orange-500 border-t-transparent rounded-full animate-spin mb-2" />
-            <span className="text-xs font-semibold text-neutral-700">正在解析 PDF 页面...</span>
+          <div className="absolute inset-0 bg-white/70 backdrop-blur-xs flex flex-col items-center justify-center z-30 font-ui">
+            <div className="w-7 h-7 border-2 border-[#0071E3] border-t-transparent rounded-full animate-spin mb-2" />
+            <span className="text-[12px] font-medium text-neutral-600">正在渲染页面...</span>
           </div>
         )}
       </div>

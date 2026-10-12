@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 import { useVoiceInput } from '../../hooks/useVoiceInput.js';
 import {
   Keyboard,
-  UploadCloud,
+  Upload,
   FileText,
   X,
   Mic,
@@ -38,32 +38,32 @@ export default function CentralConsole({
 
   const applyTagPrompt = (text) => {
     setPromptText(text);
-    showToast('已填入指令，上传或选择卡片即可开启研读');
+    showToast('已填入研读指令');
   };
 
   return (
-    <div id="centralConsole" className="z-20 w-full max-w-xl px-4 flex flex-col items-center pointer-events-auto">
-      {/* Hero Title */}
-      <h1 className="text-3xl md:text-4xl font-extrabold text-neutral-900 tracking-tight mb-5 text-center">
+    <div id="centralConsole" className="z-20 w-full max-w-xl px-4 flex flex-col items-center pointer-events-auto select-none">
+      {/* Hero Title with Apple Editorial Serif Font */}
+      <h1 className="text-3xl md:text-4xl font-bold text-[#1D1D1F] tracking-tight mb-5 text-center font-editorial">
         今天你想研读什么？
       </h1>
 
-      {/* Prompt Box */}
-      <div className="w-full bg-white rounded-2xl border border-neutral-200/90 shadow-xl shadow-neutral-200/40 p-4 focus-within:border-neutral-400 focus-within:ring-2 focus-within:ring-neutral-100 transition relative">
+      {/* Apple Spotlight Glass Card */}
+      <div className="w-full bg-white/85 backdrop-blur-xl rounded-2xl border border-black/[0.08] shadow-[0_12px_40px_rgba(0,0,0,0.06)] p-4 focus-within:border-black/25 focus-within:bg-white focus-within:shadow-[0_16px_48px_rgba(0,0,0,0.08)] transition-all relative font-editorial">
         {/* Drop Overlay */}
         {isDraggingOver && (
-          <div className="absolute inset-0 bg-orange-500/10 backdrop-blur-xs rounded-2xl border-2 border-dashed border-orange-500 flex items-center justify-center text-orange-600 font-semibold text-xs z-30 pointer-events-none">
-            <UploadCloud className="w-6 h-6 mr-2 animate-bounce" />
-            松开鼠标，立即解析并生成环绕卡片
+          <div className="absolute inset-0 bg-[#0071E3]/10 backdrop-blur-xs rounded-2xl border-2 border-dashed border-[#0071E3] flex items-center justify-center text-[#0071E3] font-medium text-xs z-30 pointer-events-none font-ui">
+            <Upload className="w-5 h-5 mr-2 animate-bounce" />
+            释放鼠标即可解析并加入星轨
           </div>
         )}
 
         {/* Attached file chip */}
         {attachedFile && (
-          <div className="mb-2 inline-flex items-center gap-2 px-2.5 py-1 rounded-lg bg-orange-50 border border-orange-200 text-xs text-orange-800">
-            <FileText className="w-3.5 h-3.5 text-orange-600" />
+          <div className="mb-2 inline-flex items-center gap-2 px-3 py-1 rounded-full bg-neutral-100 border border-black/[0.06] text-xs text-neutral-800 font-ui">
+            <FileText className="w-3.5 h-3.5 text-[#0071E3]" />
             <span className="font-medium max-w-[240px] truncate">{attachedFile.name}</span>
-            <span className="text-[10px] text-orange-600/70">
+            <span className="text-[10px] text-neutral-400">
               {(attachedFile.size / (1024 * 1024)).toFixed(1)} MB
             </span>
             <button
@@ -71,7 +71,7 @@ export default function CentralConsole({
                 e.stopPropagation();
                 setAttachedFile(null);
               }}
-              className="hover:text-orange-950 ml-1 cursor-pointer"
+              className="hover:text-black ml-1 cursor-pointer"
             >
               <X className="w-3 h-3" />
             </button>
@@ -79,9 +79,6 @@ export default function CentralConsole({
         )}
 
         {/* Textarea */}
-        <p role="status" className="mb-2 text-[11px] text-orange-700">
-          {voice.state === 'idle' ? 'S2 语音输入 · 使用电脑麦克风' : voice.state === 'starting' ? '正在启动麦克风…再次按 S2 可停止' : '正在听写…再次按 S2 或点击麦克风停止'}
-        </p>
         <textarea
           rows={2}
           value={promptText}
@@ -93,21 +90,21 @@ export default function CentralConsole({
               onStart();
             }
           }}
-          placeholder="点击下方「上传 PDF」或直接将 PDF 拖入此处，零碎卡片将环绕飞舞..."
-          className="w-full resize-none bg-transparent outline-none text-neutral-800 placeholder-neutral-400 text-xs md:text-sm leading-relaxed no-scrollbar"
+          placeholder="提出研读问题，或直接将 PDF 拖入此处..."
+          className="w-full resize-none bg-transparent outline-none text-[#1D1D1F] placeholder-neutral-400 text-xs md:text-[13.5px] leading-relaxed no-scrollbar font-editorial"
         />
 
         {/* Bottom Toolbar Inside Card */}
-        <div className="flex items-center justify-between pt-3 mt-1 border-t border-neutral-100">
-          <div className="flex items-center gap-2">
+        <div className="flex items-center justify-between pt-2.5 mt-1 border-t border-black/[0.05] font-ui">
+          <div className="flex items-center gap-1.5">
             <button
               type="button"
               tabIndex={-1}
               onClick={onOpenKeySettings}
-              className="p-1.5 px-3 rounded-lg border border-neutral-200 hover:bg-neutral-50 text-neutral-700 flex items-center gap-1.5 text-xs font-semibold transition cursor-pointer"
-              title="连接与配置 EasyInput 按键映射"
+              className="px-3 py-1.5 rounded-full border border-black/[0.08] hover:border-black/20 hover:bg-neutral-50 text-neutral-700 flex items-center gap-1.5 text-xs font-medium transition cursor-pointer active:scale-95 shadow-2xs"
+              title="配置 EasyInput 按键映射"
             >
-              <Keyboard className="w-4 h-4 text-orange-500" />
+              <Keyboard className="w-3.5 h-3.5 text-neutral-600" />
               <span>按键设置</span>
             </button>
 
@@ -115,10 +112,10 @@ export default function CentralConsole({
               type="button"
               tabIndex={-1}
               onClick={() => fileInputRef.current?.click()}
-              className="p-1.5 px-3 rounded-lg border border-neutral-200 hover:bg-neutral-50 text-neutral-700 flex items-center gap-1.5 text-xs font-semibold transition cursor-pointer"
-              title="导入 PDF 文档"
+              className="px-3 py-1.5 rounded-full border border-black/[0.08] hover:border-black/20 hover:bg-neutral-50 text-neutral-700 flex items-center gap-1.5 text-xs font-medium transition cursor-pointer active:scale-95 shadow-2xs"
+              title="导入本地 PDF 文档"
             >
-              <UploadCloud className="w-4 h-4 text-orange-500" />
+              <Upload className="w-3.5 h-3.5 text-neutral-600" />
               <span>上传 PDF</span>
             </button>
 
@@ -131,15 +128,16 @@ export default function CentralConsole({
               onChange={handleFileInputChange}
             />
 
-            {/* 深度精读胶囊开关 */}
+            {/* Apple-style iOS Toggle Switch for Deep Mode */}
             <div
-              className="flex items-center gap-1.5 px-2 py-1 rounded-lg bg-neutral-100 cursor-pointer select-none"
+              className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-black/[0.04] hover:bg-black/[0.07] cursor-pointer transition select-none"
               onClick={onToggleDeepMode}
+              title="切换深度精读模式"
             >
-              <span className="text-xs font-medium text-neutral-600">深度精读</span>
+              <span className="text-[11px] font-medium text-neutral-600">精读模式</span>
               <div
                 className={`w-7 h-4 rounded-full flex items-center p-0.5 transition-colors ${
-                  deepMode ? 'bg-orange-500' : 'bg-neutral-300'
+                  deepMode ? 'bg-[#0071E3]' : 'bg-neutral-300'
                 }`}
               >
                 <div
@@ -157,52 +155,56 @@ export default function CentralConsole({
               onClick={voice.toggle}
               aria-label={voice.state === 'idle' ? '开始语音输入' : '停止语音输入'}
               aria-pressed={voice.state !== 'idle'}
-              title="S2 语音输入：开始 / 停止"
-              className={`p-1.5 rounded-md cursor-pointer ${voice.state === 'idle' ? 'text-neutral-500 hover:bg-neutral-100' : 'text-red-600 bg-red-50 animate-pulse'}`}
+              title={voice.state === 'idle' ? '语音输入 (S2)' : '停止语音输入'}
+              className={`p-1.5 rounded-full cursor-pointer transition-all ${
+                voice.state === 'idle'
+                  ? 'text-neutral-500 hover:text-black hover:bg-black/[0.05]'
+                  : 'text-white bg-[#FF3B30] animate-pulse shadow-xs'
+              }`}
             >
-              <Mic className="w-4 h-4" />
+              <Mic className="w-3.5 h-3.5" />
             </button>
 
-            {/* 黑色圆形提交按钮 */}
+            {/* Apple Blue Circular Submit Button */}
             <button
               onClick={onStart}
-              className="w-7 h-7 rounded-full bg-neutral-900 hover:bg-neutral-800 text-white flex items-center justify-center transition shadow-sm cursor-pointer"
-              title="开始研读 / 进入阅读模式（S5 打开或退出阅读）"
+              className="w-7 h-7 rounded-full bg-[#0071E3] hover:bg-[#005bb5] text-white flex items-center justify-center transition shadow-xs cursor-pointer active:scale-95"
+              title="开始研读"
             >
-              <ArrowUp className="w-4 h-4" />
+              <ArrowUp className="w-3.5 h-3.5" />
             </button>
           </div>
         </div>
       </div>
 
-      {/* Quick Tags */}
-      <div className="flex flex-wrap items-center justify-center gap-2 mt-4 text-xs">
+      {/* Quick Suggestion Pills */}
+      <div className="flex flex-wrap items-center justify-center gap-2 mt-4 text-xs font-editorial">
         <button
           onClick={() => applyTagPrompt('请提炼当前 PDF 的核心 Executive Summary 与关键论点')}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white border border-neutral-200/90 text-neutral-700 hover:border-neutral-400 transition shadow-2xs cursor-pointer"
+          className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white/80 hover:bg-white border border-black/[0.06] text-neutral-700 hover:text-[#1D1D1F] transition shadow-2xs cursor-pointer active:scale-95"
         >
-          <Sparkles className="w-3.5 h-3.5 text-orange-500" />
+          <Sparkles className="w-3 h-3 text-[#0071E3]" />
           <span>核心提炼</span>
         </button>
         <button
           onClick={() => applyTagPrompt('请对比文档中的不同方案与技术优劣势')}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white border border-neutral-200/90 text-neutral-700 hover:border-neutral-400 transition shadow-2xs cursor-pointer"
+          className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white/80 hover:bg-white border border-black/[0.06] text-neutral-700 hover:text-[#1D1D1F] transition shadow-2xs cursor-pointer active:scale-95"
         >
-          <LayoutGrid className="w-3.5 h-3.5 text-blue-500" />
+          <LayoutGrid className="w-3 h-3 text-neutral-600" />
           <span>方案对比</span>
         </button>
         <button
           onClick={() => applyTagPrompt('提取全文专业术语表与数学推导')}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white border border-neutral-200/90 text-neutral-700 hover:border-neutral-400 transition shadow-2xs cursor-pointer"
+          className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white/80 hover:bg-white border border-black/[0.06] text-neutral-700 hover:text-[#1D1D1F] transition shadow-2xs cursor-pointer active:scale-95"
         >
-          <BookMarked className="w-3.5 h-3.5 text-emerald-500" />
+          <BookMarked className="w-3 h-3 text-neutral-600" />
           <span>术语辞典</span>
         </button>
         <button
           onClick={() => applyTagPrompt('为本文档生成思维导图结构')}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white border border-neutral-200/90 text-neutral-700 hover:border-neutral-400 transition shadow-2xs cursor-pointer"
+          className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white/80 hover:bg-white border border-black/[0.06] text-neutral-700 hover:text-[#1D1D1F] transition shadow-2xs cursor-pointer active:scale-95"
         >
-          <Network className="w-3.5 h-3.5 text-purple-500" />
+          <Network className="w-3 h-3 text-neutral-600" />
           <span>知识脑图</span>
         </button>
       </div>

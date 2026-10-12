@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import {
-  ArrowLeft,
+  ChevronLeft,
   Keyboard,
   Upload,
   Download
@@ -16,26 +16,26 @@ export default function WorkspaceTopbar({
   const fileInputRef = useRef(null);
 
   return (
-    <div className="h-12 bg-white border-b border-neutral-200 px-5 flex items-center justify-between flex-shrink-0 text-xs">
+    <div className="h-13 bg-white/80 backdrop-blur-xl border-b border-black/[0.06] px-5 flex items-center justify-between flex-shrink-0 z-20 font-ui select-none">
       <div className="flex items-center gap-3">
         <button
           onClick={onBackToUniverse}
-          className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl hover:bg-neutral-100 text-neutral-700 font-semibold transition cursor-pointer"
-          title="返回星轨"
+          className="flex items-center gap-1 px-3 py-1.5 rounded-full hover:bg-black/[0.05] text-neutral-700 font-medium transition cursor-pointer text-xs active:scale-95"
+          title="返回主页星轨"
         >
-          <ArrowLeft className="w-4 h-4 text-orange-500" />
-          <span>返回主页</span>
+          <ChevronLeft className="w-4 h-4 text-neutral-600" />
+          <span>星轨主页</span>
         </button>
-        <div className="h-4 w-px bg-neutral-200" />
-        <div className="flex items-center gap-2">
-          <span className="text-[10px] font-bold text-white bg-orange-600 px-1.5 py-0.5 rounded">
+        <div className="h-3.5 w-px bg-black/[0.08]" />
+        <div className="flex items-center gap-2.5">
+          <span className="text-[10px] font-bold tracking-wider text-white bg-neutral-900 px-2 py-0.5 rounded-md font-mono">
             PDF
           </span>
-          <span className="font-bold text-neutral-900 max-w-[280px] md:max-w-[420px] truncate">
+          <span className="font-semibold text-[#1D1D1F] text-xs max-w-[280px] md:max-w-[420px] truncate font-editorial">
             {currentDoc.fileName}
           </span>
-          <span className="text-[11px] text-neutral-500 bg-neutral-100 px-2 py-0.5 rounded-full">
-            {currentDoc.pages} 页 · {currentDoc.fileSize}
+          <span className="text-[11px] text-neutral-400 font-normal">
+            {currentDoc.pages} 页
           </span>
         </div>
       </div>
@@ -43,18 +43,18 @@ export default function WorkspaceTopbar({
       <div className="flex items-center gap-2">
         <button
           onClick={onOpenKeySettings}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-neutral-200 hover:border-neutral-300 bg-white hover:bg-neutral-50 text-neutral-700 font-semibold transition cursor-pointer"
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-black/[0.08] hover:border-black/20 bg-white hover:bg-neutral-50 text-neutral-700 font-medium text-xs transition cursor-pointer shadow-2xs active:scale-95"
           title="EasyInput 按键设置与连接"
         >
-          <Keyboard className="w-3.5 h-3.5 text-orange-500" />
+          <Keyboard className="w-3.5 h-3.5 text-neutral-600" />
           <span>按键设置</span>
         </button>
         <button
           onClick={() => fileInputRef.current?.click()}
-          className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-neutral-100 hover:bg-neutral-200 text-neutral-700 font-medium cursor-pointer"
+          className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-black/[0.04] hover:bg-black/[0.08] text-neutral-700 font-medium text-xs transition cursor-pointer active:scale-95"
         >
-          <Upload className="w-3.5 h-3.5" />
-          <span>上传其他 PDF</span>
+          <Upload className="w-3.5 h-3.5 text-neutral-600" />
+          <span>上传其他</span>
         </button>
         <input
           type="file"
@@ -71,10 +71,10 @@ export default function WorkspaceTopbar({
         />
         <button
           onClick={onExportNotes}
-          className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-orange-500 hover:bg-orange-600 text-white font-semibold shadow-sm transition cursor-pointer"
+          className="flex items-center gap-1 px-3.5 py-1.5 rounded-full bg-[#0071E3] hover:bg-[#005bb5] text-white font-medium text-xs transition shadow-sm cursor-pointer active:scale-95"
         >
           <Download className="w-3.5 h-3.5" />
-          <span>导出研读报告</span>
+          <span>导出笔记</span>
         </button>
       </div>
     </div>

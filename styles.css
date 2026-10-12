@@ -1,6 +1,56 @@
-/* Clean White Scattered Document Cards Orbit System */
+/* Apple-inspired Clean Editorial & Orbit Design System */
 
-/* Reset & Scrollbars */
+:root {
+  /* Apple Serif Stack: New York / Times New Roman / Songti SC (宋体) */
+  --font-serif: "New York", "Times New Roman", Times, "Songti SC", "SimSun", "STSong", "Songti TC", "Noto Serif CJK SC", Georgia, serif;
+  /* Apple Sans Stack: SF Pro / PingFang SC (苹方) */
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "PingFang SC", "Hiragino Sans GB", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-mono: "SF Mono", Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
+body {
+  font-family: var(--font-serif);
+  background-color: #FBFBFD;
+  color: #1D1D1F;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+.font-editorial {
+  font-family: var(--font-serif);
+}
+
+.font-ui {
+  font-family: var(--font-sans);
+}
+
+/* Apple Frosted Glass Utilities */
+.apple-glass {
+  background: rgba(255, 255, 255, 0.78);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+}
+
+.apple-glass-subtle {
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(16px) saturate(160%);
+  -webkit-backdrop-filter: blur(16px) saturate(160%);
+}
+
+.apple-border {
+  border-color: rgba(0, 0, 0, 0.07);
+}
+
+.apple-shadow {
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0, 0, 0, 0.02);
+}
+
+.apple-shadow-lg {
+  box-shadow: 0 12px 36px -4px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.03);
+}
+
+/* Apple Subtle Scrollbars */
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
@@ -17,11 +67,11 @@
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(160, 160, 170, 0.35);
+  background: rgba(0, 0, 0, 0.15);
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(140, 140, 150, 0.6);
+  background: rgba(0, 0, 0, 0.3);
 }
 
 /* Orbit Stage */
@@ -49,25 +99,25 @@
   transition: box-shadow 0.25s ease, border-color 0.25s ease;
 }
 
-/* Paper card styling: crisp white paper with authentic paper shadow */
+/* Paper card styling: Apple-grade subtle border & shadow */
 .orbit-card-inner {
   width: 100%;
   height: 100%;
-  border-radius: 12px;
+  border-radius: 16px;
   background: #ffffff;
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  box-shadow: 0 14px 35px -8px rgba(0, 0, 0, 0.14), 0 4px 12px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: 0 16px 36px -8px rgba(0, 0, 0, 0.09), 0 2px 8px rgba(0, 0, 0, 0.03);
   overflow: hidden;
   display: flex;
   flex-direction: column;
   position: relative;
-  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease;
+  transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.25s ease, border-color 0.2s ease;
 }
 
 .orbit-card:hover .orbit-card-inner,
 .orbit-card-inner.ring-4 {
-  box-shadow: 0 24px 50px -10px rgba(249, 115, 22, 0.35), 0 6px 18px rgba(0, 0, 0, 0.12);
-  border-color: rgba(249, 115, 22, 0.8);
+  box-shadow: 0 24px 50px -10px rgba(0, 113, 227, 0.25), 0 6px 18px rgba(0, 0, 0, 0.06);
+  border-color: rgba(0, 113, 227, 0.6);
 }
 
 /* Central Console */
@@ -80,17 +130,17 @@
 .mindmap-node {
   position: relative;
   padding-left: 1rem;
-  margin-top: 0.35rem;
-  border-left: 1.5px solid rgba(249, 115, 22, 0.4);
+  margin-top: 0.4rem;
+  border-left: 1.5px solid rgba(0, 113, 227, 0.3);
 }
 .mindmap-node::before {
   content: '';
   position: absolute;
-  top: 0.6rem;
+  top: 0.65rem;
   left: 0;
   width: 0.65rem;
   height: 1.5px;
-  background-color: rgba(249, 115, 22, 0.4);
+  background-color: rgba(0, 113, 227, 0.3);
 }
 
 /* Text layer for PDF selection */
@@ -113,9 +163,9 @@
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 .animate-fadeIn {
-  animation: fadeIn 0.15s ease-out forwards;
+  animation: fadeIn 0.18s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
 }
