@@ -18,6 +18,11 @@ import {
   closeHidConnection,
   tryAutoConnectHid
 } from '../services/hidService.js';
+import {
+  toggleSpeechRecognition,
+  stopSpeechRecognition,
+  isCurrentlyListening
+} from '../services/speechService.js';
 
 export function useHardwareController({
   handleDeleteDoc,
@@ -82,6 +87,32 @@ export function useHardwareController({
     }
 
     switch (actionName) {
+      case 'voiceToText': {
+        const isListening = isCurrentlyListening();
+        if (isListening) {
+          stopSpeechRecognition();
+          showToast('🎤 语音输入已结束');
+        } else {
+          const started = toggleSpeechRecognition({
+            onResult: (text) => {
+              window.dispatchEvent(new CustomEvent('orbit-voice-input', { detail: { text } }));
+            },
+            onStatusChange: (listening) => {
+              if (listening) {
+                showToast('🎙️ 语音输入中... 请说话 (再次按 S2 结束)');
+              }
+            },
+            onError: (err) => {
+              showToast(`语音提示: ${err}`);
+            }
+          });
+          if (!started) {
+            showToast('当前浏览器不支持或未开启麦克风权限');
+          }
+        }
+        break;
+      }
+
       case 'deleteDoc': {
         const targetDoc = viewRef.current === 'workspace'
           ? currentDocRef.current
