@@ -169,3 +169,35 @@ body {
 .animate-fadeIn {
   animation: fadeIn 0.18s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
 }
+
+/* Orbital Trajectory Arc Breathing Animations */
+@keyframes orbitArcBreath {
+  0%, 100% {
+    opacity: 0.45;
+    stroke-width: 1.4;
+  }
+  50% {
+    opacity: 0.92;
+    stroke-width: 2.2;
+  }
+}
+
+@keyframes orbitArcBreathAlt {
+  0%, 100% {
+    opacity: 0.35;
+    stroke-width: 1.0;
+  }
+  50% {
+    opacity: 0.75;
+    stroke-width: 1.8;
+  }
+}
+
+.orbit-arc-breathing {
+  animation: orbitArcBreath 4.8s ease-in-out infinite;
+}
+
+.orbit-arc-breathing-delayed {
+  animation: orbitArcBreathAlt 5.6s ease-in-out 1.6s infinite;
+}
+

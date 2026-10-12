@@ -63,7 +63,7 @@ export default function OrbitCard({
       <div
         className={`orbit-card-inner group transition-all duration-200 ${
           isCardActive
-            ? 'ring-4 ring-orange-500 shadow-2xl border-orange-500'
+            ? 'ring-4 ring-[#0071E3]/85 shadow-[0_20px_45px_rgba(0,113,227,0.22)] border-[#0071E3]'
             : ''
         }`}
         onMouseEnter={() => {
@@ -76,9 +76,9 @@ export default function OrbitCard({
       >
         {/* Floating Selection Indicator Badge */}
         {isSelected && (
-          <div className="absolute -top-3.5 left-1/2 transform -translate-x-1/2 z-50 bg-neutral-900/95 text-white text-[9px] font-extrabold px-2.5 py-0.5 rounded-full shadow-xl flex items-center gap-1.5 border border-orange-400 whitespace-nowrap">
-            <span className="w-1.5 h-1.5 rounded-full bg-orange-400 animate-ping" />
-            <span>旋钮选中 · 按下打开</span>
+          <div className="absolute -top-3.5 left-1/2 transform -translate-x-1/2 z-50 bg-neutral-900/95 text-white text-[9px] font-semibold px-2.5 py-0.5 rounded-full shadow-xl flex items-center gap-1.5 border border-[#0071E3]/70 whitespace-nowrap font-ui">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#0071E3] animate-ping" />
+            <span>旋钮选中 · 按下研读</span>
           </div>
         )}
 
@@ -129,8 +129,8 @@ export default function OrbitCard({
           </div>
           <div className="flex items-center justify-between text-[8px] text-neutral-400 mt-0.5">
             <span className="truncate max-w-[70px]">{doc.fileSize}</span>
-            <ArrowUpRight className={`w-3 h-3 text-orange-500 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform ${
-              isCardActive ? 'translate-x-0.5 -translate-y-0.5 text-orange-600' : ''
+            <ArrowUpRight className={`w-3 h-3 text-[#0071E3] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform ${
+              isCardActive ? 'translate-x-0.5 -translate-y-0.5 text-[#005bb5]' : ''
             }`} />
           </div>
         </div>
