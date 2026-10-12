@@ -1,5 +1,32 @@
 // Client-side AI service connected to local bl-cli (Bailian Qwen)
 
+export const SUPPORTED_BAILIAN_MODELS = [
+  {
+    id: 'qwen-plus',
+    name: '通义千问 Plus',
+    desc: '推荐 · 学术与文献深度研读首选，综合性能均衡强大',
+    tag: '推荐'
+  },
+  {
+    id: 'qwen-max',
+    name: '通义千问 Max',
+    desc: '旗舰 · 最强逻辑推理能力，适合复杂论证与深层思辨',
+    tag: '旗舰'
+  },
+  {
+    id: 'qwen-flash',
+    name: '通义千问 Flash',
+    desc: '极速 · 毫秒级低延迟响应，适合快速浏览与交互',
+    tag: '极速'
+  },
+  {
+    id: 'qwen-long',
+    name: '通义千问 Long',
+    desc: '超长 · 百万Token长文本处理，适合超长文献全局分析',
+    tag: '超长'
+  }
+];
+
 export async function fetchBailianStatus() {
   try {
     const res = await fetch('/api/bailian/status');
@@ -83,6 +110,7 @@ export async function streamReadingQA({
   pageText,
   userQuestion,
   chatHistory = [],
+  model = 'qwen-plus',
   onChunk,
   signal
 }) {
@@ -112,7 +140,7 @@ export async function streamReadingQA({
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      model: 'qwen-plus',
+      model: model || 'qwen-plus',
       messages,
       stream: true,
       temperature: 0.6
@@ -132,7 +160,7 @@ export async function streamReadingQA({
   return await parseSseStream(response, onChunk);
 }
 
-export async function generateQuickSummary({ currentDoc, pageText }) {
+export async function generateQuickSummary({ currentDoc, pageText, model = 'qwen-plus' }) {
   const docTitle = currentDoc?.fileName || '文档';
   const cleanText = (pageText || '').trim().slice(0, 2000);
 
@@ -151,7 +179,7 @@ export async function generateQuickSummary({ currentDoc, pageText }) {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      model: 'qwen-plus',
+      model: model || 'qwen-plus',
       messages,
       stream: false,
       temperature: 0.5
@@ -166,7 +194,7 @@ export async function generateQuickSummary({ currentDoc, pageText }) {
   return data.choices?.[0]?.message?.content || '';
 }
 
-export async function generateMindmapStructure({ currentDoc, pageText }) {
+export async function generateMindmapStructure({ currentDoc, pageText, model = 'qwen-plus' }) {
   const docTitle = currentDoc?.fileName ? currentDoc.fileName.replace(/\.pdf$/i, '') : '核心主题';
   const cleanText = (pageText || '').trim().slice(0, 2000);
 
@@ -182,7 +210,7 @@ export async function generateMindmapStructure({ currentDoc, pageText }) {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      model: 'qwen-plus',
+      model: model || 'qwen-plus',
       messages: [{ role: 'user', content: prompt }],
       stream: false,
       temperature: 0.3

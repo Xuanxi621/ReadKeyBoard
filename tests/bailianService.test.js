@@ -80,3 +80,22 @@ test('parseSseStream accumulates text chunks correctly from readable stream', as
   assert.equal(chunks[0].accumulated, '你好');
   assert.equal(chunks[2].accumulated, '你好！我是千问。');
 });
+
+test('SUPPORTED_BAILIAN_MODELS contains qwen-plus, qwen-max, qwen-flash, and qwen-long', async () => {
+  const { SUPPORTED_BAILIAN_MODELS } = await import('../src/services/aiService.js');
+  assert.ok(Array.isArray(SUPPORTED_BAILIAN_MODELS));
+  const ids = SUPPORTED_BAILIAN_MODELS.map(m => m.id);
+  assert.ok(ids.includes('qwen-plus'));
+  assert.ok(ids.includes('qwen-max'));
+  assert.ok(ids.includes('qwen-flash'));
+  assert.ok(ids.includes('qwen-long'));
+});
+
+test('marked parses markdown headers, lists, and code blocks for optimized rendering', async () => {
+  const { marked } = await import('marked');
+  const markdown = '# 核心总结\n\n- 要点 1：**重要发现**\n- 要点 2：测试\n\n```python\nprint("hello")\n```';
+  const html = marked.parse(markdown);
+  assert.match(html, /<h1>核心总结<\/h1>/);
+  assert.match(html, /<strong>重要发现<\/strong>/);
+  assert.match(html, /<pre><code.*>print\(&quot;hello&quot;\)\n<\/code><\/pre>/);
+});

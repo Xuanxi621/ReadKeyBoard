@@ -41,8 +41,20 @@ export default function WorkspaceView({
   const [isAiThinking, setIsAiThinking] = useState(false);
   const [isPageLoading, setIsPageLoading] = useState(false);
   const [bailianStatus, setBailianStatus] = useState({ connected: false, checking: true, model: 'qwen-plus' });
+  const [selectedModel, setSelectedModel] = useState(() => {
+    return localStorage.getItem('readkeyboard_bailian_model') || 'qwen-plus';
+  });
   const [customMindmap, setCustomMindmap] = useState(null);
   const [customSummary, setCustomSummary] = useState(null);
+
+  const handleModelChange = (newModel) => {
+    if (!newModel) return;
+    setSelectedModel(newModel);
+    try {
+      localStorage.setItem('readkeyboard_bailian_model', newModel);
+    } catch (_) {}
+    showToast(`已切换至模型：${newModel}`);
+  };
 
   const canvasRef = useRef(null);
   const textLayerRef = useRef(null);
@@ -220,6 +232,7 @@ export default function WorkspaceView({
         pageText,
         userQuestion: query,
         chatHistory: chatMessages,
+        model: selectedModel,
         onChunk: (_delta, accumulated) => {
           setChatMessages(prev => {
             const next = [...prev];
@@ -276,10 +289,10 @@ export default function WorkspaceView({
   };
 
   const handleRegenerateMindmap = async () => {
-    showToast('正在通过 bl-cli 通义千问分析重构概念拓扑...');
+    showToast(`正在通过 bl-cli [${selectedModel}] 分析重构概念拓扑...`);
     try {
       const pageText = await extractCurrentPageText();
-      const nodes = await generateMindmapStructure({ currentDoc, pageText });
+      const nodes = await generateMindmapStructure({ currentDoc, pageText, model: selectedModel });
       if (nodes && Array.isArray(nodes) && nodes.length > 0) {
         setCustomMindmap(nodes);
         showToast('知识脑图已基于文档实际内容成功更新');
@@ -293,10 +306,10 @@ export default function WorkspaceView({
   };
 
   const handleRegenerateSummary = async () => {
-    showToast('正在通过 bl-cli 通义千问提炼核心要点...');
+    showToast(`正在通过 bl-cli [${selectedModel}] 提炼核心要点...`);
     try {
       const pageText = await extractCurrentPageText();
-      const summaryText = await generateQuickSummary({ currentDoc, pageText });
+      const summaryText = await generateQuickSummary({ currentDoc, pageText, model: selectedModel });
       if (summaryText) {
         setCustomSummary(summaryText);
         showToast('要点提炼已更新');
@@ -407,6 +420,8 @@ export default function WorkspaceView({
           addNote={addNote}
           showToast={showToast}
           bailianStatus={bailianStatus}
+          selectedModel={selectedModel}
+          onSelectModel={handleModelChange}
           customMindmap={customMindmap}
           customSummary={customSummary}
           handleRegenerateMindmap={handleRegenerateMindmap}

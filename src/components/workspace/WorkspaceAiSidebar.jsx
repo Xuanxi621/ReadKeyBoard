@@ -1,5 +1,7 @@
 import React from 'react';
 import { useVoiceInput } from '../../hooks/useVoiceInput.js';
+import MarkdownRenderer from '../MarkdownRenderer.jsx';
+import { SUPPORTED_BAILIAN_MODELS } from '../../services/aiService.js';
 import {
   MessageSquare,
   FileText,
@@ -13,7 +15,8 @@ import {
   ListOrdered,
   RefreshCw,
   Plus,
-  Mic
+  Mic,
+  Cpu
 } from 'lucide-react';
 
 export default function WorkspaceAiSidebar({
@@ -34,6 +37,8 @@ export default function WorkspaceAiSidebar({
   addNote,
   showToast,
   bailianStatus,
+  selectedModel = 'qwen-plus',
+  onSelectModel,
   customMindmap,
   customSummary,
   handleRegenerateMindmap,
@@ -42,8 +47,8 @@ export default function WorkspaceAiSidebar({
   const voice = useVoiceInput(setChatInput, showToast, () => setActiveAiTab('chat'));
   return (
     <div className="w-[420px] xl:w-[460px] flex-shrink-0 bg-white flex flex-col border-l border-neutral-200 transition-all">
-      {/* Bailian bl-cli Status Banner */}
-      <div className="px-3.5 py-1.5 bg-neutral-50/90 border-b border-neutral-200/70 flex items-center justify-between text-[11px]">
+      {/* Bailian bl-cli Status & Model Selector Banner */}
+      <div className="px-3 py-1.5 bg-neutral-50/95 border-b border-neutral-200/80 flex items-center justify-between text-[11px] gap-2">
         <div className="flex items-center gap-1.5 min-w-0">
           <span
             className={`w-2 h-2 rounded-full flex-shrink-0 ${
@@ -52,22 +57,35 @@ export default function WorkspaceAiSidebar({
                 : 'bg-amber-400'
             }`}
           />
-          <span className="font-medium text-neutral-700 truncate">
-            {bailianStatus?.connected
-              ? `已接入本地 bl-cli · ${bailianStatus.model || 'qwen-plus'}`
-              : bailianStatus?.checking
-              ? '正在检测本地 bl-cli...'
-              : 'bl-cli 未连接 (~/.bailian)'}
+          <span className="font-semibold text-neutral-700 truncate text-[11px]">
+            {bailianStatus?.connected ? '百炼 bl-cli' : '未连接 bl-cli'}
           </span>
+          {bailianStatus?.workspace_id && (
+            <span
+              className="text-[10px] text-neutral-400 font-mono hidden sm:inline"
+              title={`百炼空间: ${bailianStatus.workspace_id}`}
+            >
+              ({bailianStatus.workspace_id.slice(0, 7)}...)
+            </span>
+          )}
         </div>
-        {bailianStatus?.workspace_id && (
-          <span
-            className="text-[10px] text-neutral-400 font-mono ml-2 flex-shrink-0"
-            title={`百炼空间: ${bailianStatus.workspace_id}`}
+
+        {/* Model Selector Dropdown */}
+        <div className="flex items-center gap-1 flex-shrink-0">
+          <Cpu className="w-3.5 h-3.5 text-orange-500" />
+          <select
+            value={selectedModel}
+            onChange={e => onSelectModel && onSelectModel(e.target.value)}
+            className="bg-white text-[11px] font-medium text-neutral-800 border border-neutral-300 rounded px-1.5 py-0.5 outline-none hover:border-orange-500 focus:ring-1 focus:ring-orange-400 cursor-pointer shadow-2xs"
+            title="选择要调用的通义千问大模型"
           >
-            空间: {bailianStatus.workspace_id.slice(0, 10)}...
-          </span>
-        )}
+            {SUPPORTED_BAILIAN_MODELS.map(m => (
+              <option key={m.id} value={m.id}>
+                {m.name} [{m.tag}]
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
 
       {/* AI Tabs */}
@@ -139,11 +157,8 @@ export default function WorkspaceAiSidebar({
                       AI
                     </div>
                     <div className="flex-1 space-y-1.5">
-                      <div className="bg-neutral-100 p-3 rounded-2xl rounded-tl-sm text-neutral-800 leading-relaxed whitespace-pre-wrap">
-                        {msg.text || (msg.isStreaming ? '正在思考中...' : '')}
-                        {msg.isStreaming && (
-                          <span className="inline-block w-1.5 h-3.5 bg-orange-500 animate-pulse ml-1 align-middle" />
-                        )}
+                      <div className="bg-neutral-100 p-3 rounded-2xl rounded-tl-sm text-neutral-800 leading-relaxed shadow-2xs">
+                        <MarkdownRenderer content={msg.text} isStreaming={msg.isStreaming} />
                       </div>
                       {msg.suggestions && (
                         <div className="flex flex-wrap gap-1.5 pt-1">
@@ -182,7 +197,7 @@ export default function WorkspaceAiSidebar({
                 </div>
                 <div className="bg-neutral-100 p-2.5 rounded-2xl rounded-tl-sm text-neutral-500 flex items-center gap-1.5">
                   <span className="w-1.5 h-1.5 rounded-full bg-orange-500 animate-ping" />
-                  <span>正在通过 bl-cli 通义千问研读当前第 {currentPage} 页...</span>
+                  <span>正在通过 bl-cli [{selectedModel}] 研读当前第 {currentPage} 页...</span>
                 </div>
               </div>
             )}
@@ -243,9 +258,9 @@ export default function WorkspaceAiSidebar({
               <Sparkles className="w-4 h-4 text-orange-500" />
               <span>一句话总结 (Executive Summary)</span>
             </div>
-            <p className="text-neutral-700 leading-relaxed whitespace-pre-wrap">
-              {customSummary || currentDoc.oneLiner || `已成功加载并持久化本地文档《${currentDoc.fileName}》（共 ${currentDoc.pages} 页）。`}
-            </p>
+            <div className="text-neutral-700 leading-relaxed">
+              <MarkdownRenderer content={customSummary || currentDoc.oneLiner || `已成功加载并持久化本地文档《${currentDoc.fileName}》（共 ${currentDoc.pages} 页）。`} />
+            </div>
           </div>
 
           <div className="space-y-3">
