@@ -518,16 +518,37 @@ export function useHardwareController({
 
       // ─── 改键录制模式 ───
       if (recordingToken) {
-        // 纯修饰键按下，等待组合键完成
-        if (isModifierKey(e)) {
-          e.preventDefault();
-          return;
-        }
         // Escape 取消改键（除非改的就是 ENC_PRESS）
         if (e.key === 'Escape' && !e.ctrlKey && !e.altKey && !e.shiftKey && recordingToken !== 'ENC_PRESS') {
           e.preventDefault();
           setRecordingToken(null);
           showToast('已取消改键');
+          return;
+        }
+
+        // 如果按下的是 Windows 键 (MetaLeft / MetaRight)，在 Windows 下 keyup 常被系统拦截，在 keydown 立即完成录制
+        if (e.key === 'Meta' || e.code === 'MetaLeft' || e.code === 'MetaRight') {
+          e.preventDefault();
+          e.stopPropagation();
+          const targetCode = e.code || 'MetaLeft';
+          const updated = {
+            ...hardwareMap,
+            [recordingToken]: {
+              ...hardwareMap[recordingToken],
+              fallbackKey: targetCode
+            }
+          };
+          hardwareMapRef.current = updated;
+          setHardwareMap(updated);
+          saveStoredHardwareMap(updated);
+          showToast(`已重设 ${hardwareMap[recordingToken].label} 快捷键为: ${targetCode}`);
+          setRecordingToken(null);
+          return;
+        }
+
+        // 纯修饰键按下 (Ctrl / Alt / Shift)，等待组合键完成
+        if (isModifierKey(e)) {
+          e.preventDefault();
           return;
         }
         e.preventDefault();
@@ -540,6 +561,7 @@ export function useHardwareController({
             fallbackKey: formattedKey
           }
         };
+        hardwareMapRef.current = updated;
         setHardwareMap(updated);
         saveStoredHardwareMap(updated);
         showToast(`已重设 ${hardwareMap[recordingToken].label} 快捷键为: ${formattedKey}`);
@@ -547,8 +569,19 @@ export function useHardwareController({
         return;
       }
 
-      // Bound modifier keys are dispatched only on a standalone release.
-      if (isModifierKey(e) && (e.code === 'MetaLeft' || Object.values(hardwareMap).some(mapping => mapping.fallbackKey === e.code))) {
+      // 独立 Meta 键 (Win键 / S2) 响应：Windows 系统下 keyup 会被系统吞掉，在 keydown 立即响应并拦截系统菜单
+      if (e.code === 'MetaLeft' || e.code === 'MetaRight' || (e.key === 'Meta' && !e.ctrlKey && !e.altKey && !e.shiftKey)) {
+        e.preventDefault();
+        e.stopPropagation();
+        if (e.repeat) return;
+        const binding = Object.entries(hardwareMap).find(([, mapping]) => mapping.fallbackKey === e.code);
+        const token = binding?.[0] || 'KEY2';
+        onHardwareTrigger(token, `按键 (${e.code || 'Meta'})`);
+        return;
+      }
+
+      // Bound modifier keys (Ctrl/Shift/Alt) are dispatched only on a standalone release.
+      if (isModifierKey(e) && Object.values(hardwareMap).some(mapping => mapping.fallbackKey === e.code)) {
         e.preventDefault();
         return;
       }
