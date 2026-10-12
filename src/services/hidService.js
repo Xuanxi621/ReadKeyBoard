@@ -2,13 +2,25 @@
 
 let hidDevice = null;
 let hidConnected = false;
-let inputReportHandler = null;
+let openDevices = [];
+const boundListeners = new Map();
 
-function removeInputListener() {
-  if (hidDevice && inputReportHandler) {
-    hidDevice.removeEventListener('inputreport', inputReportHandler);
+function removeAllInputListeners() {
+  for (const [dev, handler] of boundListeners.entries()) {
+    try {
+      dev.removeEventListener('inputreport', handler);
+    } catch (e) {}
   }
-  inputReportHandler = null;
+  boundListeners.clear();
+}
+
+function removeInputListener(device) {
+  if (device && boundListeners.has(device)) {
+    try {
+      device.removeEventListener('inputreport', boundListeners.get(device));
+    } catch (e) {}
+    boundListeners.delete(device);
+  }
 }
 
 export async function openHidConnection(onTokenReceived, onLogReceived, onStatusChanged) {
@@ -17,16 +29,8 @@ export async function openHidConnection(onTokenReceived, onLogReceived, onStatus
   }
 
   // 关闭旧连接
-  if (hidDevice) {
-    removeInputListener();
-    try {
-      await hidDevice.close();
-    } catch (e) {}
-    hidDevice = null;
-    hidConnected = false;
-  }
+  await closeHidConnection();
 
-  // 1. 尝试复用已授权设备
   // 1. 获取已授权设备
   const existingDevices = await navigator.hid.getDevices();
   let matchedList = existingDevices.filter(d => d.vendorId === 0x303a);
@@ -51,6 +55,7 @@ export async function openHidConnection(onTokenReceived, onLogReceived, onStatus
   ) || matchedList[0];
 
   // 打开匹配到的所有 EasyInput 集合节点，确保按键上报和配网配置双通
+  openDevices = [];
   for (const dev of matchedList) {
     if (!dev.opened) {
       try {
@@ -58,6 +63,9 @@ export async function openHidConnection(onTokenReceived, onLogReceived, onStatus
       } catch (e) {
         console.warn('HID 打开失败:', dev, e);
       }
+    }
+    if (dev.opened || dev.opened === undefined) {
+      openDevices.push(dev);
     }
   }
 
@@ -69,8 +77,8 @@ export async function openHidConnection(onTokenReceived, onLogReceived, onStatus
     onLogReceived(`[WebHID] 已连接 EasyInput: ${targetDevice.productName || 'ESP32-S3'} (VID: 0x${targetDevice.vendorId.toString(16)}, PID: 0x${targetDevice.productId.toString(16)}, 集合数: ${matchedList.length})`);
   }
 
-  // 为所有打开的设备挂载输入监听
-  for (const dev of matchedList) {
+  // 为所有打开的设备挂载输入监听，彼此独立保留，不互相冲掉
+  for (const dev of openDevices) {
     attachInputListener(dev, onTokenReceived, onLogReceived);
   }
 
@@ -78,9 +86,8 @@ export async function openHidConnection(onTokenReceived, onLogReceived, onStatus
 }
 
 function attachInputListener(device, onTokenReceived, onLogReceived) {
-  removeInputListener();
-  hidDevice = device;
-  inputReportHandler = (event) => {
+  removeInputListener(device);
+  const inputReportHandler = (event) => {
     const { data, reportId } = event;
     if (onLogReceived) {
       onLogReceived(`[WebHID Report 0x${reportId.toString(16)}] 字节数: ${data.byteLength}`);
@@ -150,6 +157,7 @@ function attachInputListener(device, onTokenReceived, onLogReceived) {
       }
     }
   };
+  boundListeners.set(device, inputReportHandler);
   device.addEventListener('inputreport', inputReportHandler);
 }
 
@@ -157,16 +165,35 @@ export async function tryAutoConnectHid(onTokenReceived, onLogReceived, onStatus
   if (!('hid' in navigator)) return false;
   try {
     const devices = await navigator.hid.getDevices();
-    const matched = devices.find(d => d.vendorId === 0x303a);
-    if (matched) {
-      if (!matched.opened) {
-        await matched.open();
+    const matchedList = devices.filter(d => d.vendorId === 0x303a);
+    if (matchedList.length > 0) {
+      removeAllInputListeners();
+      openDevices = [];
+      for (const dev of matchedList) {
+        if (!dev.opened) {
+          try {
+            await dev.open();
+          } catch (e) {
+            console.warn('Auto-connect HID open failed:', dev, e);
+          }
+        }
+        if (dev.opened || dev.opened === undefined) {
+          openDevices.push(dev);
+        }
       }
-      attachInputListener(matched, onTokenReceived, onLogReceived);
+      for (const dev of openDevices) {
+        attachInputListener(dev, onTokenReceived, onLogReceived);
+      }
+      hidDevice = matchedList.find(d => 
+        d.collections?.some(c => 
+          c.usagePage === 0xFF00 || 
+          c.featureReports?.some(r => r.reportId === 0x10)
+        )
+      ) || matchedList[0];
       hidConnected = true;
       if (onStatusChanged) onStatusChanged(true);
       if (onLogReceived) {
-        onLogReceived(`[WebHID 自动重连] ${matched.productName || 'EasyInput AI'}`);
+        onLogReceived(`[WebHID 自动重连] ${hidDevice.productName || 'EasyInput AI'}`);
       }
       return true;
     }
@@ -178,13 +205,14 @@ export async function tryAutoConnectHid(onTokenReceived, onLogReceived, onStatus
 
 export async function closeHidConnection(onStatusChanged) {
   hidConnected = false;
-  if (hidDevice) {
-    removeInputListener();
+  removeAllInputListeners();
+  for (const dev of openDevices) {
     try {
-      await hidDevice.close();
+      await dev.close();
     } catch (e) {}
-    hidDevice = null;
   }
+  openDevices = [];
+  hidDevice = null;
   if (onStatusChanged) onStatusChanged(false);
 }
 
