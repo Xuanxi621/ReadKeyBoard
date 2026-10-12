@@ -1,5 +1,5 @@
 import React from 'react';
-import { Sliders, Terminal, RotateCw, RotateCcw, Check } from 'lucide-react';
+import { Sliders, Terminal, RotateCw, RotateCcw, Check, Disc } from 'lucide-react';
 import { EASYINPUT_ACTIONS, DEFAULT_HARDWARE_MAP } from '../../services/hardwareConfig.js';
 
 export default function KeyMappingList({
