@@ -11,26 +11,17 @@ function OrbitCard({
   onSelectCard,
   onHoverCard,
   onOpenDoc,
-  onDeleteDoc
+  onDeleteDoc,
+  rx = 700,
+  ry = 310
 }) {
-  const cProps = doc.cardProps || {
-    w: 136,
-    h: 184,
-    baseTilt: 0,
-    radiusX: 590,
-    radiusY: 260,
-    orbitOffset: (index / Math.max(1, totalDocs)) * Math.PI * 2
-  };
-
   // Evenly distribute cards along the orbit, ensuring calm, harmonious spacing
   const orbitOffset = (index / Math.max(1, totalDocs)) * Math.PI * 2;
   const cardAngle = orbitAngle + orbitOffset;
 
-  // Exact orbit radii matching SVG ellipse perfectly (590px x 260px)
-  const cardW = Math.max(132, cProps.w || 136);
-  const cardH = Math.max(178, cProps.h || 184);
-  const rx = 590;
-  const ry = 260;
+  // Architectural card sizing: refined compact proportions ensuring zero overlap with CentralConsole
+  const cardW = 124;
+  const cardH = 168;
   const sinA = Math.sin(cardAngle);
   const cosA = Math.cos(cardAngle);
 
@@ -55,9 +46,9 @@ function OrbitCard({
   const brightness = isCardActive ? 1.01 : 0.97 + depthRatio * 0.04;
 
   // Perspective Scale & Opacity: clean 3D depth perception
-  const scale = isCardActive ? 1.15 : 0.90 + depthRatio * 0.20;
-  // Layering: background cards (<20) travel physically behind console (z-20); foreground cards (>30) pass in front
-  const zIndex = isCardActive ? 90 : Math.round(depthRatio * 50) + 10;
+  const scale = isCardActive ? 1.10 : 0.88 + depthRatio * 0.16;
+  // Layering: background cards travel safely behind central console (z-30)
+  const zIndex = isCardActive ? 25 : Math.round(depthRatio * 15) + 5;
   const opacity = isCardActive ? 1 : 0.88 + depthRatio * 0.12;
 
   const handleCardClick = (e) => {

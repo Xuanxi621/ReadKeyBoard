@@ -185,7 +185,7 @@ function UniverseView({
       >
         {/* Architectural Champagne Gold & Stone Orbit Track */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
-          <svg className="w-[1440px] h-[780px] overflow-visible max-w-none" viewBox="0 0 1440 780" fill="none">
+          <svg className="w-[1600px] h-[800px] overflow-visible max-w-none pointer-events-none" viewBox="0 0 1600 800" fill="none">
             <defs>
               <linearGradient id="orbitTrackArch" x1="0%" y1="0%" x2="100%" y2="100%">
                 <stop offset="0%" stopColor="#B89A5A" stopOpacity="0.45" />
@@ -201,12 +201,12 @@ function UniverseView({
               </filter>
             </defs>
 
-            {/* Primary Orbit Track Arc (绝对同心 cy=390, rx=590, ry=260) */}
+            {/* Primary Orbit Track Arc (绝对同心 cx=800, cy=400, rx=700, ry=310) */}
             <ellipse
-              cx="720"
-              cy="390"
-              rx="590"
-              ry="260"
+              cx="800"
+              cy="400"
+              rx="700"
+              ry="310"
               stroke="url(#orbitTrackArch)"
               strokeWidth="1.5"
               strokeDasharray="6 6"
@@ -216,21 +216,21 @@ function UniverseView({
 
             {/* Subtle Inner Horizon Reference Ring */}
             <ellipse
-              cx="720"
-              cy="390"
-              rx="535"
-              ry="235"
+              cx="800"
+              cy="400"
+              rx="640"
+              ry="285"
               stroke="rgba(184, 154, 90, 0.12)"
               strokeWidth="1"
               strokeDasharray="4 8"
             />
 
-            {/* Celestial Optical Nodes */}
-            <circle cx="1310" cy="390" r="3" fill="#B89A5A" opacity="0.85" />
-            <circle cx="1310" cy="390" r="1.6" fill="#FFFFFF" />
-            <circle cx="130" cy="390" r="2.5" fill="#B89A5A" opacity="0.80" />
-            <circle cx="720" cy="130" r="2.2" fill="#D5CEC2" opacity="0.65" />
-            <circle cx="720" cy="650" r="2.8" fill="#B89A5A" opacity="0.75" />
+            {/* Celestial Optical Nodes (aligned with rx=700, ry=310) */}
+            <circle cx="1500" cy="400" r="3" fill="#B89A5A" opacity="0.85" />
+            <circle cx="1500" cy="400" r="1.6" fill="#FFFFFF" />
+            <circle cx="100" cy="400" r="2.5" fill="#B89A5A" opacity="0.80" />
+            <circle cx="800" cy="90" r="2.2" fill="#D5CEC2" opacity="0.65" />
+            <circle cx="800" cy="710" r="2.8" fill="#B89A5A" opacity="0.75" />
           </svg>
         </div>
 
@@ -274,6 +274,8 @@ function UniverseView({
               onHoverCard={setHoveredCardIndex}
               onOpenDoc={onOpenDoc}
               onDeleteDoc={onDeleteDoc}
+              rx={700}
+              ry={310}
             />
           ))}
         </div>

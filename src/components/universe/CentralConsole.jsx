@@ -42,17 +42,17 @@ function CentralConsole({
   };
 
   return (
-    <div id="centralConsole" className="z-20 w-full max-w-xl px-4 flex flex-col items-center pointer-events-auto select-none">
-      {/* Hero Title with Austin Skyline Light Architectural Typography */}
-      <h1 className="text-3xl md:text-[40px] font-light text-[#1C1917] tracking-tight leading-[1.18] mb-2 text-center">
+    <div id="centralConsole" className="z-30 w-full max-w-4xl px-4 flex flex-col items-center pointer-events-auto select-none">
+      {/* Hero Title with Austin Skyline Light Architectural Typography (Enforce single line) */}
+      <h1 className="text-2xl sm:text-3xl md:text-[36px] lg:text-[40px] font-light text-[#1C1917] tracking-tight leading-none mb-3 text-center whitespace-nowrap select-none">
         在星轨与指尖之间 — 深度研读。
       </h1>
-      <p className="text-xs md:text-[13px] text-[#6E6760] font-light tracking-normal text-center mb-5 max-w-md leading-relaxed">
+      <p className="text-xs md:text-[13px] text-[#6E6760] font-light tracking-wide text-center mb-6 whitespace-nowrap">
         开放、静谧的知识空间，专为专注与深刻洞察而设计。
       </p>
 
-      {/* Architectural Inset Card */}
-      <div className="w-full bg-white rounded-2xl border border-[#E2DDD5] shadow-[0_6px_24px_rgba(28,25,23,0.04)] p-4 focus-within:border-[#1C1917] focus-within:ring-2 focus-within:ring-[#1C1917]/10 transition-all relative">
+      {/* Architectural Inset Card (Focused max-w-xl width) */}
+      <div className="w-full max-w-xl bg-white rounded-2xl border border-[#E2DDD5] shadow-[0_6px_24px_rgba(28,25,23,0.04)] p-4 focus-within:border-[#1C1917] focus-within:ring-2 focus-within:ring-[#1C1917]/10 transition-all relative">
         {/* Drop Overlay */}
         {isDraggingOver && (
           <div className="absolute inset-0 bg-[#B89A5A]/10 backdrop-blur-xs rounded-2xl border-2 border-dashed border-[#B89A5A] flex items-center justify-center text-[#1C1917] font-medium text-xs z-30 pointer-events-none">
@@ -181,7 +181,7 @@ function CentralConsole({
       </div>
 
       {/* Quick Suggestion Pills (Explore the residence style) */}
-      <div className="flex flex-wrap items-center justify-center gap-2 mt-4 text-xs font-light">
+      <div className="flex flex-wrap items-center justify-center gap-2 mt-4 text-xs font-light max-w-xl">
         <button
           onClick={() => applyTagPrompt('请提炼当前 PDF 的核心 Executive Summary 与关键论点')}
           className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-white hover:bg-[#F2EFE9] border border-[#E2DDD5] hover:border-[#1C1917] text-[#1C1917] transition shadow-2xs cursor-pointer active:scale-95"
