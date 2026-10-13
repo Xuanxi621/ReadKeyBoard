@@ -13,7 +13,7 @@ import {
   Network
 } from 'lucide-react';
 
-export default function CentralConsole({
+function CentralConsole({
   promptText,
   setPromptText,
   attachedFile,
@@ -211,3 +211,5 @@ export default function CentralConsole({
     </div>
   );
 }
+
+export default React.memo(CentralConsole);

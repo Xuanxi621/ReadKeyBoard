@@ -14,7 +14,8 @@ export default function UniverseView({
   deepMode,
   onToggleDeepMode,
   showToast,
-  onStartReadingWithPrompt
+  onStartReadingWithPrompt,
+  isPaused = false
 }) {
   const [promptText, setPromptText] = useState('');
   const [attachedFile, setAttachedFile] = useState(null);
@@ -42,7 +43,7 @@ export default function UniverseView({
       const dt = (now - lastTime) / 1000;
       lastTime = now;
 
-      if (!isOrbitDragging.current && documents.length > 0) {
+      if (!isPaused && !isOrbitDragging.current && documents.length > 0) {
         setOrbitAngle((prev) => (prev + 0.11 * dt) % (Math.PI * 2));
       }
 
@@ -51,7 +52,7 @@ export default function UniverseView({
 
     animId = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(animId);
-  }, [documents.length]);
+  }, [documents.length, isPaused]);
 
   // Stage Dragging & Click handlers
   const handleStageMouseDown = (e) => {

@@ -2,19 +2,38 @@
 export const EASYINPUT_ACTIONS = {
   voiceInput: { name: '语音输入', icon: 'mic' },
   deleteDoc: { name: '删除当前文档', icon: 'trash-2' },
-  enterReading: { name: '进入阅读模式 (Enter Reading)', icon: 'book-open' },
-  nextPage: { name: '翻到下一页 (Next Page)', icon: 'chevron-down' },
-  prevPage: { name: '翻到上一页 (Prev Page)', icon: 'chevron-up' },
-  zoomIn: { name: '放大文档视图 (Zoom In)', icon: 'zoom-in' },
-  zoomOut: { name: '缩小文档视图 (Zoom Out)', icon: 'zoom-out' },
-  resetZoom: { name: '自适应宽度 / 重置缩放', icon: 'maximize-2' },
-  aiSummary: { name: 'AI 核心要点提炼', icon: 'sparkles' },
-  aiChat: { name: 'AI 研读问答聚焦', icon: 'message-square' },
-  toggleDeepMode: { name: '深度精读模式开关', icon: 'brain' },
-  returnHome: { name: '返回星轨主页 (Return Home)', icon: 'orbit' },
-  toggleView: { name: '阅读模式 / 返回主页', icon: 'orbit' },
-  importPdf: { name: '上传 PDF 文档 (Upload PDF)', icon: 'plus' },
-  highlightTool: { name: '划线批注工具切换', icon: 'highlighter' }
+  enterReading: { name: '进入阅读模式', icon: 'book-open' },
+  nextPage: { name: '翻到下一页', icon: 'chevron-down' },
+  prevPage: { name: '翻到上一页', icon: 'chevron-up' },
+  zoomIn: { name: '放大文档视图', icon: 'zoom-in' },
+  zoomOut: { name: '缩小文档视图', icon: 'zoom-out' },
+  resetZoom: { name: '自适应宽度 / 重置', icon: 'maximize-2' },
+  aiSummary: { name: 'AI 核心提炼', icon: 'sparkles' },
+  aiChat: { name: 'AI 研读问答', icon: 'message-square' },
+  toggleDeepMode: { name: '深度精读开关', icon: 'brain' },
+  returnHome: { name: '返回星轨主页', icon: 'orbit' },
+  toggleView: { name: '阅读 / 主页切换', icon: 'orbit' },
+  importPdf: { name: '上传 PDF 文档', icon: 'plus' },
+  highlightTool: { name: '划线批注工具', icon: 'highlighter' }
+};
+
+// 硬件键帽高密度简短标签 (2-4 字，确保键帽永不溢出)
+export const ACTION_SHORT_LABELS = {
+  voiceInput: '语音输入',
+  deleteDoc: '删除文档',
+  enterReading: '进入阅读',
+  nextPage: '下一页',
+  prevPage: '上一页',
+  zoomIn: '放大视图',
+  zoomOut: '缩小视图',
+  resetZoom: '自适应',
+  aiSummary: '核心提炼',
+  aiChat: 'AI问答',
+  toggleDeepMode: '深度精读',
+  returnHome: '星轨主页',
+  toggleView: '主页/阅读',
+  importPdf: '上传文档',
+  highlightTool: '划线批注'
 };
 
 // EasyInput 默认硬件引脚与动作映射 (8 按键 + 1 编码器 3 种状态)

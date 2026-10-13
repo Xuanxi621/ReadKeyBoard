@@ -161,6 +161,7 @@ export default function App() {
           }}
           showToast={showToast}
           onStartReadingWithPrompt={handleStartReadingWithPrompt}
+          isPaused={isKeyModalOpen || isUploadModalOpen}
         />
       )}
 

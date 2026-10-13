@@ -10,7 +10,7 @@ export default function SerialGuideSidebar({
   setShowSerialMonitor
 }) {
   return (
-    <aside className="w-full lg:w-[320px] border-t lg:border-t-0 lg:border-l border-black/[0.06] bg-[#F7F7F9]/80 p-5 sm:p-6 space-y-5 shrink-0 lg:overflow-y-auto custom-scrollbar font-ui">
+    <aside className="w-full lg:w-[280px] border-t lg:border-t-0 lg:border-l border-black/[0.06] bg-[#F7F7F9]/80 p-4 sm:p-5 space-y-4 shrink-0 lg:overflow-y-auto custom-scrollbar font-ui">
       <div>
         <h3 className="font-bold text-sm text-[#1D1D1F] font-editorial">连接设备</h3>
         <p className="mt-1 text-xs text-neutral-500">选择有线或蓝牙无线方式开始使用</p>
