@@ -73,29 +73,29 @@ export default function WorkspaceAiSidebar({
   }, [composerDraft]);
 
   return (
-    <div id="workspaceAiSidebar" className="w-[420px] xl:w-[460px] flex-shrink-0 bg-[#FAF9F6] flex flex-col border-l border-[#E2DDD5] transition-all select-text text-[#1C1917]">
+    <div id="workspaceAiSidebar" className="w-[420px] xl:w-[460px] flex-shrink-0 bg-white flex flex-col border-l border-[#E5E7EB] transition-all select-text text-[#111827]">
       {/* EasyInput Engine Bar */}
-      <div className="px-4 py-2 bg-[#E8E2D8]/60 border-b border-[#E2DDD5] flex items-center justify-between gap-2 flex-shrink-0">
+      <div className="px-4 py-2 bg-[#F9FAFB] border-b border-[#E5E7EB] flex items-center justify-between gap-2 flex-shrink-0">
         <div className="flex items-center gap-2 min-w-0">
           <span
             className={`w-2 h-2 rounded-full flex-shrink-0 ${
               bailianStatus?.connected
                 ? 'bg-[#34C759] shadow-[0_0_6px_rgba(52,199,89,0.7)] animate-pulse'
-                : 'bg-[#B89A5A]'
+                : 'bg-[#0071E3]'
             }`}
           />
-          <span className="font-medium text-[#1C1917] text-[12px] truncate">
+          <span className="font-medium text-[#111827] text-[12px] truncate">
             {bailianStatus?.connected ? '通义千问 · bl-cli' : '连接本地 bl-cli 中...'}
           </span>
         </div>
 
         {/* Model Selector */}
         <div className="flex items-center gap-1.5 flex-shrink-0">
-          <Cpu className="w-3.5 h-3.5 text-[#6E6760]" />
+          <Cpu className="w-3.5 h-3.5 text-[#6B7280]" />
           <select
             value={selectedModel}
             onChange={e => onSelectModel && onSelectModel(e.target.value)}
-            className="bg-white text-[11.5px] font-medium text-[#1C1917] border border-[#E2DDD5] rounded-lg px-2.5 py-1 outline-none hover:border-[#B89A5A] focus:border-[#B89A5A] cursor-pointer shadow-2xs transition"
+            className="bg-white text-[11.5px] font-medium text-[#111827] border border-[#E5E7EB] rounded-lg px-2.5 py-1 outline-none hover:border-[#0071E3] focus:border-[#0071E3] cursor-pointer shadow-2xs transition"
             title="选择要调用的通义千问模型"
           >
             {SUPPORTED_BAILIAN_MODELS.map(m => (
@@ -108,50 +108,50 @@ export default function WorkspaceAiSidebar({
       </div>
 
       {/* Inset Hairline Segmented Control Tabs */}
-      <div className="px-3.5 py-2 border-b border-[#E2DDD5] bg-[#FAF9F6] flex-shrink-0">
-        <div className="flex items-center p-0.5 bg-[#E8E2D8] border border-[#D5CEC2] rounded-xl text-[12px]">
+      <div className="px-3.5 py-2 border-b border-[#E5E7EB] bg-white flex-shrink-0">
+        <div className="flex items-center p-0.5 bg-[#F3F4F6] border border-[#E5E7EB] rounded-xl text-[12px]">
           <button
             onClick={() => setActiveAiTab('chat')}
             className={`flex-1 py-1 rounded-lg flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
               activeAiTab === 'chat'
-                ? 'bg-white text-[#1C1917] shadow-xs font-semibold border border-[#D5CEC2]/60'
-                : 'text-[#6E6760] hover:text-[#1C1917]'
+                ? 'bg-white text-[#111827] shadow-xs font-semibold border border-black/5'
+                : 'text-[#6B7280] hover:text-[#111827]'
             }`}
           >
-            <MessageSquare className="w-3.5 h-3.5 text-[#B89A5A]" />
+            <MessageSquare className="w-3.5 h-3.5 text-[#0071E3]" />
             <span>研读问答</span>
           </button>
           <button
             onClick={() => setActiveAiTab('summary')}
             className={`flex-1 py-1 rounded-lg flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
               activeAiTab === 'summary'
-                ? 'bg-white text-[#1C1917] shadow-xs font-semibold border border-[#D5CEC2]/60'
-                : 'text-[#6E6760] hover:text-[#1C1917]'
+                ? 'bg-white text-[#111827] shadow-xs font-semibold border border-black/5'
+                : 'text-[#6B7280] hover:text-[#111827]'
             }`}
           >
-            <FileText className="w-3.5 h-3.5 text-[#B89A5A]" />
+            <FileText className="w-3.5 h-3.5 text-[#0071E3]" />
             <span>要点提炼</span>
           </button>
           <button
             onClick={() => setActiveAiTab('mindmap')}
             className={`flex-1 py-1 rounded-lg flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
               activeAiTab === 'mindmap'
-                ? 'bg-white text-[#1C1917] shadow-xs font-semibold border border-[#D5CEC2]/60'
-                : 'text-[#6E6760] hover:text-[#1C1917]'
+                ? 'bg-white text-[#111827] shadow-xs font-semibold border border-black/5'
+                : 'text-[#6B7280] hover:text-[#111827]'
             }`}
           >
-            <Network className="w-3.5 h-3.5 text-[#B89A5A]" />
+            <Network className="w-3.5 h-3.5 text-[#0071E3]" />
             <span>知识脑图</span>
           </button>
           <button
             onClick={() => setActiveAiTab('notes')}
             className={`flex-1 py-1 rounded-lg flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
               activeAiTab === 'notes'
-                ? 'bg-white text-[#1C1917] shadow-xs font-semibold border border-[#D5CEC2]/60'
-                : 'text-[#6E6760] hover:text-[#1C1917]'
+                ? 'bg-white text-[#111827] shadow-xs font-semibold border border-black/5'
+                : 'text-[#6B7280] hover:text-[#111827]'
             }`}
           >
-            <Bookmark className="w-3.5 h-3.5 text-[#B89A5A]" />
+            <Bookmark className="w-3.5 h-3.5 text-[#0071E3]" />
             <span>批注书签{notes?.length > 0 ? ` (${notes.length})` : ''}</span>
           </button>
         </div>
@@ -159,23 +159,23 @@ export default function WorkspaceAiSidebar({
 
       {/* TAB 1: Chat (研读问答) */}
       {activeAiTab === 'chat' && (
-        <div className="flex-1 flex flex-col overflow-hidden">
-          <div id="chatScrollContainer" ref={chatScrollRef} className="flex-1 overflow-y-auto p-4 space-y-4 custom-scrollbar select-text">
+        <div className="flex-1 flex flex-col overflow-hidden bg-white">
+          <div id="chatScrollContainer" ref={chatScrollRef} className="flex-1 overflow-y-auto p-4 space-y-4 custom-scrollbar select-text bg-white">
             {chatMessages.map((msg, idx) => (
               <div key={idx}>
                 {msg.sender === 'user' ? (
                   <div className="flex gap-2.5 items-start justify-end">
-                    <div className="bg-[#1C1917] text-white px-3.5 py-2.5 rounded-2xl rounded-tr-md max-w-[85%] text-[13px] leading-relaxed shadow-sm">
+                    <div className="bg-[#18181B] text-white px-3.5 py-2.5 rounded-2xl rounded-tr-md max-w-[85%] text-[13px] leading-relaxed shadow-xs">
                       {msg.text}
                     </div>
                   </div>
                 ) : (
                   <div className="flex gap-2.5 items-start">
-                    <div className="w-6 h-6 rounded-lg bg-[#E8E2D8] text-[#1C1917] border border-[#D5CEC2] flex items-center justify-center flex-shrink-0 text-[10px] font-bold shadow-2xs">
+                    <div className="w-6 h-6 rounded-lg bg-[#F3F4F6] text-[#111827] border border-[#E5E7EB] flex items-center justify-center flex-shrink-0 text-[10px] font-bold shadow-2xs">
                       AI
                     </div>
                     <div className="flex-1 space-y-2">
-                      <div className="bg-white border border-[#E2DDD5] p-3.5 rounded-2xl rounded-tl-md text-[#1C1917] shadow-[0_2px_12px_rgba(28,25,23,0.03)]">
+                      <div className="bg-white border border-[#E5E7EB] p-3.5 rounded-2xl rounded-tl-md text-[#111827] shadow-[0_1px_4px_rgba(0,0,0,0.04)]">
                         <MarkdownRenderer content={msg.text} isStreaming={msg.isStreaming} />
                       </div>
                       {msg.suggestions && msg.suggestions.length > 0 && (
@@ -184,7 +184,7 @@ export default function WorkspaceAiSidebar({
                             <button
                               key={sIdx}
                               onClick={() => sendChatMessage(sug)}
-                              className="px-3 py-1 rounded-lg bg-[#FAF9F6] hover:bg-[#E8E2D8] border border-[#E2DDD5] hover:border-[#B89A5A] text-[#6E6760] hover:text-[#1C1917] text-[11.5px] transition shadow-2xs cursor-pointer active:scale-95"
+                              className="px-3 py-1 rounded-lg bg-[#F9FAFB] hover:bg-[#F3F4F6] border border-[#E5E7EB] hover:border-[#0071E3] text-[#4B5563] hover:text-[#111827] text-[11.5px] transition shadow-2xs cursor-pointer active:scale-95"
                             >
                               {sug}
                             </button>
@@ -192,13 +192,13 @@ export default function WorkspaceAiSidebar({
                         </div>
                       )}
                       {msg.pageRef && (
-                        <div className="flex items-center gap-1.5 text-[11px] text-[#6E6760]">
+                        <div className="flex items-center gap-1.5 text-[11px] text-[#6B7280]">
                           <button
                             type="button"
                             onClick={() => setCurrentPage(msg.pageRef)}
-                            className="flex items-center gap-1 text-[#6E6760] hover:text-[#B89A5A] cursor-pointer transition"
+                            className="flex items-center gap-1 text-[#6B7280] hover:text-[#0071E3] cursor-pointer transition"
                           >
-                            <Bookmark className="w-3 h-3 text-[#B89A5A]" />
+                            <Bookmark className="w-3 h-3 text-[#0071E3]" />
                             <span>来源引证：第 {msg.pageRef} 页</span>
                           </button>
                         </div>
@@ -211,22 +211,22 @@ export default function WorkspaceAiSidebar({
 
             {isAiThinking && chatMessages[chatMessages.length - 1]?.sender !== 'ai' && (
               <div className="flex gap-2.5 items-start">
-                <div className="w-6 h-6 rounded-lg bg-[#E8E2D8] text-[#1C1917] border border-[#D5CEC2] flex items-center justify-center flex-shrink-0 text-[10px] font-bold">
+                <div className="w-6 h-6 rounded-lg bg-[#F3F4F6] text-[#111827] border border-[#E5E7EB] flex items-center justify-center flex-shrink-0 text-[10px] font-bold">
                   AI
                 </div>
-                <div className="bg-white border border-[#E2DDD5] px-3.5 py-2.5 rounded-xl rounded-tl-md text-[#6E6760] flex items-center gap-2 text-[12px] shadow-2xs">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#B89A5A] animate-ping" />
+                <div className="bg-[#F9FAFB] border border-[#E5E7EB] px-3.5 py-2.5 rounded-xl rounded-tl-md text-[#6B7280] flex items-center gap-2 text-[12px] shadow-2xs">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#0071E3] animate-ping" />
                   <span>正在深度研读第 {currentPage} 页内容...</span>
                 </div>
               </div>
             )}
           </div>
 
-          {/* Luxury Architectural Chat Input */}
-          <div className="p-3.5 border-t border-[#E2DDD5] bg-[#FAF9F6]">
+          {/* Clean High-Clarity Chat Input */}
+          <div className="p-3.5 border-t border-[#E5E7EB] bg-white">
             <form
               onSubmit={handleChatSubmit}
-              className="relative bg-white rounded-xl p-2.5 border border-[#E2DDD5] focus-within:border-[#B89A5A] focus-within:ring-2 focus-within:ring-[#B89A5A]/15 transition-all shadow-2xs"
+              className="relative bg-[#F9FAFB] rounded-xl p-2.5 border border-[#E5E7EB] focus-within:border-[#0071E3] focus-within:bg-white focus-within:ring-2 focus-within:ring-[#0071E3]/15 transition-all shadow-2xs"
             >
               <textarea
                 rows={2}
@@ -234,7 +234,7 @@ export default function WorkspaceAiSidebar({
                 onChange={e => setChatInput(e.target.value)}
                 onKeyDown={handleChatKeyDown}
                 placeholder="提出关于本文档的问题..."
-                className="w-full bg-transparent resize-none text-[12.5px] outline-none text-[#1C1917] placeholder-[#9E968E] leading-relaxed"
+                className="w-full bg-transparent resize-none text-[12.5px] outline-none text-[#111827] placeholder-[#9CA3AF] leading-relaxed"
               />
               <div className="flex items-center justify-between pt-1">
                 <div className="flex items-center gap-1.5">
@@ -246,14 +246,14 @@ export default function WorkspaceAiSidebar({
                     title={voice.state === 'idle' ? 'S2 语音输入' : '停止听写'}
                     className={`p-1.5 rounded-lg transition-all cursor-pointer ${
                       voice.state === 'idle'
-                        ? 'text-[#6E6760] hover:text-[#1C1917] hover:bg-[#E8E2D8]/50'
-                        : 'bg-[#B89A5A] text-white animate-pulse shadow-xs'
+                        ? 'text-[#6B7280] hover:text-[#111827] hover:bg-[#E5E7EB]/50'
+                        : 'bg-[#0071E3] text-white animate-pulse shadow-xs'
                     }`}
                   >
                     <Mic className="w-3.5 h-3.5" />
                   </button>
                   {voice.state !== 'idle' && (
-                    <span className="text-[11px] text-[#B89A5A] animate-pulse font-medium">正在倾听…</span>
+                    <span className="text-[11px] text-[#0071E3] animate-pulse font-medium">正在倾听…</span>
                   )}
                 </div>
 
@@ -262,8 +262,8 @@ export default function WorkspaceAiSidebar({
                   disabled={!chatInput.trim()}
                   className={`p-1.5 rounded-lg transition-all cursor-pointer shadow-xs ${
                     chatInput.trim()
-                      ? 'bg-[#1C1917] hover:bg-[#2C2926] text-white active:scale-95'
-                      : 'bg-[#E8E2D8] text-[#9E968E] cursor-not-allowed'
+                      ? 'bg-[#18181B] hover:bg-black text-white active:scale-95'
+                      : 'bg-[#E5E7EB] text-[#9CA3AF] cursor-not-allowed'
                   }`}
                   title="发送提问"
                 >
@@ -277,24 +277,24 @@ export default function WorkspaceAiSidebar({
 
       {/* TAB 2: Summary */}
       {activeAiTab === 'summary' && (
-        <div className="flex-1 overflow-y-auto p-4 space-y-4 custom-scrollbar select-text">
+        <div className="flex-1 overflow-y-auto p-4 space-y-4 custom-scrollbar select-text bg-white">
           <div className="flex items-center justify-between">
-            <span className="text-[13px] font-semibold text-[#1C1917]">文档概要与提炼</span>
+            <span className="text-[13px] font-semibold text-[#111827]">文档概要与提炼</span>
             <button
               onClick={handleRegenerateSummary}
-              className="text-[#B89A5A] hover:text-[#8E743F] flex items-center gap-1 text-[11.5px] font-medium transition cursor-pointer"
+              className="text-[#0071E3] hover:text-[#005bb5] flex items-center gap-1 text-[11.5px] font-medium transition cursor-pointer"
             >
               <RefreshCw className="w-3 h-3" />
               <span>重新提炼</span>
             </button>
           </div>
 
-          <div className="p-4 rounded-xl bg-white border border-[#E2DDD5] shadow-2xs space-y-2">
-            <div className="font-semibold text-[#1C1917] flex items-center gap-1.5 text-[13px]">
-              <Sparkles className="w-4 h-4 text-[#B89A5A]" />
+          <div className="p-4 rounded-xl bg-white border border-[#E5E7EB] shadow-2xs space-y-2">
+            <div className="font-semibold text-[#111827] flex items-center gap-1.5 text-[13px]">
+              <Sparkles className="w-4 h-4 text-[#0071E3]" />
               <span>核心提要 (Executive Summary)</span>
             </div>
-            <div className="text-[#1C1917] leading-relaxed text-[13px]">
+            <div className="text-[#111827] leading-relaxed text-[13px]">
               <MarkdownRenderer
                 content={
                   customSummary ||
@@ -307,17 +307,17 @@ export default function WorkspaceAiSidebar({
 
           {currentDoc.keyTakeaways && currentDoc.keyTakeaways.length > 0 && (
             <div className="space-y-2.5">
-              <h3 className="font-semibold text-[#1C1917] flex items-center gap-1.5 text-[13px]">
-                <CheckCircle2 className="w-4 h-4 text-[#B89A5A]" />
+              <h3 className="font-semibold text-[#111827] flex items-center gap-1.5 text-[13px]">
+                <CheckCircle2 className="w-4 h-4 text-[#0071E3]" />
                 <span>核心论点与突破</span>
               </h3>
               <div className="space-y-2">
                 {currentDoc.keyTakeaways.map((t, idx) => (
-                  <div key={idx} className="p-3.5 rounded-xl bg-white border border-[#E2DDD5] shadow-2xs">
-                    <span className="inline-block px-2 py-0.5 rounded text-[10px] font-medium bg-[#FAF9F6] text-[#B89A5A] border border-[#E2DDD5] mb-1 font-mono">
+                  <div key={idx} className="p-3.5 rounded-xl bg-white border border-[#E5E7EB] shadow-2xs">
+                    <span className="inline-block px-2 py-0.5 rounded text-[10px] font-medium bg-[#F3F4F6] text-[#0071E3] border border-[#E5E7EB] mb-1 font-mono">
                       {t.tag}
                     </span>
-                    <p className="text-[#1C1917] text-[12.5px] leading-relaxed">{t.text}</p>
+                    <p className="text-[#111827] text-[12.5px] leading-relaxed">{t.text}</p>
                   </div>
                 ))}
               </div>
@@ -326,8 +326,8 @@ export default function WorkspaceAiSidebar({
 
           {currentDoc.outline && currentDoc.outline.length > 0 && (
             <div className="pt-2">
-              <h3 className="font-semibold text-[#1C1917] flex items-center gap-1.5 mb-2 text-[13px]">
-                <ListOrdered className="w-4 h-4 text-[#B89A5A]" />
+              <h3 className="font-semibold text-[#111827] flex items-center gap-1.5 mb-2 text-[13px]">
+                <ListOrdered className="w-4 h-4 text-[#0071E3]" />
                 <span>章节结构导航</span>
               </h3>
               <div className="space-y-1">
@@ -335,10 +335,10 @@ export default function WorkspaceAiSidebar({
                   <div
                     key={idx}
                     onClick={() => setCurrentPage(item.page)}
-                    className="flex items-center justify-between p-2.5 rounded-lg hover:bg-white hover:shadow-2xs border border-transparent hover:border-[#E2DDD5] cursor-pointer text-[#1C1917] text-[12.5px] transition"
+                    className="flex items-center justify-between p-2.5 rounded-lg hover:bg-[#F9FAFB] hover:shadow-2xs border border-transparent hover:border-[#E5E7EB] cursor-pointer text-[#111827] text-[12.5px] transition"
                   >
                     <span className="truncate pr-2">{item.title}</span>
-                    <span className="text-[10px] font-mono text-[#6E6760] bg-[#FAF9F6] border border-[#E2DDD5] px-1.5 py-0.5 rounded">
+                    <span className="text-[10px] font-mono text-[#6B7280] bg-[#F3F4F6] border border-[#E5E7EB] px-1.5 py-0.5 rounded">
                       P.{item.page}
                     </span>
                   </div>
@@ -351,19 +351,19 @@ export default function WorkspaceAiSidebar({
 
       {/* TAB 3: Mindmap */}
       {activeAiTab === 'mindmap' && (
-        <div className="flex-1 overflow-y-auto p-4 space-y-3.5 custom-scrollbar select-text">
+        <div className="flex-1 overflow-y-auto p-4 space-y-3.5 custom-scrollbar select-text bg-white">
           <div className="flex items-center justify-between">
-            <span className="text-[13px] font-semibold text-[#1C1917]">概念拓扑脑图</span>
+            <span className="text-[13px] font-semibold text-[#111827]">概念拓扑脑图</span>
             <button
               onClick={handleRegenerateMindmap}
-              className="text-[#B89A5A] hover:text-[#8E743F] flex items-center gap-1 text-[11.5px] font-medium transition cursor-pointer"
+              className="text-[#0071E3] hover:text-[#005bb5] flex items-center gap-1 text-[11.5px] font-medium transition cursor-pointer"
             >
               <RefreshCw className="w-3 h-3" />
               <span>重新生成</span>
             </button>
           </div>
 
-          <div className="p-4 bg-white rounded-xl border border-[#E2DDD5] shadow-2xs space-y-3">
+          <div className="p-4 bg-white rounded-xl border border-[#E5E7EB] shadow-2xs space-y-3">
             {(customMindmap || currentDoc.mindmap || [
               {
                 title: currentDoc.fileName.replace('.pdf', ''),
@@ -371,13 +371,13 @@ export default function WorkspaceAiSidebar({
               }
             ]).map((root, rIdx) => (
               <div key={rIdx}>
-                <div className="font-semibold text-[#1C1917] flex items-center gap-2 pb-1 text-[13px]">
-                  <span className="w-2 h-2 rounded-full bg-[#B89A5A]" />
+                <div className="font-semibold text-[#111827] flex items-center gap-2 pb-1 text-[13px]">
+                  <span className="w-2 h-2 rounded-full bg-[#0071E3]" />
                   {root.title}
                 </div>
                 {root.children &&
                   root.children.map((c, cIdx) => (
-                    <div key={cIdx} className="mindmap-node text-[#1C1917] text-[12.5px]">
+                    <div key={cIdx} className="mindmap-node text-[#111827] text-[12.5px]">
                       {typeof c === 'string' ? c : c.title}
                     </div>
                   ))}
@@ -430,12 +430,12 @@ export default function WorkspaceAiSidebar({
         };
 
         return (
-          <div className="flex-1 flex flex-col overflow-hidden p-3.5">
+          <div className="flex-1 flex flex-col overflow-hidden p-3.5 bg-white">
             {/* Header & Quick Action Buttons */}
             <div className="flex items-center justify-between mb-2.5 flex-shrink-0">
               <div className="flex items-center gap-1.5">
-                <span className="text-[13px] font-semibold text-[#1C1917]">批注与书签</span>
-                <span className="text-[10.5px] font-mono px-1.5 py-0.5 rounded-full bg-[#E8E2D8] text-[#6E6760] font-semibold">
+                <span className="text-[13px] font-semibold text-[#111827]">批注与书签</span>
+                <span className="text-[10.5px] font-mono px-1.5 py-0.5 rounded-full bg-[#F3F4F6] text-[#6B7280] font-semibold">
                   {totalCount}
                 </span>
               </div>
@@ -445,12 +445,12 @@ export default function WorkspaceAiSidebar({
                   onClick={() => toggleBookmark && toggleBookmark(currentPage)}
                   className={`px-2.5 py-1 rounded-lg text-[11px] font-medium flex items-center gap-1 transition cursor-pointer border ${
                     isCurrentBookmarked
-                      ? 'bg-[#B89A5A]/15 text-[#8E743F] border-[#B89A5A]/40 hover:bg-[#B89A5A]/25'
-                      : 'bg-white text-[#6E6760] border-[#E2DDD5] hover:text-[#1C1917] hover:border-[#B89A5A]'
+                      ? 'bg-[#0071E3]/10 text-[#0071E3] border-[#0071E3]/30 hover:bg-[#0071E3]/20'
+                      : 'bg-white text-[#6B7280] border-[#E5E7EB] hover:text-[#111827] hover:border-[#0071E3]'
                   }`}
                   title={isCurrentBookmarked ? '取消当前页书签' : '添加当前页书签'}
                 >
-                  <Bookmark className={`w-3 h-3 ${isCurrentBookmarked ? 'fill-current text-[#B89A5A]' : ''}`} />
+                  <Bookmark className={`w-3 h-3 ${isCurrentBookmarked ? 'fill-current text-[#0071E3]' : ''}`} />
                   <span>{isCurrentBookmarked ? `已标 P.${currentPage}` : `书签 P.${currentPage}`}</span>
                 </button>
                 <button
@@ -460,7 +460,7 @@ export default function WorkspaceAiSidebar({
                       setComposerDraft({ page: currentPage, quote: '', text: '' });
                     }
                   }}
-                  className="px-2.5 py-1 rounded-lg text-[11px] font-medium flex items-center gap-1 bg-[#1C1917] text-white hover:bg-[#2C2926] transition cursor-pointer shadow-2xs active:scale-95"
+                  className="px-2.5 py-1 rounded-lg text-[11px] font-medium flex items-center gap-1 bg-[#18181B] text-white hover:bg-black transition cursor-pointer shadow-2xs active:scale-95"
                   title="撰写当前页批注"
                 >
                   <Plus className="w-3 h-3" />
@@ -470,14 +470,14 @@ export default function WorkspaceAiSidebar({
             </div>
 
             {/* Filter Segmented Control */}
-            <div className="flex items-center p-0.5 bg-[#E8E2D8] border border-[#D5CEC2] rounded-xl text-[11px] mb-3 flex-shrink-0">
+            <div className="flex items-center p-0.5 bg-[#F3F4F6] border border-[#E5E7EB] rounded-xl text-[11px] mb-3 flex-shrink-0">
               <button
                 type="button"
                 onClick={() => setNoteFilter('all')}
                 className={`flex-1 py-1 rounded-lg transition-all cursor-pointer font-medium ${
                   noteFilter === 'all'
-                    ? 'bg-white text-[#1C1917] shadow-xs'
-                    : 'text-[#6E6760] hover:text-[#1C1917]'
+                    ? 'bg-white text-[#111827] shadow-xs'
+                    : 'text-[#6B7280] hover:text-[#111827]'
                 }`}
               >
                 全部 ({totalCount})
@@ -487,8 +487,8 @@ export default function WorkspaceAiSidebar({
                 onClick={() => setNoteFilter('bookmark')}
                 className={`flex-1 py-1 rounded-lg transition-all cursor-pointer font-medium ${
                   noteFilter === 'bookmark'
-                    ? 'bg-white text-[#1C1917] shadow-xs'
-                    : 'text-[#6E6760] hover:text-[#1C1917]'
+                    ? 'bg-white text-[#111827] shadow-xs'
+                    : 'text-[#6B7280] hover:text-[#111827]'
                 }`}
               >
                 🔖 书签 ({bookmarkCount})
@@ -498,8 +498,8 @@ export default function WorkspaceAiSidebar({
                 onClick={() => setNoteFilter('highlight')}
                 className={`flex-1 py-1 rounded-lg transition-all cursor-pointer font-medium ${
                   noteFilter === 'highlight'
-                    ? 'bg-white text-[#1C1917] shadow-xs'
-                    : 'text-[#6E6760] hover:text-[#1C1917]'
+                    ? 'bg-white text-[#111827] shadow-xs'
+                    : 'text-[#6B7280] hover:text-[#111827]'
                 }`}
               >
                 🖍️ 划线 ({highlightCount})
@@ -509,8 +509,8 @@ export default function WorkspaceAiSidebar({
                 onClick={() => setNoteFilter('note')}
                 className={`flex-1 py-1 rounded-lg transition-all cursor-pointer font-medium ${
                   noteFilter === 'note'
-                    ? 'bg-white text-[#1C1917] shadow-xs'
-                    : 'text-[#6E6760] hover:text-[#1C1917]'
+                    ? 'bg-white text-[#111827] shadow-xs'
+                    : 'text-[#6B7280] hover:text-[#111827]'
                 }`}
               >
                 📝 批注 ({noteCount})
@@ -519,19 +519,19 @@ export default function WorkspaceAiSidebar({
 
             {/* Inline Note Composer Card */}
             {Boolean(composerDraft) && (
-              <div className="mb-3 p-3 bg-white rounded-xl border border-[#B89A5A]/50 shadow-xs space-y-2.5 animate-fadeIn flex-shrink-0">
+              <div className="mb-3 p-3 bg-white rounded-xl border border-[#0071E3]/40 shadow-xs space-y-2.5 animate-fadeIn flex-shrink-0">
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-1.5 text-[12px] font-semibold text-[#1C1917]">
-                    <Edit3 className="w-3.5 h-3.5 text-[#B89A5A]" />
+                  <div className="flex items-center gap-1.5 text-[12px] font-semibold text-[#111827]">
+                    <Edit3 className="w-3.5 h-3.5 text-[#0071E3]" />
                     <span>撰写批注心得</span>
-                    <span className="text-[10.5px] font-mono font-medium px-1.5 py-0.5 rounded bg-[#FAF9F6] border border-[#E2DDD5] text-[#B89A5A]">
+                    <span className="text-[10.5px] font-mono font-medium px-1.5 py-0.5 rounded bg-[#F3F4F6] border border-[#E5E7EB] text-[#0071E3]">
                       P.{composerDraft.page || currentPage}
                     </span>
                   </div>
                   <button
                     type="button"
                     onClick={handleCancelComposer}
-                    className="p-1 rounded-lg text-[#9E968E] hover:text-[#1C1917] hover:bg-[#FAF9F6] transition cursor-pointer"
+                    className="p-1 rounded-lg text-[#9CA3AF] hover:text-[#111827] hover:bg-[#F3F4F6] transition cursor-pointer"
                     title="取消"
                   >
                     <X className="w-3.5 h-3.5" />
@@ -539,14 +539,14 @@ export default function WorkspaceAiSidebar({
                 </div>
 
                 {composerDraft.quote && (
-                  <div className="p-2 rounded-lg bg-[#FAF9F6] border-l-2 border-[#B89A5A] border-y border-r border-[#E2DDD5] text-[11.5px] text-[#44403C] italic leading-relaxed line-clamp-3">
+                  <div className="p-2 rounded-lg bg-[#F9FAFB] border-l-2 border-[#0071E3] border-y border-r border-[#E5E7EB] text-[11.5px] text-[#374151] italic leading-relaxed line-clamp-3">
                     “{composerDraft.quote}”
                   </div>
                 )}
 
                 {/* Category Pills */}
                 <div className="flex flex-wrap gap-1.5 items-center">
-                  <span className="text-[10.5px] text-[#6E6760] font-medium mr-0.5">分类:</span>
+                  <span className="text-[10.5px] text-[#6B7280] font-medium mr-0.5">分类:</span>
                   {['研读心得', '核心重点', '疑问待查', '灵感引申'].map(cat => (
                     <button
                       key={cat}
@@ -554,8 +554,8 @@ export default function WorkspaceAiSidebar({
                       onClick={() => setComposerCategory(cat)}
                       className={`px-2 py-0.5 rounded-md text-[10.5px] font-medium transition cursor-pointer border ${
                         composerCategory === cat
-                          ? 'bg-[#1C1917] text-white border-[#1C1917]'
-                          : 'bg-[#FAF9F6] text-[#6E6760] border-[#E2DDD5] hover:text-[#1C1917] hover:border-[#B89A5A]'
+                          ? 'bg-[#18181B] text-white border-[#18181B]'
+                          : 'bg-[#F9FAFB] text-[#4B5563] border-[#E5E7EB] hover:text-[#111827] hover:border-[#0071E3]'
                       }`}
                     >
                       {cat}
@@ -569,7 +569,7 @@ export default function WorkspaceAiSidebar({
                   value={composerText}
                   onChange={e => setComposerText(e.target.value)}
                   placeholder="记录您对当前段落或页面的核心感悟、逻辑批注或研读问题..."
-                  className="w-full bg-[#FAF9F6] rounded-lg p-2.5 border border-[#E2DDD5] focus:border-[#B89A5A] focus:bg-white text-[12px] outline-none text-[#1C1917] placeholder-[#9E968E] resize-none leading-relaxed transition"
+                  className="w-full bg-[#F9FAFB] rounded-lg p-2.5 border border-[#E5E7EB] focus:border-[#0071E3] focus:bg-white text-[12px] outline-none text-[#111827] placeholder-[#9CA3AF] resize-none leading-relaxed transition"
                   autoFocus
                 />
 
@@ -578,14 +578,14 @@ export default function WorkspaceAiSidebar({
                   <button
                     type="button"
                     onClick={handleCancelComposer}
-                    className="px-2.5 py-1 rounded-lg text-[11px] text-[#6E6760] hover:text-[#1C1917] hover:bg-[#FAF9F6] border border-transparent hover:border-[#E2DDD5] cursor-pointer transition"
+                    className="px-2.5 py-1 rounded-lg text-[11px] text-[#6B7280] hover:text-[#111827] hover:bg-[#F3F4F6] border border-transparent hover:border-[#E5E7EB] cursor-pointer transition"
                   >
                     取消
                   </button>
                   <button
                     type="button"
                     onClick={handleSaveComposer}
-                    className="px-3 py-1 rounded-lg text-[11px] font-medium bg-[#1C1917] hover:bg-[#2C2926] text-white cursor-pointer shadow-2xs transition active:scale-95"
+                    className="px-3 py-1 rounded-lg text-[11px] font-medium bg-[#18181B] hover:bg-black text-white cursor-pointer shadow-2xs transition active:scale-95"
                   >
                     保存收录
                   </button>
@@ -594,14 +594,14 @@ export default function WorkspaceAiSidebar({
             )}
 
             {/* Note & Bookmark List */}
-            <div className="flex-1 overflow-y-auto space-y-2.5 custom-scrollbar select-text pr-1">
+            <div className="flex-1 overflow-y-auto space-y-2.5 custom-scrollbar select-text pr-1 bg-white">
               {filteredNotes.length === 0 ? (
-                <div className="p-8 text-center text-[#9E968E] space-y-3">
-                  <div className="w-10 h-10 rounded-2xl bg-[#E8E2D8] text-[#B89A5A] flex items-center justify-center mx-auto shadow-2xs">
+                <div className="p-8 text-center text-[#9CA3AF] space-y-3">
+                  <div className="w-10 h-10 rounded-2xl bg-[#F3F4F6] text-[#0071E3] flex items-center justify-center mx-auto shadow-2xs">
                     <Bookmark className="w-5 h-5" />
                   </div>
                   <div className="space-y-1">
-                    <p className="text-[12.5px] font-medium text-[#1C1917]">
+                    <p className="text-[12.5px] font-medium text-[#111827]">
                       {noteFilter === 'bookmark'
                         ? '本篇暂无书签'
                         : noteFilter === 'highlight'
@@ -610,7 +610,7 @@ export default function WorkspaceAiSidebar({
                         ? '暂无研读批注'
                         : '暂无批注或书签'}
                     </p>
-                    <p className="text-[11px] text-[#6E6760] leading-relaxed max-w-[240px] mx-auto">
+                    <p className="text-[11px] text-[#6B7280] leading-relaxed max-w-[240px] mx-auto">
                       在左侧阅读时选中文本可快速【高亮摘录】或【写批注】；点击右上角书签按钮可标记关键页面。
                     </p>
                   </div>
@@ -618,7 +618,7 @@ export default function WorkspaceAiSidebar({
                     <button
                       type="button"
                       onClick={() => toggleBookmark && toggleBookmark(currentPage)}
-                      className="px-2.5 py-1 rounded-lg bg-white border border-[#E2DDD5] hover:border-[#B89A5A] text-[#1C1917] text-[11px] font-medium transition cursor-pointer shadow-2xs"
+                      className="px-2.5 py-1 rounded-lg bg-white border border-[#E5E7EB] hover:border-[#0071E3] text-[#111827] text-[11px] font-medium transition cursor-pointer shadow-2xs"
                     >
                       🔖 书签第 {currentPage} 页
                     </button>
@@ -629,7 +629,7 @@ export default function WorkspaceAiSidebar({
                           setComposerDraft({ page: currentPage, quote: '', text: '' });
                         }
                       }}
-                      className="px-2.5 py-1 rounded-lg bg-[#1C1917] text-white hover:bg-[#2C2926] text-[11px] font-medium transition cursor-pointer shadow-2xs"
+                      className="px-2.5 py-1 rounded-lg bg-[#18181B] text-white hover:bg-black text-[11px] font-medium transition cursor-pointer shadow-2xs"
                     >
                       + 撰写批注
                     </button>
@@ -643,7 +643,7 @@ export default function WorkspaceAiSidebar({
                   return (
                     <div
                       key={n.id}
-                      className="group p-3 rounded-xl bg-white border border-[#E2DDD5] hover:border-[#D5CEC2] hover:shadow-xs transition space-y-2 relative"
+                      className="group p-3 rounded-xl bg-white border border-[#E5E7EB] hover:border-[#D1D5DB] hover:shadow-xs transition space-y-2 relative"
                     >
                       {/* Header Row: Page Jump Badge, Type Badge, Time, Actions */}
                       <div className="flex items-center justify-between text-[11px]">
@@ -651,7 +651,7 @@ export default function WorkspaceAiSidebar({
                           <button
                             type="button"
                             onClick={() => setCurrentPage(n.page)}
-                            className="font-mono font-medium text-[#B89A5A] bg-[#FAF9F6] hover:bg-[#B89A5A] hover:text-white border border-[#E2DDD5] px-1.5 py-0.5 rounded cursor-pointer transition flex items-center gap-0.5"
+                            className="font-mono font-medium text-[#0071E3] bg-[#F9FAFB] hover:bg-[#0071E3] hover:text-white border border-[#E5E7EB] px-1.5 py-0.5 rounded cursor-pointer transition flex items-center gap-0.5"
                             title={`跳转至第 ${n.page} 页`}
                           >
                             <span>P.{n.page}</span>
@@ -661,23 +661,23 @@ export default function WorkspaceAiSidebar({
                           <span
                             className={`px-1.5 py-0.5 rounded font-medium text-[10px] ${
                               isBookmark
-                                ? 'bg-[#B89A5A]/10 text-[#8E743F] border border-[#B89A5A]/25'
+                                ? 'bg-[#0071E3]/10 text-[#0071E3] border border-[#0071E3]/25'
                                 : isHighlight
-                                ? 'bg-[#F26419]/10 text-[#C27803] border border-[#F26419]/25'
-                                : 'bg-[#1C1917]/5 text-[#1C1917] border border-[#1C1917]/15'
+                                ? 'bg-[#F59E0B]/10 text-[#D97706] border border-[#F59E0B]/25'
+                                : 'bg-[#F3F4F6] text-[#374151] border border-[#E5E7EB]'
                             }`}
                           >
                             {isBookmark ? '🔖 书签' : isHighlight ? '🖍️ 划线' : '📝 批注'}
                           </span>
                         </div>
 
-                        <div className="flex items-center gap-1 text-[#9E968E]">
+                        <div className="flex items-center gap-1 text-[#9CA3AF]">
                           <span className="font-mono text-[10px]">{n.time}</span>
-                          <div className="h-2.5 w-px bg-[#E2DDD5] mx-0.5" />
+                          <div className="h-2.5 w-px bg-[#E5E7EB] mx-0.5" />
                           <button
                             type="button"
                             onClick={() => handleCopyNote(n)}
-                            className="p-1 rounded hover:bg-[#FAF9F6] hover:text-[#1C1917] transition cursor-pointer"
+                            className="p-1 rounded hover:bg-[#F3F4F6] hover:text-[#111827] transition cursor-pointer"
                             title="复制此条内容"
                           >
                             {copiedId === n.id ? (
@@ -689,7 +689,7 @@ export default function WorkspaceAiSidebar({
                           <button
                             type="button"
                             onClick={() => onDeleteNote && onDeleteNote(n.id)}
-                            className="p-1 rounded hover:bg-[#FFEBEB] hover:text-[#E02424] transition cursor-pointer"
+                            className="p-1 rounded hover:bg-[#FEE2E2] hover:text-[#DC2626] transition cursor-pointer"
                             title="删除此条记录"
                           >
                             <Trash2 className="w-3 h-3" />
@@ -701,7 +701,7 @@ export default function WorkspaceAiSidebar({
                       {n.quote && (
                         <div
                           onClick={() => setCurrentPage(n.page)}
-                          className="p-2 rounded-lg bg-[#FAF9F6] border-l-2 border-[#B89A5A] border-y border-r border-[#E2DDD5] text-[11.5px] text-[#44403C] italic leading-relaxed cursor-pointer hover:bg-[#F5F2EC] transition"
+                          className="p-2 rounded-lg bg-[#F9FAFB] border-l-2 border-[#0071E3] border-y border-r border-[#E5E7EB] text-[11.5px] text-[#374151] italic leading-relaxed cursor-pointer hover:bg-[#F3F4F6] transition"
                           title="点击定位到该页"
                         >
                           “{n.quote}”
@@ -712,7 +712,7 @@ export default function WorkspaceAiSidebar({
                       {n.text && (
                         <p
                           onClick={() => setCurrentPage(n.page)}
-                          className="text-[#1C1917] text-[12px] leading-relaxed cursor-pointer hover:text-[#B89A5A] transition"
+                          className="text-[#111827] text-[12px] leading-relaxed cursor-pointer hover:text-[#0071E3] transition"
                           title="点击定位到该页"
                         >
                           {n.text}

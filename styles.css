@@ -1,48 +1,46 @@
-/* Architectural Luxury & Quiet Minimalism Design System (Austin Skyline Style) */
+/* Modern Apple-Grade Typography & Clean White Minimalist Design System */
 
 :root {
-  /* High-end Architectural Typography Stack: Urbanist + Outfit + PingFang SC + Microsoft YaHei UI */
-  --font-architectural: "Urbanist", "Outfit", -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei UI", "Microsoft YaHei", "Segoe UI", system-ui, sans-serif;
-  --font-mono: "JetBrains Mono", "SF Mono", Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  /* High-clarity Apple & System Typography: SF Pro / PingFang / Microsoft YaHei UI */
+  --font-system: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei UI", "Microsoft YaHei", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "SF Mono", "JetBrains Mono", Menlo, Monaco, Consolas, "Liberation Mono", monospace;
 
-  /* Architectural Warm Palette Tokens */
-  --color-obsidian: #1C1917;         /* Deep obsidian black for bold text & "Book a viewing" CTAs */
-  --color-stone-body: #6E6760;       /* Quiet architectural gray for editorial paragraphs */
-  --color-stone-muted: #9E968E;      /* Secondary metadata / page numbers */
-  --color-canvas: #FAF9F6;           /* Crisp warm travertine plaster canvas */
-  --color-travertine-pill: #DFD9CE;  /* Inset pill header background as in screenshot */
-  --color-travertine-light: #ECE7DE; /* Lighter travertine tint */
-  --color-hairline: #E2DDD5;         /* Ultra-fine 1px hairline border */
-  --color-gold-emblem: #B89A5A;      /* Architectural gold/brass emblem */
-  --color-gold-glow: rgba(184, 154, 90, 0.25);
+  /* Modern Clean Light Tokens */
+  --color-obsidian: #111827;         /* High-contrast crisp dark text */
+  --color-stone-body: #4B5563;       /* Balanced body text */
+  --color-stone-muted: #6B7280;      /* Secondary metadata / page numbers */
+  --color-canvas: #FFFFFF;           /* Pure white canvas */
+  --color-travertine-pill: #F3F4F6;  /* Inset light pill header */
+  --color-travertine-light: #F9FAFB; /* Subtle background */
+  --color-hairline: #E5E7EB;         /* Clean 1px hairline border */
+  --color-accent: #0071E3;           /* Apple classic blue accent */
+  --color-accent-glow: rgba(0, 113, 227, 0.2);
 }
 
 body {
-  font-family: var(--font-architectural);
+  font-family: var(--font-system);
   background-color: var(--color-canvas);
   color: var(--color-obsidian);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
-  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
-  letter-spacing: -0.015em;
 }
 
 .font-editorial,
 .font-sans,
 .font-ui,
 .font-architectural {
-  font-family: var(--font-architectural);
+  font-family: var(--font-system);
 }
 
 /* Inset Travertine Pill Header */
 .travertine-pill-bar {
   background-color: var(--color-travertine-pill);
-  border: 1px solid var(--color-sand-border, #D5CEC2);
+  border: 1px solid var(--color-hairline);
   border-radius: 1rem;
 }
 
-/* Obsidian Button (as seen in "Book a viewing") */
+/* Obsidian Button */
 .btn-obsidian {
   background-color: var(--color-obsidian);
   color: #FFFFFF;
