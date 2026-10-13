@@ -16,25 +16,25 @@ export default function WorkspaceTopbar({
   const fileInputRef = useRef(null);
 
   return (
-    <div className="h-13 bg-white border-b border-[#eae5db] px-5 flex items-center justify-between flex-shrink-0 z-20 font-ui select-none text-[#2b2722]">
+    <div className="h-13 bg-white border-b border-black/[0.08] px-5 flex items-center justify-between flex-shrink-0 z-20 select-none text-[#1D1D1F]">
       <div className="flex items-center gap-3">
         <button
           onClick={onBackToUniverse}
-          className="flex items-center gap-1 px-3 py-1.5 rounded-lg hover:bg-[#fbfaf7] text-[#2b2722] font-semibold transition cursor-pointer text-xs active:scale-95"
+          className="flex items-center gap-1 px-3 py-1.5 rounded-lg hover:bg-[#F5F5F7] text-[#1D1D1F] font-medium transition cursor-pointer text-xs active:scale-95"
           title="返回主页星轨"
         >
-          <ChevronLeft className="w-4 h-4 text-[#7d7468]" />
+          <ChevronLeft className="w-4 h-4 text-neutral-500" />
           <span>星轨主页</span>
         </button>
-        <div className="h-3.5 w-px bg-[#eae5db]" />
+        <div className="h-3.5 w-px bg-black/[0.08]" />
         <div className="flex items-center gap-2.5">
-          <span className="text-[10px] font-bold tracking-wider text-white bg-[#2b2722] px-2 py-0.5 rounded font-mono">
+          <span className="text-[10px] font-semibold tracking-wider text-white bg-[#1D1D1F] px-2 py-0.5 rounded font-mono">
             PDF
           </span>
-          <span className="font-bold text-[#2b2722] text-xs max-w-[280px] md:max-w-[420px] truncate font-editorial">
+          <span className="font-semibold text-[#1D1D1F] text-xs max-w-[280px] md:max-w-[420px] truncate">
             {currentDoc.fileName}
           </span>
-          <span className="text-[11px] text-[#7d7468] font-mono">
+          <span className="text-[11px] text-neutral-400 font-mono">
             {currentDoc.pages} 页
           </span>
         </div>
@@ -43,17 +43,17 @@ export default function WorkspaceTopbar({
       <div className="flex items-center gap-2">
         <button
           onClick={onOpenKeySettings}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-[#eae5db] hover:border-[#b5563a] bg-[#fbfaf7] hover:bg-white text-[#2b2722] font-semibold text-xs transition cursor-pointer shadow-2xs active:scale-95"
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-black/[0.08] hover:border-[#0071E3] bg-[#F5F5F7] hover:bg-white text-[#1D1D1F] font-medium text-xs transition cursor-pointer shadow-2xs active:scale-95"
           title="EasyInput 按键设置与连接"
         >
-          <Keyboard className="w-3.5 h-3.5 text-[#b5563a]" />
+          <Keyboard className="w-3.5 h-3.5 text-[#0071E3]" />
           <span>按键设置</span>
         </button>
         <button
           onClick={() => fileInputRef.current?.click()}
-          className="flex items-center gap-1 px-3 py-1.5 rounded-lg border border-[#eae5db] hover:border-[#b5563a] bg-[#fbfaf7] hover:bg-white text-[#2b2722] font-semibold text-xs transition cursor-pointer active:scale-95"
+          className="flex items-center gap-1 px-3 py-1.5 rounded-lg border border-black/[0.08] hover:border-[#0071E3] bg-[#F5F5F7] hover:bg-white text-[#1D1D1F] font-medium text-xs transition cursor-pointer active:scale-95"
         >
-          <Upload className="w-3.5 h-3.5 text-[#7d7468]" />
+          <Upload className="w-3.5 h-3.5 text-neutral-500" />
           <span>上传其他</span>
         </button>
         <input
@@ -71,7 +71,7 @@ export default function WorkspaceTopbar({
         />
         <button
           onClick={onExportNotes}
-          className="flex items-center gap-1 px-3.5 py-1.5 rounded-lg bg-[#b5563a] hover:bg-[#9e462e] text-white font-bold text-xs transition shadow-xs cursor-pointer active:scale-95"
+          className="flex items-center gap-1 px-3.5 py-1.5 rounded-lg bg-[#0071E3] hover:bg-[#0077ED] text-white font-medium text-xs transition shadow-xs cursor-pointer active:scale-95"
         >
           <Download className="w-3.5 h-3.5" />
           <span>导出笔记</span>

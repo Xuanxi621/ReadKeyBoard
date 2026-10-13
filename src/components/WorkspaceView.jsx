@@ -371,7 +371,7 @@ export default function WorkspaceView({
   };
 
   return (
-    <div className="absolute inset-0 bg-[#FBFBFD] flex flex-col z-40 font-editorial">
+    <div className="absolute inset-0 bg-[#F5F5F7] flex flex-col z-40">
       {/* Topbar */}
       <WorkspaceTopbar
         currentDoc={currentDoc}

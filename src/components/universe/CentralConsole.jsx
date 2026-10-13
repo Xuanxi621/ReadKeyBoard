@@ -43,16 +43,16 @@ function CentralConsole({
 
   return (
     <div id="centralConsole" className="z-20 w-full max-w-xl px-4 flex flex-col items-center pointer-events-auto select-none">
-      {/* Hero Title with EasyInput Editorial Serif Font */}
-      <h1 className="text-3xl md:text-4xl font-bold text-[#2b2722] tracking-tight mb-5 text-center font-editorial">
+      {/* Hero Title with Apple Clean Typography */}
+      <h1 className="text-3xl md:text-4xl font-semibold text-[#1D1D1F] tracking-tight mb-5 text-center">
         今天你想研读什么？
       </h1>
 
-      {/* Editorial Inset Hairline Card */}
-      <div className="w-full bg-white rounded-xl border border-[#eae5db] shadow-[0_4px_24px_rgba(43,39,34,0.06)] p-4 focus-within:border-[#b5563a] transition-all relative font-editorial">
+      {/* Apple Inset Hairline Card */}
+      <div className="w-full bg-white rounded-2xl border border-black/[0.08] shadow-[0_4px_24px_rgba(0,0,0,0.04)] p-4 focus-within:border-[#0071E3] focus-within:ring-2 focus-within:ring-[#0071E3]/15 transition-all relative">
         {/* Drop Overlay */}
         {isDraggingOver && (
-          <div className="absolute inset-0 bg-[#b5563a]/10 backdrop-blur-xs rounded-xl border-2 border-dashed border-[#b5563a] flex items-center justify-center text-[#b5563a] font-medium text-xs z-30 pointer-events-none font-ui">
+          <div className="absolute inset-0 bg-[#0071E3]/5 backdrop-blur-xs rounded-2xl border-2 border-dashed border-[#0071E3] flex items-center justify-center text-[#0071E3] font-medium text-xs z-30 pointer-events-none">
             <Upload className="w-5 h-5 mr-2 animate-bounce" />
             释放鼠标即可解析并加入星轨
           </div>
@@ -60,10 +60,10 @@ function CentralConsole({
 
         {/* Attached file chip */}
         {attachedFile && (
-          <div className="mb-2 inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-[#fbfaf7] border border-[#eae5db] text-xs text-[#2b2722] font-ui">
-            <FileText className="w-3.5 h-3.5 text-[#b5563a]" />
+          <div className="mb-2 inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-[#F5F5F7] border border-black/[0.08] text-xs text-[#1D1D1F]">
+            <FileText className="w-3.5 h-3.5 text-[#0071E3]" />
             <span className="font-medium max-w-[240px] truncate">{attachedFile.name}</span>
-            <span className="text-[10px] text-[#7d7468]">
+            <span className="text-[10px] text-neutral-400">
               {(attachedFile.size / (1024 * 1024)).toFixed(1)} MB
             </span>
             <button
@@ -91,20 +91,20 @@ function CentralConsole({
             }
           }}
           placeholder="提出研读问题，或直接将 PDF 拖入此处..."
-          className="w-full resize-none bg-transparent outline-none text-[#2b2722] placeholder-[#a8a199] text-xs md:text-[13.5px] leading-relaxed no-scrollbar font-editorial"
+          className="w-full resize-none bg-transparent outline-none text-[#1D1D1F] placeholder-neutral-400 text-xs md:text-[14px] leading-relaxed no-scrollbar"
         />
 
         {/* Bottom Toolbar Inside Card */}
-        <div className="flex items-center justify-between pt-2.5 mt-1 border-t border-[#eae5db] font-ui">
+        <div className="flex items-center justify-between pt-2.5 mt-1 border-t border-black/[0.06]">
           <div className="flex items-center gap-1.5">
             <button
               type="button"
               tabIndex={-1}
               onClick={onOpenKeySettings}
-              className="px-3 py-1.5 rounded-lg border border-[#eae5db] hover:border-[#b5563a] bg-[#fbfaf7] hover:bg-white text-[#2b2722] flex items-center gap-1.5 text-xs font-semibold transition cursor-pointer active:scale-95 shadow-2xs"
+              className="px-3 py-1.5 rounded-lg border border-black/[0.08] hover:border-[#0071E3] bg-[#F5F5F7] hover:bg-white text-[#1D1D1F] flex items-center gap-1.5 text-xs font-medium transition cursor-pointer active:scale-95 shadow-2xs"
               title="配置 EasyInput 按键映射"
             >
-              <Keyboard className="w-3.5 h-3.5 text-[#b5563a]" />
+              <Keyboard className="w-3.5 h-3.5 text-[#0071E3]" />
               <span>按键设置</span>
             </button>
 
@@ -112,10 +112,10 @@ function CentralConsole({
               type="button"
               tabIndex={-1}
               onClick={() => fileInputRef.current?.click()}
-              className="px-3 py-1.5 rounded-lg border border-[#eae5db] hover:border-[#b5563a] bg-[#fbfaf7] hover:bg-white text-[#2b2722] flex items-center gap-1.5 text-xs font-semibold transition cursor-pointer active:scale-95 shadow-2xs"
+              className="px-3 py-1.5 rounded-lg border border-black/[0.08] hover:border-[#0071E3] bg-[#F5F5F7] hover:bg-white text-[#1D1D1F] flex items-center gap-1.5 text-xs font-medium transition cursor-pointer active:scale-95 shadow-2xs"
               title="导入本地 PDF 文档"
             >
-              <Upload className="w-3.5 h-3.5 text-[#7d7468]" />
+              <Upload className="w-3.5 h-3.5 text-neutral-500" />
               <span>上传 PDF</span>
             </button>
 
@@ -130,14 +130,14 @@ function CentralConsole({
 
             {/* Toggle Switch for Deep Mode */}
             <div
-              className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#fbfaf7] border border-[#eae5db] hover:border-[#b5563a] cursor-pointer transition select-none"
+              className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#F5F5F7] border border-black/[0.08] hover:border-[#0071E3] cursor-pointer transition select-none"
               onClick={onToggleDeepMode}
               title="切换深度精读模式"
             >
-              <span className="text-[11px] font-semibold text-[#7d7468]">精读模式</span>
+              <span className="text-[11px] font-medium text-neutral-600">精读模式</span>
               <div
                 className={`w-7 h-4 rounded-full flex items-center p-0.5 transition-colors ${
-                  deepMode ? 'bg-[#b5563a]' : 'bg-[#c5beaf]'
+                  deepMode ? 'bg-[#0071E3]' : 'bg-[#E5E5EA]'
                 }`}
               >
                 <div
@@ -158,17 +158,17 @@ function CentralConsole({
               title={voice.state === 'idle' ? '语音输入 (S2)' : '停止语音输入'}
               className={`p-1.5 rounded-lg cursor-pointer transition-all ${
                 voice.state === 'idle'
-                  ? 'text-[#7d7468] hover:text-[#2b2722] hover:bg-[#fbfaf7]'
-                  : 'text-white bg-[#b5563a] animate-pulse shadow-xs'
+                  ? 'text-neutral-500 hover:text-[#1D1D1F] hover:bg-[#F5F5F7]'
+                  : 'text-white bg-[#0071E3] animate-pulse shadow-xs'
               }`}
             >
               <Mic className="w-3.5 h-3.5" />
             </button>
 
-            {/* EasyInput Terracotta Submit Button */}
+            {/* Apple Blue Submit Button */}
             <button
               onClick={onStart}
-              className="w-7 h-7 rounded-lg bg-[#b5563a] hover:bg-[#9e462e] text-white flex items-center justify-center transition shadow-xs cursor-pointer active:scale-95"
+              className="w-7 h-7 rounded-full bg-[#0071E3] hover:bg-[#0077ED] text-white flex items-center justify-center transition shadow-xs cursor-pointer active:scale-95"
               title="开始研读"
             >
               <ArrowUp className="w-3.5 h-3.5" />
@@ -178,33 +178,33 @@ function CentralConsole({
       </div>
 
       {/* Quick Suggestion Pills */}
-      <div className="flex flex-wrap items-center justify-center gap-2 mt-4 text-xs font-editorial">
+      <div className="flex flex-wrap items-center justify-center gap-2 mt-4 text-xs">
         <button
           onClick={() => applyTagPrompt('请提炼当前 PDF 的核心 Executive Summary 与关键论点')}
-          className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-white hover:bg-[#fbfaf7] border border-[#eae5db] hover:border-[#b5563a] text-[#2b2722] transition shadow-2xs cursor-pointer active:scale-95"
+          className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white hover:bg-[#F5F5F7] border border-black/[0.08] hover:border-[#0071E3] text-[#1D1D1F] transition shadow-2xs cursor-pointer active:scale-95"
         >
-          <Sparkles className="w-3 h-3 text-[#b5563a]" />
+          <Sparkles className="w-3 h-3 text-[#0071E3]" />
           <span>核心提炼</span>
         </button>
         <button
           onClick={() => applyTagPrompt('请对比文档中的不同方案与技术优劣势')}
-          className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-white hover:bg-[#fbfaf7] border border-[#eae5db] hover:border-[#b5563a] text-[#2b2722] transition shadow-2xs cursor-pointer active:scale-95"
+          className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white hover:bg-[#F5F5F7] border border-black/[0.08] hover:border-[#0071E3] text-[#1D1D1F] transition shadow-2xs cursor-pointer active:scale-95"
         >
-          <LayoutGrid className="w-3 h-3 text-[#7d7468]" />
+          <LayoutGrid className="w-3 h-3 text-neutral-500" />
           <span>方案对比</span>
         </button>
         <button
           onClick={() => applyTagPrompt('提取全文专业术语表与数学推导')}
-          className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-white hover:bg-[#fbfaf7] border border-[#eae5db] hover:border-[#b5563a] text-[#2b2722] transition shadow-2xs cursor-pointer active:scale-95"
+          className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white hover:bg-[#F5F5F7] border border-black/[0.08] hover:border-[#0071E3] text-[#1D1D1F] transition shadow-2xs cursor-pointer active:scale-95"
         >
-          <BookMarked className="w-3 h-3 text-[#7d7468]" />
+          <BookMarked className="w-3 h-3 text-neutral-500" />
           <span>术语辞典</span>
         </button>
         <button
           onClick={() => applyTagPrompt('为本文档生成思维导图结构')}
-          className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-white hover:bg-[#fbfaf7] border border-[#eae5db] hover:border-[#b5563a] text-[#2b2722] transition shadow-2xs cursor-pointer active:scale-95"
+          className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white hover:bg-[#F5F5F7] border border-black/[0.08] hover:border-[#0071E3] text-[#1D1D1F] transition shadow-2xs cursor-pointer active:scale-95"
         >
-          <Network className="w-3 h-3 text-[#7d7468]" />
+          <Network className="w-3 h-3 text-neutral-500" />
           <span>知识脑图</span>
         </button>
       </div>

@@ -1,62 +1,72 @@
-/* Apple-inspired Clean Editorial & Orbit Design System */
+/* Apple Clean Minimalist Design System: Black, White & Soft Blue */
 
 :root {
-  /* Apple Serif Stack: New York / Times New Roman / Songti SC (宋体) */
-  --font-serif: "New York", "Times New Roman", Times, "Songti SC", "SimSun", "STSong", "Songti TC", "Noto Serif CJK SC", Georgia, serif;
-  /* Apple Sans Stack: SF Pro / PingFang SC (苹方) */
-  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "PingFang SC", "Hiragino Sans GB", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  --font-mono: "SF Mono", Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  /* Apple High-Definition Typography Stack: Inter + SF Pro + PingFang SC + Microsoft YaHei UI */
+  --font-apple: "Inter", -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei UI", "Microsoft YaHei", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", "SF Mono", Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+
+  /* Apple Minimalist Palette Tokens */
+  --apple-black: #1D1D1F;
+  --apple-black-secondary: #424245;
+  --apple-gray-subtle: #86868B;
+  --apple-gray-bg: #F5F5F7;
+  --apple-card-bg: #FFFFFF;
+  --apple-hairline: rgba(0, 0, 0, 0.08);
+  --apple-blue: #0071E3;
+  --apple-blue-hover: #0077ED;
+  --apple-blue-soft: #F0F7FF;
+  --apple-blue-border: rgba(0, 113, 227, 0.22);
 }
 
 body {
-  font-family: var(--font-serif);
-  background-color: #fbfaf7;
-  color: #2b2722;
+  font-family: var(--font-apple);
+  background-color: var(--apple-gray-bg);
+  color: var(--apple-black);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  letter-spacing: -0.01em;
 }
 
-.font-editorial {
-  font-family: var(--font-serif);
-}
-
+.font-editorial,
+.font-sans,
 .font-ui {
-  font-family: var(--font-sans);
+  font-family: var(--font-apple);
 }
 
-/* EasyInput Print Utilities */
-.ei-panel {
-  background-color: #fbfaf7;
-  border: 1px solid #eae5db;
+/* Inset Hairline Utilities */
+.apple-inset-box {
+  background-color: #FFFFFF;
+  border: 1px solid rgba(0, 0, 0, 0.08);
 }
 
-.ei-hairline {
-  border-color: #eae5db;
+.apple-hairline {
+  border-color: rgba(0, 0, 0, 0.08);
 }
 
-/* Global readable scrollbar */
+/* Apple Global Scrollbars */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: rgba(43, 39, 34, 0.03);
+  background: transparent;
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(43, 39, 34, 0.20);
+  background: rgba(0, 0, 0, 0.18);
   border-radius: 9999px;
   transition: background-color 0.2s ease;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(181, 86, 58, 0.65);
+  background: rgba(0, 113, 227, 0.65);
 }
 
 /* Dedicated High-Visibility Smooth Scrollbar for AI Q&A Sidebar */
 .custom-scrollbar {
   scrollbar-width: thin;
-  scrollbar-color: rgba(43, 39, 34, 0.25) rgba(43, 39, 34, 0.04);
+  scrollbar-color: rgba(0, 0, 0, 0.22) rgba(0, 0, 0, 0.03);
 }
 
 .custom-scrollbar::-webkit-scrollbar {
@@ -65,13 +75,13 @@ body {
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {
-  background: rgba(43, 39, 34, 0.04);
+  background: rgba(0, 0, 0, 0.03);
   border-radius: 9999px;
   margin: 6px 0;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: rgba(43, 39, 34, 0.25);
+  background: rgba(0, 0, 0, 0.22);
   border-radius: 9999px;
   border: 1px solid transparent;
   background-clip: padding-box;
@@ -79,11 +89,11 @@ body {
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: rgba(181, 86, 58, 0.75);
+  background: rgba(0, 113, 227, 0.75);
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:active {
-  background: #b5563a;
+  background: #0071E3;
 }
 
 /* Orbit Stage */
@@ -97,7 +107,7 @@ body {
   cursor: grabbing;
 }
 
-/* Scattered Fragmented Paper Cards (零碎纸质卡片) with Optical 3D DOF */
+/* 3D Orbiting Cards with Optical Depth of Field */
 .orbit-card {
   position: absolute;
   top: 50%;
@@ -111,14 +121,14 @@ body {
   transition: box-shadow 0.25s ease, border-color 0.25s ease;
 }
 
-/* Paper card styling: Inset Hairline & Editorial Sheet */
+/* Inset Card Frame */
 .orbit-card-inner {
   width: 100%;
   height: 100%;
   border-radius: 12px;
-  background: #ffffff;
-  border: 1px solid #eae5db;
-  box-shadow: 0 4px 18px -2px rgba(43, 39, 34, 0.07), 0 1px 3px rgba(43, 39, 34, 0.03);
+  background: #FFFFFF;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 18px -2px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.02);
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -128,8 +138,8 @@ body {
 
 .orbit-card:hover .orbit-card-inner,
 .orbit-card-inner.ring-4 {
-  box-shadow: 0 16px 36px -6px rgba(181, 86, 58, 0.22), 0 4px 12px rgba(43, 39, 34, 0.06);
-  border-color: #b5563a;
+  box-shadow: 0 16px 36px -6px rgba(0, 113, 227, 0.18), 0 4px 12px rgba(0, 0, 0, 0.04);
+  border-color: #0071E3;
 }
 
 /* Central Console */
@@ -143,7 +153,7 @@ body {
   position: relative;
   padding-left: 1rem;
   margin-top: 0.4rem;
-  border-left: 1.5px solid rgba(181, 86, 58, 0.4);
+  border-left: 1.5px solid rgba(0, 113, 227, 0.35);
 }
 .mindmap-node::before {
   content: '';
@@ -152,7 +162,7 @@ body {
   left: 0;
   width: 0.65rem;
   height: 1.5px;
-  background-color: rgba(181, 86, 58, 0.4);
+  background-color: rgba(0, 113, 227, 0.35);
 }
 
 /* Text layer for PDF selection */
@@ -185,12 +195,12 @@ body {
 /* Luminous Orbit Track Breathing */
 @keyframes orbitTrackGlow {
   0%, 100% {
-    opacity: 0.60;
-    stroke-width: 1.6;
+    opacity: 0.55;
+    stroke-width: 1.5;
   }
   50% {
-    opacity: 0.95;
-    stroke-width: 2.2;
+    opacity: 0.90;
+    stroke-width: 2.0;
   }
 }
 

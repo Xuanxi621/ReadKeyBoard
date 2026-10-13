@@ -87,8 +87,8 @@ function OrbitCard({
       <div
         className={`orbit-card-inner group transition-all duration-200 ${
           isCardActive
-            ? 'ring-2 ring-[#b5563a]/40 shadow-[0_16px_36px_rgba(181,86,58,0.20)] border-[#b5563a]'
-            : 'border border-[#eae5db] shadow-[0_4px_16px_-2px_rgba(43,39,34,0.06)] hover:border-[#b5563a]/60 hover:shadow-[0_12px_28px_-4px_rgba(181,86,58,0.14)]'
+            ? 'ring-2 ring-[#0071E3] shadow-[0_16px_36px_rgba(0,113,227,0.18)] border-[#0071E3]'
+            : 'border border-black/[0.08] shadow-[0_4px_16px_rgba(0,0,0,0.04)] hover:border-[#0071E3]/50 hover:shadow-[0_12px_28px_rgba(0,113,227,0.12)]'
         }`}
         onMouseEnter={() => {
           onHoverCard(index);
@@ -100,7 +100,7 @@ function OrbitCard({
       >
         {/* Floating Selection Indicator Badge */}
         {isSelected && (
-          <div className="absolute -top-3.5 left-1/2 transform -translate-x-1/2 z-50 bg-[#b5563a] text-white text-[9px] font-semibold px-2.5 py-0.5 rounded-full shadow-md flex items-center gap-1.5 whitespace-nowrap font-ui">
+          <div className="absolute -top-3.5 left-1/2 transform -translate-x-1/2 z-50 bg-[#0071E3] text-white text-[9px] font-medium px-2.5 py-0.5 rounded-full shadow-md flex items-center gap-1.5 whitespace-nowrap">
             <span className="w-1.5 h-1.5 rounded-full bg-white animate-ping" />
             <span>旋钮选中 · 按下研读</span>
           </div>
@@ -108,7 +108,7 @@ function OrbitCard({
 
         {/* Cover Thumbnail */}
         <div
-          className="relative w-full overflow-hidden bg-[#fbfaf7] flex-shrink-0"
+          className="relative w-full overflow-hidden bg-[#F5F5F7] flex-shrink-0"
           style={{ height: `${cardH - 48}px` }}
         >
           {doc.coverThumbnail ? (
@@ -120,9 +120,9 @@ function OrbitCard({
               }`}
             />
           ) : (
-            <div className="w-full h-full flex flex-col items-center justify-center bg-[#fbfaf7] text-[#b5563a]">
+            <div className="w-full h-full flex flex-col items-center justify-center bg-[#F5F5F7] text-[#0071E3]">
               <FileText className="w-8 h-8 mb-1" />
-              <span className="text-[9px] font-bold font-mono">PDF</span>
+              <span className="text-[9px] font-semibold font-mono">PDF</span>
             </div>
           )}
           <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/10 p-1.5 flex flex-col justify-between">
@@ -147,13 +147,13 @@ function OrbitCard({
         </div>
 
         {/* Bottom Paper Label */}
-        <div className="p-2 flex-1 flex flex-col justify-between bg-white text-[#2b2722] border-t border-[#eae5db]">
-          <div className="font-bold text-[10px] leading-tight line-clamp-1 text-[#2b2722] font-editorial" title={doc.fileName}>
+        <div className="p-2 flex-1 flex flex-col justify-between bg-white text-[#1D1D1F] border-t border-black/[0.06]">
+          <div className="font-medium text-[11px] leading-tight line-clamp-1 text-[#1D1D1F]" title={doc.fileName}>
             {doc.fileName.replace('.pdf', '')}
           </div>
-          <div className="flex items-center justify-between text-[8.5px] text-[#7d7468] mt-0.5 font-ui">
+          <div className="flex items-center justify-between text-[8.5px] text-neutral-400 mt-0.5">
             <span className="truncate max-w-[75px] font-mono">{doc.fileSize}</span>
-            <ArrowUpRight className={`w-3.5 h-3.5 text-[#b5563a] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform ${
+            <ArrowUpRight className={`w-3.5 h-3.5 text-[#0071E3] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform ${
               isCardActive ? 'translate-x-0.5 -translate-y-0.5' : ''
             }`} />
           </div>
