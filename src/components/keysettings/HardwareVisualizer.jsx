@@ -17,19 +17,19 @@ function HardwareVisualizer({
   };
 
   return (
-    <div className="bg-white border border-black/[0.06] rounded-2xl p-3.5 sm:p-4 flex flex-col items-center select-none shadow-2xs font-ui">
-      <div className="w-full flex items-center justify-between text-xs text-neutral-500 mb-2 px-1">
-        <span className="font-bold text-[#1D1D1F] flex items-center gap-1.5 font-editorial text-[13px]">
-          <Cpu className="w-3.5 h-3.5 text-[#0071E3]" />
+    <div className="bg-white border border-black/[0.08] rounded-2xl p-4 sm:p-5 flex flex-col items-center select-none shadow-xs font-ui">
+      <div className="w-full flex items-center justify-between text-xs text-neutral-500 mb-2.5 px-1">
+        <span className="font-bold text-[#1D1D1F] flex items-center gap-2 font-editorial text-sm">
+          <Cpu className="w-4 h-4 text-[#0071E3]" />
           <span>设备全景映射 · 8 按键 + 1 编码器旋钮</span>
         </span>
-        <span className="text-[11px] text-neutral-400 hidden sm:inline">
+        <span className="text-xs text-neutral-400 hidden sm:inline">
           点击按键或旋钮直接触发动作并定位配置
         </span>
       </div>
 
       {/* Keyboard Graphic with Interactive Frosted Keycaps */}
-      <div className="relative w-full max-w-[480px] aspect-[620/320] select-none my-0.5 rounded-xl overflow-hidden shadow-2xs border border-black/[0.04]">
+      <div className="relative w-full max-w-[580px] aspect-[620/320] select-none my-1 rounded-xl overflow-hidden shadow-xs border border-black/[0.06]">
         <img
           src="easyinput-device.png"
           alt="EasyInput AI 键盘"
@@ -58,15 +58,15 @@ function HardwareVisualizer({
             style={{ left: k.left, top: k.top, width: k.width, height: k.height }}
             className={`absolute rounded-xl cursor-pointer border-2 transition-all flex flex-col items-center justify-center group ${
               isTokenActive(k.token)
-                ? 'bg-[#0071E3]/20 border-[#0071E3] ring-2 ring-[#0071E3]/40 scale-95 shadow-xs'
-                : 'hover:bg-[#0071E3]/10 border-transparent hover:border-[#0071E3]/60'
+                ? 'bg-[#0071E3]/25 border-[#0071E3] ring-3 ring-[#0071E3]/40 scale-95 shadow-sm'
+                : 'hover:bg-[#0071E3]/15 border-transparent hover:border-[#0071E3]/60'
             }`}
             title={`${k.label}: 点击触发并定位配置`}
           >
-            <span className="text-[10px] font-extrabold text-[#1D1D1F] bg-white/95 px-1.5 py-0.2 rounded shadow-2xs group-hover:text-[#0071E3] transition">
+            <span className="text-xs font-black text-[#1D1D1F] bg-white/95 px-2 py-0.5 rounded shadow-2xs group-hover:text-[#0071E3] transition">
               {k.label}
             </span>
-            <span className="text-[8.5px] text-neutral-700 font-medium truncate max-w-[92%] px-1 mt-0.5 bg-white/90 rounded tracking-tight">
+            <span className="text-[10px] text-neutral-800 font-bold truncate max-w-[92%] px-1.5 py-0.5 mt-0.5 bg-white/90 rounded tracking-tight shadow-2xs">
               {getActionShortName(k.token)}
             </span>
           </div>
@@ -82,15 +82,15 @@ function HardwareVisualizer({
           onMouseLeave={() => setHoveredToken(null)}
           className={`absolute left-[72.58%] top-[25.00%] w-[18.55%] h-[37.50%] rounded-full cursor-pointer border-2 transition-all flex flex-col items-center justify-center group ${
             isTokenActive('ENC')
-              ? 'bg-[#0071E3]/25 border-[#0071E3] ring-2 ring-[#0071E3]/40 scale-95 shadow-xs'
-              : 'hover:bg-[#0071E3]/10 border-transparent hover:border-[#0071E3]/60'
+              ? 'bg-[#0071E3]/30 border-[#0071E3] ring-3 ring-[#0071E3]/40 scale-95 shadow-sm'
+              : 'hover:bg-[#0071E3]/15 border-transparent hover:border-[#0071E3]/60'
           }`}
           title="旋转编码器: 顺时针翻页 / 逆时针翻页 / 点击触发阅读模式"
         >
-          <span className="text-[10px] font-extrabold text-[#1D1D1F] bg-white/95 px-2 py-0.2 rounded-full shadow-2xs group-hover:text-[#0071E3] transition">
+          <span className="text-xs font-black text-[#1D1D1F] bg-white/95 px-2.5 py-0.5 rounded-full shadow-2xs group-hover:text-[#0071E3] transition">
             旋钮
           </span>
-          <span className="text-[7.5px] text-neutral-700 font-medium mt-0.5 bg-white/90 px-1.5 py-0.2 rounded-full">
+          <span className="text-[9.5px] text-neutral-800 font-bold mt-1 bg-white/90 px-2 py-0.5 rounded-full shadow-2xs">
             翻页 · 阅读
           </span>
         </div>
