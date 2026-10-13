@@ -129,23 +129,50 @@ function UniverseView({
 
   return (
     <div
-      className="relative flex-1 flex flex-col justify-between overflow-hidden bg-[#F5F5F7] select-none"
+      className="relative flex-1 flex flex-col justify-between overflow-hidden bg-[#FAF9F6] select-none"
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
     >
-      {/* Subtle Apple Light-Blue Ambient Glow (极简优雅微蓝，克制通透) */}
-      <div className="absolute top-[-15%] left-[25%] w-[720px] h-[480px] bg-sky-200/12 rounded-full blur-[140px] pointer-events-none" />
+      {/* Subtle Warm Travertine Light Glow */}
+      <div className="absolute top-[-15%] left-[25%] w-[720px] h-[480px] bg-amber-100/20 rounded-full blur-[140px] pointer-events-none" />
 
-      {/* Top Area */}
-      <header className="w-full px-8 py-5 flex items-center justify-end z-30 flex-shrink-0">
-        <button
-          onClick={onOpenKeySettings}
-          className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border border-black/[0.08] hover:border-[#0071E3]/40 bg-white hover:bg-neutral-50 text-[#1D1D1F] text-xs font-medium shadow-2xs transition cursor-pointer active:scale-95"
-        >
-          <Keyboard className="w-3.5 h-3.5 text-[#0071E3]" />
-          <span>按键设置</span>
-        </button>
+      {/* Austin Skyline Architectural Inset Pill Header */}
+      <header className="w-full px-4 sm:px-8 pt-4 pb-2 flex items-center justify-center z-30 flex-shrink-0">
+        <div className="w-full max-w-5xl bg-[#DFD9CE] border border-[#D5CEC2] rounded-2xl px-5 sm:px-6 py-2.5 flex items-center justify-between shadow-[0_2px_12px_rgba(28,25,23,0.04)]">
+          {/* Left Brand with Architectural Towers Icon */}
+          <div className="flex items-center gap-3">
+            <div className="flex items-end gap-0.5 text-[#B89A5A]">
+              <span className="w-1 h-3.5 bg-[#B89A5A] rounded-t-xs" />
+              <span className="w-1.5 h-5 bg-[#B89A5A] rounded-t-xs" />
+              <span className="w-1 h-4 bg-[#B89A5A] rounded-t-xs" />
+              <span className="w-1.5 h-6 bg-[#B89A5A] rounded-t-xs" />
+              <span className="w-1 h-3 bg-[#B89A5A] rounded-t-xs" />
+            </div>
+            <span className="font-bold text-sm sm:text-base text-[#1C1917] tracking-tight">
+              EasyInput Skyline
+            </span>
+          </div>
+
+          {/* Center Nav Links */}
+          <nav className="hidden md:flex items-center gap-7 text-xs font-medium text-[#615B54]">
+            <span className="text-[#1C1917] font-semibold cursor-pointer">星轨总览</span>
+            <span className="hover:text-[#1C1917] cursor-pointer transition">深度研读</span>
+            <span className="hover:text-[#1C1917] cursor-pointer transition">快捷按键</span>
+            <span className="hover:text-[#1C1917] cursor-pointer transition">文献矩阵</span>
+          </nav>
+
+          {/* Right Action Button (Book a viewing Style) */}
+          <div className="flex items-center gap-2">
+            <button
+              onClick={onOpenKeySettings}
+              className="bg-[#1C1917] hover:bg-black text-white px-4 sm:px-5 py-2 rounded-xl text-xs font-semibold tracking-wide transition shadow-xs cursor-pointer active:scale-95 flex items-center gap-1.5"
+            >
+              <Keyboard className="w-3.5 h-3.5" />
+              <span>按键设置</span>
+            </button>
+          </div>
+        </div>
       </header>
 
       {/* 3D Orbit Arena */}
@@ -156,17 +183,17 @@ function UniverseView({
         onTouchStart={handleStageMouseDown}
         className="relative flex-1 w-full flex items-center justify-center overflow-hidden"
       >
-        {/* Apple Light Blue Minimalist Orbit Track */}
+        {/* Architectural Champagne Gold & Stone Orbit Track */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
           <svg className="w-[1440px] h-[780px] overflow-visible max-w-none" viewBox="0 0 1440 780" fill="none">
             <defs>
-              <linearGradient id="orbitTrackApple" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="#0071E3" stopOpacity="0.45" />
-                <stop offset="50%" stopColor="#38BDF8" stopOpacity="0.25" />
-                <stop offset="100%" stopColor="#0071E3" stopOpacity="0.30" />
+              <linearGradient id="orbitTrackArch" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#B89A5A" stopOpacity="0.45" />
+                <stop offset="50%" stopColor="#D5CEC2" stopOpacity="0.30" />
+                <stop offset="100%" stopColor="#B89A5A" stopOpacity="0.40" />
               </linearGradient>
               <filter id="orbitGlow" x="-20%" y="-20%" width="140%" height="140%">
-                <feGaussianBlur stdDeviation="1.6" result="blur" />
+                <feGaussianBlur stdDeviation="1.5" result="blur" />
                 <feMerge>
                   <feMergeNode in="blur" />
                   <feMergeNode in="SourceGraphic" />
@@ -180,7 +207,7 @@ function UniverseView({
               cy="390"
               rx="590"
               ry="260"
-              stroke="url(#orbitTrackApple)"
+              stroke="url(#orbitTrackArch)"
               strokeWidth="1.5"
               strokeDasharray="6 6"
               filter="url(#orbitGlow)"
@@ -193,17 +220,17 @@ function UniverseView({
               cy="390"
               rx="535"
               ry="235"
-              stroke="rgba(0, 113, 227, 0.10)"
+              stroke="rgba(184, 154, 90, 0.12)"
               strokeWidth="1"
               strokeDasharray="4 8"
             />
 
             {/* Celestial Optical Nodes */}
-            <circle cx="1310" cy="390" r="3" fill="#0071E3" opacity="0.85" />
+            <circle cx="1310" cy="390" r="3" fill="#B89A5A" opacity="0.85" />
             <circle cx="1310" cy="390" r="1.6" fill="#FFFFFF" />
-            <circle cx="130" cy="390" r="2.5" fill="#38BDF8" opacity="0.80" />
-            <circle cx="720" cy="130" r="2.2" fill="#0071E3" opacity="0.65" />
-            <circle cx="720" cy="650" r="2.8" fill="#0071E3" opacity="0.75" />
+            <circle cx="130" cy="390" r="2.5" fill="#B89A5A" opacity="0.80" />
+            <circle cx="720" cy="130" r="2.2" fill="#D5CEC2" opacity="0.65" />
+            <circle cx="720" cy="650" r="2.8" fill="#B89A5A" opacity="0.75" />
           </svg>
         </div>
 
@@ -225,8 +252,8 @@ function UniverseView({
         {/* Empty State Prompt */}
         {documents.length === 0 && (
           <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none z-10 transition-opacity duration-300">
-            <div className="mt-80 p-3 rounded-full bg-white border border-black/[0.08] text-xs text-[#86868B] flex items-center gap-2 shadow-2xs">
-              <UploadCloud className="w-4 h-4 text-[#0071E3]" />
+            <div className="mt-80 p-3 rounded-2xl bg-white border border-[#E2DDD5] text-xs text-[#6E6760] flex items-center gap-2 shadow-2xs">
+              <UploadCloud className="w-4 h-4 text-[#B89A5A]" />
               <span>拖拽或上传 PDF 即可开启智能研读星轨</span>
             </div>
           </div>

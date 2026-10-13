@@ -22,22 +22,22 @@ export default function FloatingCapsule({ serialConnected, isDeviceConnected = f
     <button
       type="button"
       onClick={onOpenModal}
-      className="fixed bottom-4 left-6 z-30 bg-white border border-black/[0.08] hover:border-[#0071E3] shadow-xs rounded-full px-3.5 py-1.5 flex items-center gap-2.5 text-xs text-[#1D1D1F] font-medium cursor-pointer transition select-none group"
+      className="fixed bottom-4 left-6 z-30 bg-[#E8E2D8]/95 backdrop-blur-md border border-[#D5CEC2] hover:border-[#B89A5A] shadow-[0_4px_16px_rgba(28,25,23,0.08)] hover:shadow-[0_6px_20px_rgba(28,25,23,0.12)] rounded-full px-4 py-2 flex items-center gap-2.5 text-xs text-[#1C1917] font-medium cursor-pointer transition select-none group"
       title="点击配置或连接 EasyInput 硬件"
     >
       <span
         className={`w-2 h-2 rounded-full ${
-          isConnected ? 'bg-[#34C759] animate-pulse' : 'bg-neutral-300'
+          isConnected ? 'bg-[#34C759] shadow-[0_0_6px_rgba(52,199,89,0.7)] animate-pulse' : 'bg-[#9E968E]'
         }`}
       />
-      <span className="font-semibold text-[#1D1D1F]">
+      <span className="font-semibold text-[#1C1917] tracking-tight">
         {statusText}
       </span>
-      <span className="text-neutral-200 hidden sm:inline">|</span>
-      <span className="hidden sm:inline text-[11px] text-neutral-400 group-hover:text-neutral-600 truncate max-w-[220px] md:max-w-[320px]">
+      <span className="text-[#D5CEC2] hidden sm:inline">|</span>
+      <span className="hidden sm:inline text-[11px] text-[#6E6760] group-hover:text-[#1C1917] truncate max-w-[220px] md:max-w-[320px]">
         {hintText}
       </span>
-      <SlidersHorizontal className="w-3.5 h-3.5 text-neutral-400 group-hover:text-[#0071E3] transition-colors ml-0.5 flex-shrink-0" />
+      <SlidersHorizontal className="w-3.5 h-3.5 text-[#6E6760] group-hover:text-[#B89A5A] transition-colors ml-0.5 flex-shrink-0" />
     </button>
   );
 }
