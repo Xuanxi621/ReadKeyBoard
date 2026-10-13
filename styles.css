@@ -170,18 +170,21 @@ body {
   animation: fadeIn 0.18s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
 }
 
-/* Minimalist Architectural Orbit Track Pulse */
-@keyframes orbitTrackPulse {
+/* Luminous Orbit Track Breathing */
+@keyframes orbitTrackGlow {
   0%, 100% {
-    opacity: 0.50;
+    opacity: 0.60;
+    stroke-width: 1.6;
   }
   50% {
-    opacity: 0.90;
+    opacity: 0.95;
+    stroke-width: 2.2;
   }
 }
 
-.orbit-track-subtle {
-  animation: orbitTrackPulse 7s ease-in-out infinite;
+.orbit-track-luminous {
+  animation: orbitTrackGlow 5.5s ease-in-out infinite;
 }
+
 
 

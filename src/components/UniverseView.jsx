@@ -128,14 +128,14 @@ export default function UniverseView({
 
   return (
     <div
-      className="relative flex-1 flex flex-col justify-between overflow-hidden bg-[#FBFBFD] select-none"
+      className="relative flex-1 flex flex-col justify-between overflow-hidden bg-gradient-to-b from-[#EDF5FD] via-[#F6FAFE] to-[#FAFBFD] select-none"
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
     >
-      {/* Subtle Apple Studio Ambient Light (纯粹通透、克制典雅) */}
-      <div className="absolute top-[-25%] left-[20%] w-[840px] h-[600px] bg-slate-200/20 rounded-full blur-[160px] pointer-events-none" />
-      <div className="absolute bottom-[-20%] right-[10%] w-[720px] h-[560px] bg-sky-100/15 rounded-full blur-[160px] pointer-events-none" />
+      {/* Delicate Apple Light-Blue Ambient Glows (清新通透、适度留白) */}
+      <div className="absolute top-[-20%] left-[22%] w-[760px] h-[540px] bg-sky-200/30 rounded-full blur-[150px] pointer-events-none" />
+      <div className="absolute bottom-[-15%] right-[10%] w-[640px] h-[500px] bg-blue-100/25 rounded-full blur-[150px] pointer-events-none" />
 
       {/* Top Area */}
       <header className="w-full px-8 py-5 flex items-center justify-end z-30 flex-shrink-0 font-ui">
@@ -156,36 +156,55 @@ export default function UniverseView({
         onTouchStart={handleStageMouseDown}
         className="relative flex-1 w-full flex items-center justify-center overflow-hidden"
       >
-        {/* Minimalist Apple Architectural Orbit Track (极简大气星轨) */}
+        {/* Luminous Apple Blue Orbit Track (清晰可见、优雅呼吸的星轨路径) */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
           <svg className="w-[1440px] h-[780px] overflow-visible max-w-none" viewBox="0 0 1440 780" fill="none">
-            {/* Primary Orbit Hairline */}
+            <defs>
+              <linearGradient id="orbitTrackBlue" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#0071E3" stopOpacity="0.65" />
+                <stop offset="30%" stopColor="#38BDF8" stopOpacity="0.45" />
+                <stop offset="70%" stopColor="#6366F1" stopOpacity="0.55" />
+                <stop offset="100%" stopColor="#0071E3" stopOpacity="0.30" />
+              </linearGradient>
+              <filter id="orbitGlow" x="-20%" y="-20%" width="140%" height="140%">
+                <feGaussianBlur stdDeviation="2.5" result="blur" />
+                <feMerge>
+                  <feMergeNode in="blur" />
+                  <feMergeNode in="SourceGraphic" />
+                </feMerge>
+              </filter>
+            </defs>
+
+            {/* Primary Orbit Track Arc (清晰通透的蓝色主星轨) */}
             <ellipse
               cx="720"
               cy="382"
               rx="590"
               ry="260"
-              stroke="rgba(0, 0, 0, 0.08)"
-              strokeWidth="1.2"
-              strokeDasharray="5 7"
-              className="orbit-track-subtle"
+              stroke="url(#orbitTrackBlue)"
+              strokeWidth="1.8"
+              strokeDasharray="8 6"
+              filter="url(#orbitGlow)"
+              className="orbit-track-luminous"
             />
 
-            {/* Subtle Horizon Reference Ring */}
+            {/* Subtle Inner Horizon Reference Ring */}
             <ellipse
               cx="720"
               cy="382"
-              rx="530"
-              ry="233"
-              stroke="rgba(0, 0, 0, 0.03)"
+              rx="535"
+              ry="235"
+              stroke="rgba(0, 113, 227, 0.16)"
               strokeWidth="1"
+              strokeDasharray="4 8"
             />
 
-            {/* Discrete Micro Cardinal Beads */}
-            <circle cx="1310" cy="382" r="2.5" fill="rgba(0, 0, 0, 0.20)" />
-            <circle cx="130" cy="382" r="2.5" fill="rgba(0, 0, 0, 0.20)" />
-            <circle cx="720" cy="122" r="2" fill="rgba(0, 0, 0, 0.15)" />
-            <circle cx="720" cy="642" r="2" fill="rgba(0, 0, 0, 0.15)" />
+            {/* Luminous Blue Celestial Beads (星轨节点) */}
+            <circle cx="1310" cy="382" r="3.5" fill="#0071E3" opacity="0.80" className="animate-ping" />
+            <circle cx="1310" cy="382" r="2.5" fill="#38BDF8" />
+            <circle cx="130" cy="382" r="3" fill="#38BDF8" opacity="0.85" />
+            <circle cx="720" cy="122" r="2.5" fill="#6366F1" opacity="0.70" />
+            <circle cx="720" cy="642" r="3" fill="#0071E3" opacity="0.80" />
           </svg>
         </div>
 
