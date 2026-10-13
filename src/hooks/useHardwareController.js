@@ -772,6 +772,20 @@ export function useHardwareController({
       const activeEl = document.activeElement;
       if (['INPUT', 'TEXTAREA'].includes(activeEl?.tagName)) return;
 
+      // 如果鼠标焦点在对话侧边栏（研读问答/要点/脑图/笔记）或任何滚动容器内，允许自然滚动，不拦截并不触发翻页
+      if (
+        e.target?.closest?.('#workspaceAiSidebar') ||
+        e.target?.closest?.('#chatScrollContainer') ||
+        e.target?.closest?.('.custom-scrollbar') ||
+        e.target?.closest?.('.overflow-y-auto') ||
+        e.target?.closest?.('.overflow-auto') ||
+        e.target?.closest?.('pre') ||
+        e.target?.closest?.('code') ||
+        e.target?.closest?.('select')
+      ) {
+        return;
+      }
+
       e.preventDefault();
       const delta = Math.abs(e.deltaY) >= Math.abs(e.deltaX) ? e.deltaY : e.deltaX;
       wheelAccumulator += delta;

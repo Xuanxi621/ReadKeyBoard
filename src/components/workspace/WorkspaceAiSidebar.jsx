@@ -46,7 +46,7 @@ export default function WorkspaceAiSidebar({
   const voice = useVoiceInput(setChatInput, showToast, () => setActiveAiTab('chat'));
 
   return (
-    <div className="w-[420px] xl:w-[460px] flex-shrink-0 bg-[#FBFBFD] flex flex-col border-l border-black/[0.06] transition-all font-editorial select-text">
+    <div id="workspaceAiSidebar" className="w-[420px] xl:w-[460px] flex-shrink-0 bg-[#FBFBFD] flex flex-col border-l border-black/[0.06] transition-all font-editorial select-text">
       {/* Apple-style Translucent Model & Engine Bar */}
       <div className="px-4 py-2 bg-white/70 backdrop-blur-md border-b border-black/[0.06] flex items-center justify-between gap-2 flex-shrink-0">
         <div className="flex items-center gap-2 min-w-0">
@@ -133,7 +133,7 @@ export default function WorkspaceAiSidebar({
       {/* TAB 1: Chat (研读问答) */}
       {activeAiTab === 'chat' && (
         <div className="flex-1 flex flex-col overflow-hidden">
-          <div ref={chatScrollRef} className="flex-1 overflow-y-auto p-4 space-y-4 custom-scrollbar select-text">
+          <div id="chatScrollContainer" ref={chatScrollRef} className="flex-1 overflow-y-auto p-4 space-y-4 custom-scrollbar select-text">
             {chatMessages.map((msg, idx) => (
               <div key={idx}>
                 {msg.sender === 'user' ? (
