@@ -186,7 +186,7 @@ function KeyMappingList({
             title="点击直接模拟旋钮下按测试"
           >
             <div className="w-8 h-8 rounded-xl bg-[#1C1917] text-white flex items-center justify-center font-medium shadow-2xs transition-colors group-hover:bg-[#B89A5A]">
-              <RotateCw className="w-4.5 h-4.5" />
+              <RotateCw className="w-4 h-4" />
             </div>
             <div>
               <span className="font-light text-sm sm:text-base text-[#1C1917] group-hover:text-[#B89A5A] transition-colors">

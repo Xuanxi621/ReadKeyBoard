@@ -105,7 +105,7 @@ export default function UploadModal({ isOpen, onClose, onUploadFiles, triggerKey
             type="button"
             tabIndex={-1}
             onClick={() => fileInputRef.current?.click()}
-            className="px-4.5 py-2 rounded-xl bg-[#1C1917] hover:bg-[#2C2926] text-white text-xs font-medium shadow-sm transition flex items-center gap-1.5 cursor-pointer active:scale-95"
+            className="px-5 py-2 rounded-xl bg-[#1C1917] hover:bg-[#2C2926] text-white text-xs font-medium shadow-sm transition flex items-center gap-1.5 cursor-pointer active:scale-95"
           >
             <FileText className="w-3.5 h-3.5" />
             <span>选择 PDF 文件</span>

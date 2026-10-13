@@ -10,7 +10,7 @@ function SerialGuideSidebar({
   setShowSerialMonitor
 }) {
   return (
-    <aside className="w-full lg:w-[340px] border-t lg:border-t-0 lg:border-l border-[#E2DDD5] bg-[#FAF9F6] p-5 sm:p-6 flex flex-col justify-between shrink-0 space-y-4 text-[#1C1917]">
+    <aside className="w-full lg:w-[360px] border-t lg:border-t-0 lg:border-l border-[#E2DDD5] bg-[#FAF9F6] p-5 sm:p-6 flex flex-col shrink-0 space-y-4 overflow-y-auto custom-scrollbar text-[#1C1917]">
       {/* Top Header */}
       <div>
         <div className="flex items-center gap-2">
@@ -25,10 +25,10 @@ function SerialGuideSidebar({
       </div>
 
       {/* USB Connection Card */}
-      <section className="rounded-2xl bg-white border border-[#E2DDD5] p-4.5 space-y-3.5 shadow-2xs">
-        <div className="flex items-center gap-2.5">
-          <div className="p-2 rounded-xl bg-[#B89A5A]/15 text-[#B89A5A] border border-[#B89A5A]/30">
-            <Usb className="w-4.5 h-4.5" />
+      <section className="rounded-2xl bg-white border border-[#E2DDD5] p-5 space-y-3.5 shadow-2xs">
+        <div className="flex items-center gap-3">
+          <div className="w-9 h-9 rounded-xl bg-[#B89A5A]/15 text-[#B89A5A] border border-[#B89A5A]/30 flex items-center justify-center shrink-0">
+            <Usb className="w-4 h-4" />
           </div>
           <span className="text-sm font-semibold text-[#1C1917]">USB 有线通道</span>
           <span className={`ml-auto text-xs font-medium px-2.5 py-0.5 rounded-full ${
@@ -40,7 +40,7 @@ function SerialGuideSidebar({
           </span>
         </div>
 
-        <p className="text-xs text-[#6E6760] leading-relaxed font-light">
+        <p className="text-xs text-[#6E6760] leading-relaxed font-light px-0.5">
           {isConnected
             ? (serialConnected
                 ? '串口已连接，按键指令即刻生效。按下硬件按键可实时测试动作。'
@@ -69,48 +69,48 @@ function SerialGuideSidebar({
       </section>
 
       {/* Bluetooth Card */}
-      <section className="rounded-2xl bg-white border border-[#E2DDD5] p-4.5 space-y-3 shadow-2xs">
-        <div className="flex items-center gap-2.5">
-          <div className="p-2 rounded-xl bg-[#B89A5A]/15 text-[#B89A5A] border border-[#B89A5A]/30">
-            <Bluetooth className="w-4.5 h-4.5" />
+      <section className="rounded-2xl bg-white border border-[#E2DDD5] p-5 space-y-3.5 shadow-2xs">
+        <div className="flex items-center gap-3">
+          <div className="w-9 h-9 rounded-xl bg-[#B89A5A]/15 text-[#B89A5A] border border-[#B89A5A]/30 flex items-center justify-center shrink-0">
+            <Bluetooth className="w-4 h-4" />
           </div>
           <span className="text-sm font-semibold text-[#1C1917]">蓝牙无线配对</span>
-          <span className="ml-auto text-xs font-mono font-medium text-[#9E968E] bg-[#FAF9F6] px-2 py-0.5 rounded border border-[#E2DDD5]">系统蓝牙</span>
+          <span className="ml-auto text-xs font-mono font-medium text-[#9E968E] bg-[#FAF9F6] px-2.5 py-0.5 rounded border border-[#E2DDD5]">系统蓝牙</span>
         </div>
 
-        <div className="space-y-2 text-xs text-[#1C1917] font-light leading-relaxed">
-          <div className="flex items-start gap-2">
-            <span className="w-4.5 h-4.5 rounded-full bg-[#B89A5A]/15 text-[#B89A5A] text-[11px] font-mono font-semibold flex items-center justify-center shrink-0 mt-0.5">1</span>
+        <div className="space-y-2.5 text-xs text-[#1C1917] font-light leading-relaxed px-0.5">
+          <div className="flex items-start gap-2.5">
+            <span className="w-5 h-5 rounded-full bg-[#B89A5A]/15 text-[#B89A5A] text-[11px] font-mono font-semibold flex items-center justify-center shrink-0 mt-0.5">1</span>
             <span>开启电脑系统蓝牙并保持硬件供电</span>
           </div>
-          <div className="flex items-start gap-2">
-            <span className="w-4.5 h-4.5 rounded-full bg-[#B89A5A]/15 text-[#B89A5A] text-[11px] font-mono font-semibold flex items-center justify-center shrink-0 mt-0.5">2</span>
+          <div className="flex items-start gap-2.5">
+            <span className="w-5 h-5 rounded-full bg-[#B89A5A]/15 text-[#B89A5A] text-[11px] font-mono font-semibold flex items-center justify-center shrink-0 mt-0.5">2</span>
             <span>在系统设置添加并连接 <strong className="text-[#1C1917] font-semibold">EasyInput AI</strong></span>
           </div>
-          <div className="flex items-start gap-2">
-            <span className="w-4.5 h-4.5 rounded-full bg-[#B89A5A]/15 text-[#B89A5A] text-[11px] font-mono font-semibold flex items-center justify-center shrink-0 mt-0.5">3</span>
+          <div className="flex items-start gap-2.5">
+            <span className="w-5 h-5 rounded-full bg-[#B89A5A]/15 text-[#B89A5A] text-[11px] font-mono font-semibold flex items-center justify-center shrink-0 mt-0.5">3</span>
             <span>配对成功后敲击物理按键即可翻页</span>
           </div>
         </div>
 
-        <p className="text-[11px] text-[#9E968E] leading-normal pt-2 border-t border-[#EAE6DF]">
+        <p className="text-[11px] text-[#9E968E] leading-relaxed pt-2.5 border-t border-[#EAE6DF] px-0.5">
           蓝牙状态请以系统设置为准，无需在浏览器重复连接。
         </p>
       </section>
 
       {/* Diagnostics / Monitor */}
-      <section className="rounded-2xl bg-white border border-[#E2DDD5] p-4 space-y-2.5 shadow-2xs">
+      <section className="rounded-2xl bg-white border border-[#E2DDD5] p-5 space-y-3 shadow-2xs">
         <div className="flex items-center justify-between">
           <h4 className="text-xs sm:text-[13px] font-semibold text-[#1C1917]">按键响应检测</h4>
           <span className="text-[11px] text-[#9E968E] font-mono font-medium">输入诊断</span>
         </div>
-        <p className="text-xs text-[#6E6760] leading-relaxed font-light">
+        <p className="text-xs text-[#6E6760] leading-relaxed font-light px-0.5">
           若按下按键无反应，可开启输入日志查看设备是否上报原始信号。
         </p>
         <button
           onClick={() => setShowSerialMonitor(prev => !prev)}
           aria-expanded={showSerialMonitor}
-          className="w-full py-2 rounded-xl bg-[#FAF9F6] hover:bg-white text-[#1C1917] hover:border-[#1C1917] border border-[#E2DDD5] font-medium text-xs sm:text-[13px] flex items-center justify-center gap-1.5 transition cursor-pointer shadow-2xs"
+          className="w-full py-2.5 rounded-xl bg-[#FAF9F6] hover:bg-white text-[#1C1917] hover:border-[#1C1917] border border-[#E2DDD5] font-medium text-xs sm:text-[13px] flex items-center justify-center gap-1.5 transition cursor-pointer shadow-2xs"
         >
           <Terminal className="w-3.5 h-3.5" />
           <span>{showSerialMonitor ? '收起输入日志' : '查看输入日志'}</span>
