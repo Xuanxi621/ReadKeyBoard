@@ -26,18 +26,17 @@ export default function OrbitCard({
   const orbitOffset = (index / Math.max(1, totalDocs)) * Math.PI * 2;
   const cardAngle = orbitAngle + orbitOffset;
 
-  // Enforce spacious orbit dimensions so cards orbit gracefully outside the central dialog box without covering it
+  // Exact orbit radii matching SVG ellipse perfectly (590px x 260px)
   const cardW = Math.max(132, cProps.w || 136);
   const cardH = Math.max(178, cProps.h || 184);
-  const rx = Math.max(590, (cProps.radiusX ? cProps.radiusX * 1.38 : 590));
-  const ry = Math.max(260, (cProps.radiusY ? cProps.radiusY * 1.02 : 260));
+  const rx = 590;
+  const ry = 260;
   const sinA = Math.sin(cardAngle);
   const cosA = Math.cos(cardAngle);
 
-  // Pure 3D Spatial Position: glide precisely along the celestial orbit (NO irregular wobbles)
+  // Exact orbital coordinates: card center locks 100% onto the SVG ellipse centerline
   const x = cosA * rx;
-  const y = sinA * ry - 8;
-  const z = sinA * 150;
+  const y = sinA * ry;
 
   // Depth ratio: 0 (furthest back) to 1 (closest front)
   const depthRatio = (sinA + 1) / 2;
@@ -46,20 +45,18 @@ export default function OrbitCard({
   const isSelected = selectedDocIndex === index;
   const isCardActive = isHovered || isSelected;
 
-  // Dignified upright spatial orientation (NO crooked roll tilt, gentle architectural yaw)
-  const rotY = cosA * -8; // gentle perspective yaw facing the viewer
-  const rotX = 5;         // consistent architectural pitch
-  const rotZ = 0;         // perfectly upright, calm, and orderly
+  // Dignified upright spatial orientation (gentle architectural yaw, perfectly upright)
+  const rotY = cosA * -6; // subtle perspective yaw facing the viewer
+  const rotX = 4;         // gentle architectural pitch
 
   // Optical 3D Depth of Field (景深):
-  // Very light, clean softening (max 0.4px) - zero muddy blur, completely legible and crisp
-  const blurPx = isCardActive ? 0 : Math.max(0, (1 - depthRatio) * 0.4);
-  const brightness = isCardActive ? 1.01 : 0.96 + depthRatio * 0.05;
-  const contrast = 1.0;
+  // Light, crisp softening (max 0.35px) - documents remain crystal clear and legible
+  const blurPx = isCardActive ? 0 : Math.max(0, (1 - depthRatio) * 0.35);
+  const brightness = isCardActive ? 1.01 : 0.97 + depthRatio * 0.04;
 
-  // Perspective Scale & Opacity: natural spatial scaling without squishing
-  const scale = isCardActive ? 1.15 : 0.92 + depthRatio * 0.16;
-  // Precise z-index: background cards (<20) travel physically behind console (z-20); foreground cards (>25) pass in front
+  // Perspective Scale & Opacity: clean 3D depth perception
+  const scale = isCardActive ? 1.15 : 0.90 + depthRatio * 0.20;
+  // Layering: background cards (<20) travel physically behind console (z-20); foreground cards (>30) pass in front
   const zIndex = isCardActive ? 90 : Math.round(depthRatio * 50) + 10;
   const opacity = isCardActive ? 1 : 0.88 + depthRatio * 0.12;
 
@@ -77,8 +74,8 @@ export default function OrbitCard({
         height: `${cardH}px`,
         marginTop: `-${cardH / 2}px`,
         marginLeft: `-${cardW / 2}px`,
-        transform: `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, ${z.toFixed(1)}px) rotateX(${rotX}deg) rotateY(${rotY.toFixed(1)}deg) rotateZ(0deg) scale(${scale.toFixed(2)})`,
-        filter: blurPx > 0.1
+        transform: `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, 0px) rotateX(${rotX}deg) rotateY(${rotY.toFixed(1)}deg) rotateZ(0deg) scale(${scale.toFixed(2)})`,
+        filter: blurPx > 0.05
           ? `blur(${blurPx.toFixed(1)}px) brightness(${brightness.toFixed(2)})`
           : `brightness(${brightness.toFixed(2)})`,
         zIndex: zIndex,
