@@ -130,10 +130,10 @@ export default function WorkspaceAiSidebar({
         </div>
       </div>
 
-      {/* TAB 1: Chat */}
+      {/* TAB 1: Chat (研读问答) */}
       {activeAiTab === 'chat' && (
         <div className="flex-1 flex flex-col overflow-hidden">
-          <div ref={chatScrollRef} className="flex-1 overflow-y-auto p-4 space-y-4">
+          <div ref={chatScrollRef} className="flex-1 overflow-y-auto p-4 space-y-4 custom-scrollbar select-text">
             {chatMessages.map((msg, idx) => (
               <div key={idx}>
                 {msg.sender === 'user' ? (
@@ -250,7 +250,7 @@ export default function WorkspaceAiSidebar({
 
       {/* TAB 2: Summary */}
       {activeAiTab === 'summary' && (
-        <div className="flex-1 overflow-y-auto p-4 space-y-4">
+        <div className="flex-1 overflow-y-auto p-4 space-y-4 custom-scrollbar select-text">
           <div className="flex items-center justify-between font-ui">
             <span className="text-[13px] font-semibold text-[#1D1D1F]">文档概要与提炼</span>
             <button
@@ -324,7 +324,7 @@ export default function WorkspaceAiSidebar({
 
       {/* TAB 3: Mindmap */}
       {activeAiTab === 'mindmap' && (
-        <div className="flex-1 overflow-y-auto p-4 space-y-3.5">
+        <div className="flex-1 overflow-y-auto p-4 space-y-3.5 custom-scrollbar select-text">
           <div className="flex items-center justify-between font-ui">
             <span className="text-[13px] font-semibold text-[#1D1D1F]">概念拓扑脑图</span>
             <button
@@ -374,7 +374,7 @@ export default function WorkspaceAiSidebar({
             </button>
           </div>
 
-          <div className="flex-1 overflow-y-auto space-y-2.5">
+          <div className="flex-1 overflow-y-auto space-y-2.5 custom-scrollbar select-text pr-1.5">
             {notes.length === 0 ? (
               <div className="p-8 text-center text-neutral-400 text-[12.5px] font-editorial">
                 暂无笔记批注，点击右上角「添加笔记」或在左侧阅读时划线批注

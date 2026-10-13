@@ -103,7 +103,7 @@ export default function WorkspacePdfViewer({
       </div>
 
       {/* PDF Canvas Viewport Container */}
-      <div className="flex-1 overflow-auto p-5 flex flex-col items-center justify-start relative select-text">
+      <div className="flex-1 overflow-auto p-5 flex flex-col items-center justify-start relative select-text custom-scrollbar">
         <div id="canvasWrapper" className="relative shadow-[0_12px_36px_rgba(0,0,0,0.08),0_1px_3px_rgba(0,0,0,0.04)] rounded-sm transition-all bg-white border border-black/[0.04]">
           <canvas id="pdfCanvas" ref={canvasRef} className="block" />
           <div id="textLayer" ref={textLayerRef} className="absolute inset-0 pointer-events-auto" />

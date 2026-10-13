@@ -50,7 +50,7 @@ body {
   box-shadow: 0 12px 36px -4px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.03);
 }
 
-/* Apple Subtle Scrollbars */
+/* Ergonomic Apple Tactile Scrollbars */
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
@@ -59,19 +59,55 @@ body {
   scrollbar-width: none;
 }
 
+/* Global readable scrollbar */
 ::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
+  width: 7px;
+  height: 7px;
 }
 ::-webkit-scrollbar-track {
-  background: transparent;
-}
-::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.15);
+  background: rgba(0, 0, 0, 0.03);
   border-radius: 9999px;
 }
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.22);
+  border-radius: 9999px;
+  transition: background-color 0.2s ease;
+}
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 0, 0, 0.3);
+  background: rgba(0, 113, 227, 0.65);
+}
+
+/* Dedicated High-Visibility Smooth Scrollbar for AI Q&A Sidebar */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.25) rgba(0, 0, 0, 0.04);
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.04);
+  border-radius: 9999px;
+  margin: 6px 0;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.25);
+  border-radius: 9999px;
+  border: 1px solid transparent;
+  background-clip: padding-box;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 113, 227, 0.75);
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:active {
+  background: #0071E3;
 }
 
 /* Orbit Stage */
