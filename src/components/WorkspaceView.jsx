@@ -46,6 +46,47 @@ export default function WorkspaceView({
   });
   const [customMindmap, setCustomMindmap] = useState(null);
   const [customSummary, setCustomSummary] = useState(null);
+  const [composerDraft, setComposerDraft] = useState(null);
+
+  // Load document-specific notes and bookmarks from localStorage
+  useEffect(() => {
+    if (!currentDoc) return;
+    const storageKey = `readkeyboard_annotations_${currentDoc.id || currentDoc.fileName}`;
+    try {
+      const raw = localStorage.getItem(storageKey);
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (Array.isArray(parsed)) {
+          setNotes(parsed);
+          return;
+        }
+      }
+      // Initial default bookmark and takeaway highlight
+      const initialNotes = [
+        {
+          id: `bm-${Date.now()}-1`,
+          type: 'bookmark',
+          page: 1,
+          text: '封面与核心导言',
+          time: '刚刚'
+        }
+      ];
+      if (currentDoc.keyTakeaways && currentDoc.keyTakeaways.length > 0) {
+        initialNotes.push({
+          id: `hl-${Date.now()}-2`,
+          type: 'highlight',
+          page: 1,
+          quote: currentDoc.keyTakeaways[0].text,
+          text: currentDoc.keyTakeaways[0].tag || '核心论点',
+          time: '刚刚'
+        });
+      }
+      setNotes(initialNotes);
+      localStorage.setItem(storageKey, JSON.stringify(initialNotes));
+    } catch (e) {
+      console.warn('Failed to load annotations from storage:', e);
+    }
+  }, [currentDoc?.id, currentDoc?.fileName]);
 
   const handleModelChange = (newModel) => {
     if (!newModel) return;
@@ -334,38 +375,85 @@ export default function WorkspaceView({
     }
   };
 
-  // Add Manual Note
-  const addNote = () => {
-    const text = prompt('请输入你的批注笔记：', '该论点具有启发性与实用价值');
-    if (text && text.trim()) {
-      setNotes(prev => [
-        {
-          id: Date.now(),
-          page: currentPage,
-          text: text.trim(),
-          time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-        },
-        ...prev
-      ]);
-      showToast('笔记已收录');
+  // Bookmark & Annotation Handlers
+  const updateNotes = (newNotesOrFn) => {
+    setNotes(prev => {
+      const updated = typeof newNotesOrFn === 'function' ? newNotesOrFn(prev) : newNotesOrFn;
+      if (currentDoc) {
+        const storageKey = `readkeyboard_annotations_${currentDoc.id || currentDoc.fileName}`;
+        try {
+          localStorage.setItem(storageKey, JSON.stringify(updated));
+        } catch (_) {}
+      }
+      return updated;
+    });
+  };
+
+  const isPageBookmarked = (page = currentPage) => {
+    return notes.some(n => n.page === page && n.type === 'bookmark');
+  };
+
+  const toggleBookmark = (page = currentPage) => {
+    const exists = isPageBookmarked(page);
+    if (exists) {
+      updateNotes(prev => prev.filter(n => !(n.page === page && n.type === 'bookmark')));
+      showToast(`已取消第 ${page} 页书签`);
+    } else {
+      const newBookmark = {
+        id: `bm-${Date.now()}`,
+        type: 'bookmark',
+        page: page,
+        text: `第 ${page} 页关键节点`,
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      };
+      updateNotes(prev => [newBookmark, ...prev]);
+      showToast(`已为第 ${page} 页添加书签`);
     }
+  };
+
+  const handleCreateNote = ({ type = 'note', text = '', quote = '', page = currentPage }) => {
+    const newNote = {
+      id: `note-${Date.now()}`,
+      type,
+      page,
+      quote: (quote || '').trim(),
+      text: (text || '').trim() || (type === 'highlight' ? '重点引述' : '研读心得'),
+      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    };
+    updateNotes(prev => [newNote, ...prev]);
+    showToast(type === 'highlight' ? `已收藏第 ${page} 页高亮引述` : `已收录第 ${page} 页研读批注`);
+    setActiveAiTab('notes');
+  };
+
+  const handleDeleteNote = (id) => {
+    updateNotes(prev => prev.filter(n => n.id !== id));
+    showToast('已删除批注/书签');
+  };
+
+  const handleEditNote = (id, newText) => {
+    updateNotes(prev => prev.map(n => n.id === id ? { ...n, text: newText } : n));
+    showToast('已更新批注');
   };
 
   // Export Notes
   const exportNotes = () => {
     const content =
-      `# 智能研读报告\n\n` +
-      `文档名称: ${currentDoc.fileName}\n` +
-      `核心提炼: ${currentDoc.oneLiner || ''}\n\n` +
-      `## 批注与书签笔记\n` +
-      notes.map(n => `- [第 ${n.page} 页] ${n.text} (${n.time})`).join('\n') +
-      `\n\n---\n导出自 智能阅读工作台`;
+      `# 智能研读报告 · ${currentDoc.fileName}\n\n` +
+      `导出时间: ${new Date().toLocaleString()}\n` +
+      `核心提炼: ${currentDoc.oneLiner || '无'}\n\n` +
+      `## 批注与书签目录 (${notes.length} 条)\n\n` +
+      notes.map(n => {
+        const typeLabel = n.type === 'bookmark' ? '🔖 [书签]' : n.type === 'highlight' ? '🖍️ [高亮划线]' : '📝 [批注心得]';
+        const quotePart = n.quote ? `\n> “${n.quote}”` : '';
+        return `### 第 ${n.page} 页 · ${typeLabel} (${n.time})\n${n.text}${quotePart}`;
+      }).join('\n\n') +
+      `\n\n---\n导出自 EasyInput 智能阅读工作台`;
 
     const blob = new Blob([content], { type: 'text/markdown;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `${currentDoc.fileName}-研读笔记.md`;
+    a.download = `${currentDoc.fileName}-研读批注.md`;
     a.click();
     showToast('已导出 Markdown 研读报告');
   };
@@ -399,6 +487,14 @@ export default function WorkspaceView({
           canvasRef={canvasRef}
           textLayerRef={textLayerRef}
           isPageLoading={isPageLoading}
+          isPageBookmarked={isPageBookmarked}
+          toggleBookmark={toggleBookmark}
+          onCreateNote={handleCreateNote}
+          onOpenNoteComposer={(data) => {
+            setComposerDraft(data);
+            setActiveAiTab('notes');
+          }}
+          showToast={showToast}
         />
 
         {/* RIGHT: AI Copilot */}
@@ -417,7 +513,17 @@ export default function WorkspaceView({
           handleChatSubmit={handleChatSubmit}
           handleChatKeyDown={handleChatKeyDown}
           notes={notes}
-          addNote={addNote}
+          addNote={() => {
+            setComposerDraft({ page: currentPage });
+            setActiveAiTab('notes');
+          }}
+          onCreateNote={handleCreateNote}
+          onDeleteNote={handleDeleteNote}
+          onEditNote={handleEditNote}
+          isPageBookmarked={isPageBookmarked}
+          toggleBookmark={toggleBookmark}
+          composerDraft={composerDraft}
+          setComposerDraft={setComposerDraft}
           showToast={showToast}
           bailianStatus={bailianStatus}
           selectedModel={selectedModel}

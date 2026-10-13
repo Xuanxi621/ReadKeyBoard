@@ -1,11 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   ChevronLeft,
   ChevronRight,
   ZoomIn,
   ZoomOut,
   Maximize2,
-  Highlighter
+  Highlighter,
+  Bookmark,
+  Edit3,
+  Copy
 } from 'lucide-react';
 
 export default function WorkspacePdfViewer({
@@ -22,13 +25,106 @@ export default function WorkspacePdfViewer({
   toggleHighlight,
   canvasRef,
   textLayerRef,
-  isPageLoading
+  isPageLoading,
+  isPageBookmarked,
+  toggleBookmark,
+  onCreateNote,
+  onOpenNoteComposer,
+  showToast
 }) {
+  const [selectionPopup, setSelectionPopup] = useState(null);
+
+  const handleMouseUp = () => {
+    setTimeout(() => {
+      const selection = window.getSelection();
+      const text = selection ? selection.toString().trim() : '';
+      if (text && text.length > 1) {
+        try {
+          const range = selection.getRangeAt(0);
+          const rect = range.getBoundingClientRect();
+          setSelectionPopup({
+            text,
+            x: rect.left + rect.width / 2,
+            y: Math.max(64, rect.top - 10)
+          });
+        } catch (_) {
+          setSelectionPopup(null);
+        }
+      } else {
+        setSelectionPopup(null);
+      }
+    }, 30);
+  };
+
+  const isBookmarked = isPageBookmarked ? isPageBookmarked(currentPage) : false;
+
   return (
-    <div className="flex-1 flex flex-col bg-[#FAF9F6] border-r border-[#E2DDD5] relative overflow-hidden select-none">
+    <div
+      className="flex-1 flex flex-col bg-[#FAF9F6] border-r border-[#E2DDD5] relative overflow-hidden select-none"
+      onMouseUp={handleMouseUp}
+    >
+      {/* Floating Text Selection Annotation Tooltip */}
+      {selectionPopup && (
+        <div
+          className="fixed transform -translate-x-1/2 -translate-y-full z-50 bg-[#1C1917]/95 backdrop-blur-md text-[#FAF9F6] rounded-full px-3.5 py-1.5 shadow-[0_8px_24px_rgba(28,25,23,0.35)] border border-[#B89A5A]/40 flex items-center gap-2.5 text-xs animate-fadeIn select-none"
+          style={{ left: `${selectionPopup.x}px`, top: `${selectionPopup.y}px` }}
+        >
+          <button
+            onClick={() => {
+              if (onCreateNote) {
+                onCreateNote({
+                  type: 'highlight',
+                  quote: selectionPopup.text,
+                  text: '重点引证',
+                  page: currentPage
+                });
+              }
+              window.getSelection()?.removeAllRanges();
+              setSelectionPopup(null);
+            }}
+            className="flex items-center gap-1.5 text-white hover:text-[#B89A5A] font-medium cursor-pointer transition active:scale-95"
+            title="高亮收藏此段引文"
+          >
+            <Highlighter className="w-3.5 h-3.5 text-[#B89A5A]" />
+            <span>高亮摘录</span>
+          </button>
+          <span className="text-[#6E6760]">|</span>
+          <button
+            onClick={() => {
+              if (onOpenNoteComposer) {
+                onOpenNoteComposer({
+                  quote: selectionPopup.text,
+                  page: currentPage
+                });
+              }
+              window.getSelection()?.removeAllRanges();
+              setSelectionPopup(null);
+            }}
+            className="flex items-center gap-1.5 text-white hover:text-[#B89A5A] font-medium cursor-pointer transition active:scale-95"
+            title="为此段文本撰写研读批注"
+          >
+            <Edit3 className="w-3.5 h-3.5 text-[#B89A5A]" />
+            <span>写批注</span>
+          </button>
+          <span className="text-[#6E6760]">|</span>
+          <button
+            onClick={() => {
+              navigator.clipboard.writeText(selectionPopup.text);
+              if (showToast) showToast('已复制所选引文');
+              window.getSelection()?.removeAllRanges();
+              setSelectionPopup(null);
+            }}
+            className="text-[#9E968E] hover:text-white cursor-pointer transition p-0.5"
+            title="复制引文"
+          >
+            <Copy className="w-3 h-3" />
+          </button>
+        </div>
+      )}
+
       {/* Austin Skyline Architectural Controls bar */}
       <div className="h-11 bg-white border-b border-[#E2DDD5] px-4 flex items-center justify-between text-xs z-10 flex-shrink-0 text-[#1C1917]">
-        {/* Page Nav */}
+        {/* Page Nav & Bookmark Toggle */}
         <div className="flex items-center gap-1.5">
           <button
             onClick={prevPage}
@@ -55,6 +151,24 @@ export default function WorkspacePdfViewer({
             title="下一页"
           >
             <ChevronRight className="w-4 h-4" />
+          </button>
+
+          <div className="h-3 w-px bg-[#E2DDD5] mx-1" />
+
+          {/* Quick Bookmark Toggle for Current Page */}
+          <button
+            onClick={() => toggleBookmark && toggleBookmark(currentPage)}
+            className={`flex items-center gap-1 px-2.5 py-1 rounded-xl text-[11.5px] font-medium cursor-pointer transition active:scale-95 ${
+              isBookmarked
+                ? 'bg-[#B89A5A]/20 text-[#1C1917] border border-[#B89A5A]/40 shadow-2xs'
+                : 'text-[#6E6760] hover:text-[#1C1917] hover:bg-[#FAF9F6] border border-transparent'
+            }`}
+            title={isBookmarked ? `已添加第 ${currentPage} 页书签（点击取消）` : `为第 ${currentPage} 页添加书签`}
+          >
+            <Bookmark className={`w-3.5 h-3.5 ${isBookmarked ? 'text-[#B89A5A] fill-[#B89A5A]' : 'text-[#6E6760]'}`} />
+            <span className="hidden sm:inline">
+              {isBookmarked ? '已加书签' : '加书签'}
+            </span>
           </button>
         </div>
 
