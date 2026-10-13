@@ -110,13 +110,13 @@ function attachInputListener(device, onTokenReceived, onLogReceived) {
           const lower = hotkey.toLowerCase().replace(/\s/g, '');
           onLogReceived?.(`[WebHID 按下] ${hotkey || '(空快捷键)'}`);
           let token = null;
-          if (lower.includes('return') || lower.includes('enter')) token = 'KEY2';
+          if (lower.includes('return') || lower.includes('enter') || lower === 's2' || lower === 'key2') token = 'KEY2';
           else if (lower.includes('selectall') || lower.includes('select_all') || /^(ctrl|control|meta|cmd|command)\+a$/.test(lower)) token = 'KEY5';
           else if (lower.includes('backspace')) token = 'KEY4';
           else if (lower.includes('copy')) token = 'KEY6';
           else if (lower.includes('paste')) token = 'KEY7';
           else if (lower.includes('undo')) token = 'KEY8';
-          else if (lower.includes('voice') || lower.includes('ptt')) token = 'KEY1';
+          else if (lower.includes('voice') || lower.includes('ptt')) token = 'KEY2';
           else if (lower.includes('edit')) token = 'KEY3';
           else if (lower.includes('scroll') || lower.includes('toggle')) token = 'ENC_PRESS';
 

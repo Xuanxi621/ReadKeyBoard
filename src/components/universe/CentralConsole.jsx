@@ -153,6 +153,9 @@ function CentralConsole({
           </div>
 
           <div className="flex items-center gap-2">
+            {voice.state !== 'idle' && (
+              <span className="text-[11px] text-[#0071E3] animate-pulse font-medium">正在倾听…</span>
+            )}
             <button
               type="button"
               onClick={voice.toggle}
@@ -162,7 +165,7 @@ function CentralConsole({
               className={`p-1.5 rounded-xl cursor-pointer transition-all ${
                 voice.state === 'idle'
                   ? 'text-[#6E6760] hover:text-[#1C1917] hover:bg-[#FAF9F6]'
-                  : 'text-white bg-[#1C1917] animate-pulse shadow-xs'
+                  : 'text-white bg-[#0071E3] animate-pulse shadow-xs'
               }`}
             >
               <Mic className="w-3.5 h-3.5" />

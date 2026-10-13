@@ -165,7 +165,7 @@ export function useHardwareController({
             setCurrentPage(prev => {
               const maxP = currentDocRef.current ? currentDocRef.current.pages : 1;
               const next = prev < maxP ? prev + 1 : prev;
-              showToast(`EasyInput S2 ➔ 下一页 (${next}/${maxP})`);
+              showToast(`EasyInput ➔ 下一页 (${next}/${maxP})`);
               return next;
             });
           }
@@ -612,6 +612,15 @@ export function useHardwareController({
         return;
       }
 
+      // S2 独立按键 (F2): 支持宏按键/独立快捷键直接触发，不受输入框焦点拦截
+      if (e.key === 'F2' || e.code === 'F2') {
+        e.preventDefault();
+        e.stopPropagation();
+        if (e.repeat) return;
+        onHardwareTrigger('KEY2', '按键 (F2/S2)');
+        return;
+      }
+
       // Bound modifier keys (Ctrl/Shift/Alt) are dispatched only on a standalone release.
       if (isModifierKey(e) && Object.values(hardwareMap).some(mapping => mapping.fallbackKey === e.code)) {
         e.preventDefault();
@@ -661,8 +670,8 @@ export function useHardwareController({
       let matchedToken = null;
       let matchedLabel = null;
 
-      // 1. S2: 用户配置动作 (Enter / 2 / NumpadEnter)
-      if (e.key === 'Enter' || e.code === 'Enter' || e.code === 'NumpadEnter' || (!e.ctrlKey && !e.metaKey && e.key === '2')) {
+      // 1. S2: 用户配置动作 (Enter / 2 / NumpadEnter / F2)
+      if (e.key === 'Enter' || e.code === 'Enter' || e.code === 'NumpadEnter' || (!e.ctrlKey && !e.metaKey && e.key === '2') || e.key === 'F2' || e.code === 'F2') {
         matchedToken = 'KEY2';
         matchedLabel = 'S2';
       }

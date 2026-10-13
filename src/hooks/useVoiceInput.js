@@ -6,12 +6,32 @@ export function useVoiceInput(setText, showToast, onActivate) {
   const callbacks = useRef({ setText, showToast, onActivate });
   callbacks.current = { setText, showToast, onActivate };
   const controller = useRef(null);
+  const hadErrorRef = useRef(false);
+
   useEffect(() => {
     const voice = createVoiceInput({
       Recognition: window.SpeechRecognition || window.webkitSpeechRecognition,
-      onText: text => callbacks.current.setText(previous => previous ? `${previous} ${text}` : text),
-      onState: setState,
-      onMessage: message => callbacks.current.showToast(message)
+      onText: text => {
+        callbacks.current.setText(previous => previous ? `${previous} ${text}` : text);
+        callbacks.current.showToast?.(`🎤 已识别: "${text}"`);
+      },
+      onState: (nextState) => {
+        setState(prev => {
+          if (nextState === 'listening') {
+            hadErrorRef.current = false;
+            callbacks.current.showToast?.('🎤 EasyInput S2 ➔ 已开启语音输入，请说话...');
+          } else if (nextState === 'idle' && prev === 'listening') {
+            if (!hadErrorRef.current) {
+              callbacks.current.showToast?.('🛑 语音输入已结束');
+            }
+          }
+          return nextState;
+        });
+      },
+      onMessage: message => {
+        hadErrorRef.current = true;
+        callbacks.current.showToast?.(message);
+      }
     });
     controller.current = voice;
     const toggle = () => {
