@@ -31,9 +31,9 @@ export default function KeySettingsModal({
   };
 
   return (
-    <div className="fixed inset-0 bg-black/40 backdrop-blur-xs flex items-center justify-center z-50 p-2 sm:p-4 animate-fadeIn">
-      <div role="dialog" aria-modal="true" aria-labelledby="key-settings-title" className="bg-[#FBFBFD] w-full max-w-5xl rounded-3xl shadow-[0_24px_72px_rgba(0,0,0,0.18)] border border-black/[0.08] overflow-hidden flex flex-col max-h-[94dvh] font-editorial">
-        <header className="px-5 sm:px-6 py-3.5 border-b border-black/[0.06] bg-white flex items-center gap-3 shrink-0">
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-2 sm:p-4 animate-fadeIn">
+      <div role="dialog" aria-modal="true" aria-labelledby="key-settings-title" className="bg-[#FBFBFD] w-[95vw] max-w-[1320px] rounded-3xl shadow-[0_24px_72px_rgba(0,0,0,0.22)] border border-black/[0.08] overflow-hidden flex flex-col max-h-[94dvh] font-editorial">
+        <header className="px-6 py-3.5 border-b border-black/[0.06] bg-white flex items-center gap-3 shrink-0">
           <div className="hidden sm:flex p-2 rounded-xl bg-[#0071E3]/10 text-[#0071E3]"><Keyboard className="w-5 h-5" /></div>
           <div className="min-w-0 flex-1">
             <h2 id="key-settings-title" className="text-base sm:text-lg font-bold text-[#1D1D1F] tracking-tight">EasyInput 按键设置</h2>

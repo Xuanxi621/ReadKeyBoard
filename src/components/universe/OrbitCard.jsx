@@ -1,7 +1,7 @@
 import React from 'react';
 import { FileText, Trash2, ArrowUpRight } from 'lucide-react';
 
-export default function OrbitCard({
+function OrbitCard({
   doc,
   index,
   totalDocs,
@@ -162,3 +162,5 @@ export default function OrbitCard({
     </div>
   );
 }
+
+export default React.memo(OrbitCard);

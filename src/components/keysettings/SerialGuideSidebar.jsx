@@ -1,7 +1,7 @@
 import React from 'react';
 import { Usb, Bluetooth, RotateCcw, Terminal } from 'lucide-react';
 
-export default function SerialGuideSidebar({
+function SerialGuideSidebar({
   serialConnected,
   isConnected,
   onToggleConnectSerial,
@@ -99,3 +99,5 @@ export default function SerialGuideSidebar({
     </aside>
   );
 }
+
+export default React.memo(SerialGuideSidebar);

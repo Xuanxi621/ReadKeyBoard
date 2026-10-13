@@ -2,7 +2,7 @@ import React from 'react';
 import { Sliders, Terminal, RotateCw, RotateCcw, Check, Disc } from 'lucide-react';
 import { EASYINPUT_ACTIONS, DEFAULT_HARDWARE_MAP } from '../../services/hardwareConfig.js';
 
-export default function KeyMappingList({
+function KeyMappingList({
   hardwareMap,
   recordingToken,
   onStartRecording,
@@ -29,7 +29,7 @@ export default function KeyMappingList({
 
   const formatFallbackBadge = (val) => {
     if (!val) return '改键';
-    if (val.length > 7) return val.slice(0, 5) + '...';
+    if (val.length > 15) return val.slice(0, 7) + '…';
     return val;
   };
 
@@ -125,7 +125,7 @@ export default function KeyMappingList({
                     e.currentTarget.blur();
                     onStartRecording(isRecording ? null : token);
                   }}
-                  className={`px-2 py-0.5 rounded-full text-[10px] font-semibold transition cursor-pointer max-w-[72px] truncate shrink-0 ${
+                  className={`px-2 py-0.5 rounded-full text-[10px] font-semibold transition cursor-pointer max-w-[110px] truncate shrink-0 ${
                     isRecording
                       ? 'bg-[#0071E3] text-white animate-pulse'
                       : 'bg-neutral-100 hover:bg-neutral-200 text-neutral-700 border border-black/[0.04]'
@@ -207,7 +207,7 @@ export default function KeyMappingList({
                   e.currentTarget.blur();
                   onStartRecording(recordingToken === 'ENC_RIGHT' ? null : 'ENC_RIGHT');
                 }}
-                className={`px-2 py-0.5 rounded-full text-[10px] font-medium transition cursor-pointer max-w-[72px] truncate shrink-0 ${
+                className={`px-2 py-0.5 rounded-full text-[10px] font-medium transition cursor-pointer max-w-[110px] truncate shrink-0 ${
                   recordingToken === 'ENC_RIGHT'
                     ? 'bg-[#0071E3] text-white animate-pulse'
                     : 'bg-white hover:bg-neutral-100 text-neutral-700 border border-black/[0.08]'
@@ -241,7 +241,7 @@ export default function KeyMappingList({
                   e.currentTarget.blur();
                   onStartRecording(recordingToken === 'ENC_LEFT' ? null : 'ENC_LEFT');
                 }}
-                className={`px-2 py-0.5 rounded-full text-[10px] font-medium transition cursor-pointer max-w-[72px] truncate shrink-0 ${
+                className={`px-2 py-0.5 rounded-full text-[10px] font-medium transition cursor-pointer max-w-[110px] truncate shrink-0 ${
                   recordingToken === 'ENC_LEFT'
                     ? 'bg-[#0071E3] text-white animate-pulse'
                     : 'bg-white hover:bg-neutral-100 text-neutral-700 border border-black/[0.08]'
@@ -275,7 +275,7 @@ export default function KeyMappingList({
                   e.currentTarget.blur();
                   onStartRecording(recordingToken === 'ENC_PRESS' ? null : 'ENC_PRESS');
                 }}
-                className={`px-2 py-0.5 rounded-full text-[10px] font-medium transition cursor-pointer max-w-[72px] truncate shrink-0 ${
+                className={`px-2 py-0.5 rounded-full text-[10px] font-medium transition cursor-pointer max-w-[110px] truncate shrink-0 ${
                   recordingToken === 'ENC_PRESS'
                     ? 'bg-[#0071E3] text-white animate-pulse'
                     : 'bg-white hover:bg-neutral-100 text-neutral-700 border border-black/[0.08]'
@@ -302,3 +302,5 @@ export default function KeyMappingList({
     </div>
   );
 }
+
+export default React.memo(KeyMappingList);

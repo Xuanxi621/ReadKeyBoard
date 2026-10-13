@@ -1,7 +1,7 @@
 import React from 'react';
 import { Cpu } from 'lucide-react';
 
-export default function HardwareVisualizer({
+function HardwareVisualizer({
   scrollToCard,
   hoveredToken,
   setHoveredToken,
@@ -98,3 +98,5 @@ export default function HardwareVisualizer({
     </div>
   );
 }
+
+export default React.memo(HardwareVisualizer);

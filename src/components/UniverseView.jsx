@@ -3,7 +3,7 @@ import { Keyboard, UploadCloud } from 'lucide-react';
 import CentralConsole from './universe/CentralConsole.jsx';
 import OrbitCard from './universe/OrbitCard.jsx';
 
-export default function UniverseView({
+function UniverseView({
   documents = [],
   selectedDocIndex = 0,
   onSelectDocIndex,
@@ -256,3 +256,5 @@ export default function UniverseView({
     </div>
   );
 }
+
+export default React.memo(UniverseView);
