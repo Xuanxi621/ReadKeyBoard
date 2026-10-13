@@ -173,7 +173,7 @@ function KeyMappingList({
         ref={el => (cardRefs.current['ENC'] = el)}
         onMouseEnter={() => setHoveredToken('ENC')}
         onMouseLeave={() => setHoveredToken(null)}
-        className={`p-5 sm:p-6 rounded-xl bg-[#fbfaf7] border space-y-4 transition shadow-2xs font-ui ${
+        className={`p-4 sm:p-5 rounded-xl bg-white border space-y-4 transition shadow-2xs font-ui ${
           isTokenActive('ENC')
             ? 'border-[#b5563a] ring-2 ring-[#b5563a]/30 bg-[#b5563a]/5'
             : 'border-[#eae5db]'
@@ -185,11 +185,11 @@ function KeyMappingList({
             onClick={() => onTriggerToken && onTriggerToken('ENC_PRESS', '旋钮下按')}
             title="点击直接模拟旋钮下按测试"
           >
-            <div className="w-9 h-9 rounded-lg bg-[#b5563a] text-white flex items-center justify-center font-bold shadow-2xs transition-colors group-hover:bg-[#9e462e]">
-              <RotateCw className="w-5 h-5" />
+            <div className="w-8 h-8 rounded-lg bg-[#b5563a] text-white flex items-center justify-center font-bold shadow-2xs transition-colors group-hover:bg-[#9e462e]">
+              <RotateCw className="w-4.5 h-4.5" />
             </div>
             <div>
-              <span className="font-bold text-base sm:text-lg text-[#2b2722] group-hover:text-[#b5563a] transition-colors font-editorial">
+              <span className="font-bold text-sm sm:text-base text-[#2b2722] group-hover:text-[#b5563a] transition-colors font-editorial">
                 旋转编码器交互
               </span>
             </div>
@@ -201,7 +201,7 @@ function KeyMappingList({
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 pt-0.5">
           {/* Knob CW */}
-          <div className="p-4 rounded-xl bg-white border border-[#eae5db] space-y-2.5 shadow-2xs">
+          <div className="p-3.5 rounded-lg bg-[#fbfaf7] border border-[#eae5db] space-y-2 shadow-2xs">
             <div className="flex items-center justify-between text-xs sm:text-[13px] font-bold text-[#2b2722] gap-1.5">
               <span className="flex items-center gap-1.5 truncate">
                 <RotateCw className="w-4 h-4 text-[#b5563a] shrink-0" /> 顺时针 (CW)
@@ -235,7 +235,7 @@ function KeyMappingList({
           </div>
 
           {/* Knob CCW */}
-          <div className="p-4 rounded-xl bg-white border border-[#eae5db] space-y-2.5 shadow-2xs">
+          <div className="p-3.5 rounded-lg bg-[#fbfaf7] border border-[#eae5db] space-y-2 shadow-2xs">
             <div className="flex items-center justify-between text-xs sm:text-[13px] font-bold text-[#2b2722] gap-1.5">
               <span className="flex items-center gap-1.5 truncate">
                 <RotateCcw className="w-4 h-4 text-[#b5563a] shrink-0" /> 逆时针 (CCW)
@@ -269,7 +269,7 @@ function KeyMappingList({
           </div>
 
           {/* Knob Press */}
-          <div className="p-4 rounded-xl bg-white border border-[#eae5db] space-y-2.5 shadow-2xs">
+          <div className="p-3.5 rounded-lg bg-[#fbfaf7] border border-[#eae5db] space-y-2 shadow-2xs">
             <div className="flex items-center justify-between text-xs sm:text-[13px] font-bold text-[#2b2722] gap-1.5">
               <span className="flex items-center gap-1.5 truncate">
                 <Disc className="w-4 h-4 text-[#b5563a] shrink-0" /> 旋钮下按 (Click)

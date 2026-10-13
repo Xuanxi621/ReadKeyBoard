@@ -46,29 +46,29 @@ export default function WorkspaceAiSidebar({
   const voice = useVoiceInput(setChatInput, showToast, () => setActiveAiTab('chat'));
 
   return (
-    <div id="workspaceAiSidebar" className="w-[420px] xl:w-[460px] flex-shrink-0 bg-[#FBFBFD] flex flex-col border-l border-black/[0.06] transition-all font-editorial select-text">
-      {/* Apple-style Translucent Model & Engine Bar */}
-      <div className="px-4 py-2 bg-white/70 backdrop-blur-md border-b border-black/[0.06] flex items-center justify-between gap-2 flex-shrink-0">
+    <div id="workspaceAiSidebar" className="w-[420px] xl:w-[460px] flex-shrink-0 bg-[#fbfaf7] flex flex-col border-l border-[#eae5db] transition-all font-editorial select-text text-[#2b2722]">
+      {/* EasyInput Engine Bar */}
+      <div className="px-4 py-2 bg-white border-b border-[#eae5db] flex items-center justify-between gap-2 flex-shrink-0">
         <div className="flex items-center gap-2 min-w-0">
           <span
             className={`w-2 h-2 rounded-full flex-shrink-0 ${
               bailianStatus?.connected
                 ? 'bg-[#34C759] shadow-[0_0_6px_rgba(52,199,89,0.7)] animate-pulse'
-                : 'bg-[#FF9500]'
+                : 'bg-[#b5563a]'
             }`}
           />
-          <span className="font-medium text-[#1D1D1F] text-[12px] truncate font-ui">
+          <span className="font-semibold text-[#2b2722] text-[12px] truncate font-ui">
             {bailianStatus?.connected ? '通义千问 · bl-cli' : '连接本地 bl-cli 中...'}
           </span>
         </div>
 
-        {/* Apple Capsule Model Selector */}
+        {/* Model Selector */}
         <div className="flex items-center gap-1.5 flex-shrink-0 font-ui">
-          <Cpu className="w-3.5 h-3.5 text-neutral-400" />
+          <Cpu className="w-3.5 h-3.5 text-[#7d7468]" />
           <select
             value={selectedModel}
             onChange={e => onSelectModel && onSelectModel(e.target.value)}
-            className="bg-white/90 text-[11.5px] font-medium text-[#1D1D1F] border border-black/[0.08] rounded-full px-2.5 py-0.5 outline-none hover:border-black/25 focus:ring-1 focus:ring-black/20 cursor-pointer shadow-2xs transition"
+            className="bg-[#fbfaf7] text-[11.5px] font-semibold text-[#2b2722] border border-[#eae5db] rounded-lg px-2.5 py-1 outline-none hover:border-[#b5563a] focus:border-[#b5563a] cursor-pointer shadow-2xs transition"
             title="选择要调用的通义千问模型"
           >
             {SUPPORTED_BAILIAN_MODELS.map(m => (
@@ -80,15 +80,15 @@ export default function WorkspaceAiSidebar({
         </div>
       </div>
 
-      {/* Apple macOS-style Segmented Control Tabs */}
-      <div className="px-3.5 py-2 border-b border-black/[0.06] bg-[#F5F5F7]/60 flex-shrink-0 font-ui">
-        <div className="flex items-center p-1 bg-black/[0.05] rounded-xl text-[12px]">
+      {/* Inset Hairline Segmented Control Tabs */}
+      <div className="px-3.5 py-2 border-b border-[#eae5db] bg-white flex-shrink-0 font-ui">
+        <div className="flex items-center p-0.5 bg-[#fbfaf7] border border-[#eae5db] rounded-lg text-[12px]">
           <button
             onClick={() => setActiveAiTab('chat')}
-            className={`flex-1 py-1 rounded-lg flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
+            className={`flex-1 py-1 rounded-md flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
               activeAiTab === 'chat'
-                ? 'bg-white text-[#1D1D1F] shadow-[0_1px_3px_rgba(0,0,0,0.08)] font-semibold'
-                : 'text-neutral-500 hover:text-neutral-900'
+                ? 'bg-white text-[#b5563a] shadow-2xs font-bold border border-[#eae5db]'
+                : 'text-[#7d7468] hover:text-[#2b2722]'
             }`}
           >
             <MessageSquare className="w-3.5 h-3.5" />
@@ -96,10 +96,10 @@ export default function WorkspaceAiSidebar({
           </button>
           <button
             onClick={() => setActiveAiTab('summary')}
-            className={`flex-1 py-1 rounded-lg flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
+            className={`flex-1 py-1 rounded-md flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
               activeAiTab === 'summary'
-                ? 'bg-white text-[#1D1D1F] shadow-[0_1px_3px_rgba(0,0,0,0.08)] font-semibold'
-                : 'text-neutral-500 hover:text-neutral-900'
+                ? 'bg-white text-[#b5563a] shadow-2xs font-bold border border-[#eae5db]'
+                : 'text-[#7d7468] hover:text-[#2b2722]'
             }`}
           >
             <FileText className="w-3.5 h-3.5" />
@@ -107,10 +107,10 @@ export default function WorkspaceAiSidebar({
           </button>
           <button
             onClick={() => setActiveAiTab('mindmap')}
-            className={`flex-1 py-1 rounded-lg flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
+            className={`flex-1 py-1 rounded-md flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
               activeAiTab === 'mindmap'
-                ? 'bg-white text-[#1D1D1F] shadow-[0_1px_3px_rgba(0,0,0,0.08)] font-semibold'
-                : 'text-neutral-500 hover:text-neutral-900'
+                ? 'bg-white text-[#b5563a] shadow-2xs font-bold border border-[#eae5db]'
+                : 'text-[#7d7468] hover:text-[#2b2722]'
             }`}
           >
             <Network className="w-3.5 h-3.5" />
@@ -118,14 +118,14 @@ export default function WorkspaceAiSidebar({
           </button>
           <button
             onClick={() => setActiveAiTab('notes')}
-            className={`flex-1 py-1 rounded-lg flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
+            className={`flex-1 py-1 rounded-md flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
               activeAiTab === 'notes'
-                ? 'bg-white text-[#1D1D1F] shadow-[0_1px_3px_rgba(0,0,0,0.08)] font-semibold'
-                : 'text-neutral-500 hover:text-neutral-900'
+                ? 'bg-white text-[#b5563a] shadow-2xs font-bold border border-[#eae5db]'
+                : 'text-[#7d7468] hover:text-[#2b2722]'
             }`}
           >
-            <Highlighter className="w-3.5 h-3.5" />
-            <span>笔记批注</span>
+            <Bookmark className="w-3.5 h-3.5" />
+            <span>批注书签</span>
           </button>
         </div>
       </div>
@@ -157,7 +157,7 @@ export default function WorkspaceAiSidebar({
                             <button
                               key={sIdx}
                               onClick={() => sendChatMessage(sug)}
-                              className="px-3 py-1 rounded-full bg-white hover:bg-neutral-100 border border-black/[0.06] text-neutral-700 hover:text-[#1D1D1F] text-[11.5px] transition shadow-2xs cursor-pointer active:scale-95 font-editorial"
+                              className="px-3 py-1 rounded-lg bg-white hover:bg-[#fbfaf7] border border-[#eae5db] hover:border-[#b5563a] text-[#2b2722] hover:text-[#b5563a] text-[11.5px] transition shadow-2xs cursor-pointer active:scale-95 font-editorial"
                             >
                               {sug}
                             </button>
@@ -165,13 +165,13 @@ export default function WorkspaceAiSidebar({
                         </div>
                       )}
                       {msg.pageRef && (
-                        <div className="flex items-center gap-1.5 text-[11px] text-neutral-400 font-ui">
+                        <div className="flex items-center gap-1.5 text-[11px] text-[#7d7468] font-ui">
                           <button
                             type="button"
                             onClick={() => setCurrentPage(msg.pageRef)}
-                            className="flex items-center gap-1 text-neutral-500 hover:text-[#0071E3] cursor-pointer transition"
+                            className="flex items-center gap-1 text-[#7d7468] hover:text-[#b5563a] cursor-pointer transition"
                           >
-                            <Bookmark className="w-3 h-3 text-[#0071E3]" />
+                            <Bookmark className="w-3 h-3 text-[#b5563a]" />
                             <span>来源引证：第 {msg.pageRef} 页</span>
                           </button>
                         </div>
@@ -184,22 +184,22 @@ export default function WorkspaceAiSidebar({
 
             {isAiThinking && chatMessages[chatMessages.length - 1]?.sender !== 'ai' && (
               <div className="flex gap-2.5 items-start">
-                <div className="w-6 h-6 rounded-lg bg-[#1D1D1F] text-white flex items-center justify-center flex-shrink-0 text-[10px] font-bold font-ui">
+                <div className="w-6 h-6 rounded-lg bg-[#2b2722] text-[#fbfaf7] flex items-center justify-center flex-shrink-0 text-[10px] font-bold font-ui">
                   AI
                 </div>
-                <div className="bg-white border border-black/[0.06] px-3.5 py-2.5 rounded-2xl rounded-tl-md text-neutral-500 flex items-center gap-2 text-[12px] shadow-2xs font-ui">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#0071E3] animate-ping" />
+                <div className="bg-white border border-[#eae5db] px-3.5 py-2.5 rounded-xl rounded-tl-md text-[#7d7468] flex items-center gap-2 text-[12px] shadow-2xs font-ui">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#b5563a] animate-ping" />
                   <span>正在深度研读第 {currentPage} 页内容...</span>
                 </div>
               </div>
             )}
           </div>
 
-          {/* Apple-style Spotlight Chat Input */}
-          <div className="p-3.5 border-t border-black/[0.06] bg-white/80 backdrop-blur-md">
+          {/* EasyInput Editorial Chat Input */}
+          <div className="p-3.5 border-t border-[#eae5db] bg-white">
             <form
               onSubmit={handleChatSubmit}
-              className="relative bg-neutral-100/90 rounded-2xl p-2.5 border border-black/[0.06] focus-within:border-black/20 focus-within:bg-white focus-within:shadow-[0_2px_12px_rgba(0,0,0,0.04)] transition-all"
+              className="relative bg-[#fbfaf7] rounded-xl p-2.5 border border-[#eae5db] focus-within:border-[#b5563a] focus-within:bg-white transition-all shadow-2xs"
             >
               <textarea
                 rows={2}
@@ -207,7 +207,7 @@ export default function WorkspaceAiSidebar({
                 onChange={e => setChatInput(e.target.value)}
                 onKeyDown={handleChatKeyDown}
                 placeholder="提出关于本文档的问题..."
-                className="w-full bg-transparent resize-none text-[12.5px] outline-none text-[#1D1D1F] placeholder-neutral-400 leading-relaxed font-editorial"
+                className="w-full bg-transparent resize-none text-[12.5px] outline-none text-[#2b2722] placeholder-[#a8a199] leading-relaxed font-editorial"
               />
               <div className="flex items-center justify-between pt-1">
                 <div className="flex items-center gap-1.5">
@@ -217,26 +217,26 @@ export default function WorkspaceAiSidebar({
                     aria-label={voice.state === 'idle' ? '语音输入 (S2)' : '停止语音听写'}
                     aria-pressed={voice.state !== 'idle'}
                     title={voice.state === 'idle' ? 'S2 语音输入' : '停止听写'}
-                    className={`p-1.5 rounded-full transition-all cursor-pointer ${
+                    className={`p-1.5 rounded-lg transition-all cursor-pointer ${
                       voice.state === 'idle'
-                        ? 'text-neutral-500 hover:text-neutral-900 hover:bg-neutral-200/60'
-                        : 'bg-[#FF3B30] text-white animate-pulse shadow-xs'
+                        ? 'text-[#7d7468] hover:text-[#2b2722] hover:bg-black/[0.04]'
+                        : 'bg-[#b5563a] text-white animate-pulse shadow-xs'
                     }`}
                   >
                     <Mic className="w-3.5 h-3.5" />
                   </button>
                   {voice.state !== 'idle' && (
-                    <span className="text-[11px] text-[#FF3B30] font-ui animate-pulse">正在倾听…</span>
+                    <span className="text-[11px] text-[#b5563a] font-ui animate-pulse font-medium">正在倾听…</span>
                   )}
                 </div>
 
                 <button
                   type="submit"
                   disabled={!chatInput.trim()}
-                  className={`p-1.5 rounded-full transition-all cursor-pointer shadow-xs ${
+                  className={`p-1.5 rounded-lg transition-all cursor-pointer shadow-xs ${
                     chatInput.trim()
-                      ? 'bg-[#0071E3] hover:bg-[#005bb5] text-white active:scale-95'
-                      : 'bg-neutral-200 text-neutral-400 cursor-not-allowed'
+                      ? 'bg-[#b5563a] hover:bg-[#9e462e] text-white active:scale-95'
+                      : 'bg-[#eae5db] text-[#a8a199] cursor-not-allowed'
                   }`}
                   title="发送提问"
                 >
@@ -252,22 +252,22 @@ export default function WorkspaceAiSidebar({
       {activeAiTab === 'summary' && (
         <div className="flex-1 overflow-y-auto p-4 space-y-4 custom-scrollbar select-text">
           <div className="flex items-center justify-between font-ui">
-            <span className="text-[13px] font-semibold text-[#1D1D1F]">文档概要与提炼</span>
+            <span className="text-[13px] font-bold text-[#2b2722]">文档概要与提炼</span>
             <button
               onClick={handleRegenerateSummary}
-              className="text-[#0071E3] hover:text-[#005bb5] flex items-center gap-1 text-[11.5px] font-medium transition cursor-pointer"
+              className="text-[#b5563a] hover:text-[#9e462e] flex items-center gap-1 text-[11.5px] font-bold transition cursor-pointer"
             >
               <RefreshCw className="w-3 h-3" />
               <span>重新提炼</span>
             </button>
           </div>
 
-          <div className="p-4 rounded-2xl bg-white border border-black/[0.06] shadow-sm space-y-2">
-            <div className="font-semibold text-[#1D1D1F] flex items-center gap-1.5 text-[13px]">
-              <Sparkles className="w-4 h-4 text-[#0071E3]" />
+          <div className="p-4 rounded-xl bg-white border border-[#eae5db] shadow-2xs space-y-2">
+            <div className="font-bold text-[#2b2722] flex items-center gap-1.5 text-[13px]">
+              <Sparkles className="w-4 h-4 text-[#b5563a]" />
               <span>核心提要 (Executive Summary)</span>
             </div>
-            <div className="text-neutral-700 leading-relaxed text-[13px]">
+            <div className="text-[#2b2722] leading-relaxed text-[13px]">
               <MarkdownRenderer
                 content={
                   customSummary ||
@@ -280,17 +280,17 @@ export default function WorkspaceAiSidebar({
 
           {currentDoc.keyTakeaways && currentDoc.keyTakeaways.length > 0 && (
             <div className="space-y-2.5">
-              <h3 className="font-semibold text-[#1D1D1F] flex items-center gap-1.5 text-[13px]">
+              <h3 className="font-bold text-[#2b2722] flex items-center gap-1.5 text-[13px]">
                 <CheckCircle2 className="w-4 h-4 text-[#34C759]" />
                 <span>核心论点与突破</span>
               </h3>
               <div className="space-y-2">
                 {currentDoc.keyTakeaways.map((t, idx) => (
-                  <div key={idx} className="p-3 rounded-xl bg-white border border-black/[0.06] shadow-2xs">
-                    <span className="inline-block px-2 py-0.5 rounded-md text-[10px] font-semibold bg-neutral-100 text-neutral-800 mb-1 font-ui">
+                  <div key={idx} className="p-3.5 rounded-xl bg-white border border-[#eae5db] shadow-2xs">
+                    <span className="inline-block px-2 py-0.5 rounded text-[10px] font-bold bg-[#fbfaf7] text-[#b5563a] border border-[#eae5db] mb-1 font-mono">
                       {t.tag}
                     </span>
-                    <p className="text-neutral-700 text-[12.5px] leading-relaxed">{t.text}</p>
+                    <p className="text-[#2b2722] text-[12.5px] leading-relaxed">{t.text}</p>
                   </div>
                 ))}
               </div>
@@ -299,8 +299,8 @@ export default function WorkspaceAiSidebar({
 
           {currentDoc.outline && currentDoc.outline.length > 0 && (
             <div className="pt-2">
-              <h3 className="font-semibold text-[#1D1D1F] flex items-center gap-1.5 mb-2 text-[13px]">
-                <ListOrdered className="w-4 h-4 text-[#0071E3]" />
+              <h3 className="font-bold text-[#2b2722] flex items-center gap-1.5 mb-2 text-[13px]">
+                <ListOrdered className="w-4 h-4 text-[#b5563a]" />
                 <span>章节结构导航</span>
               </h3>
               <div className="space-y-1">
@@ -308,10 +308,10 @@ export default function WorkspaceAiSidebar({
                   <div
                     key={idx}
                     onClick={() => setCurrentPage(item.page)}
-                    className="flex items-center justify-between p-2.5 rounded-xl hover:bg-white hover:shadow-2xs border border-transparent hover:border-black/[0.04] cursor-pointer text-neutral-700 text-[12.5px] transition"
+                    className="flex items-center justify-between p-2.5 rounded-lg hover:bg-white hover:shadow-2xs border border-transparent hover:border-[#eae5db] cursor-pointer text-[#2b2722] text-[12.5px] transition"
                   >
                     <span className="truncate pr-2">{item.title}</span>
-                    <span className="text-[10px] font-mono text-neutral-400 bg-black/[0.04] px-1.5 py-0.5 rounded-md font-ui">
+                    <span className="text-[10px] font-mono text-[#7d7468] bg-[#fbfaf7] border border-[#eae5db] px-1.5 py-0.5 rounded font-ui">
                       P.{item.page}
                     </span>
                   </div>
@@ -326,17 +326,17 @@ export default function WorkspaceAiSidebar({
       {activeAiTab === 'mindmap' && (
         <div className="flex-1 overflow-y-auto p-4 space-y-3.5 custom-scrollbar select-text">
           <div className="flex items-center justify-between font-ui">
-            <span className="text-[13px] font-semibold text-[#1D1D1F]">概念拓扑脑图</span>
+            <span className="text-[13px] font-bold text-[#2b2722]">概念拓扑脑图</span>
             <button
               onClick={handleRegenerateMindmap}
-              className="text-[#0071E3] hover:text-[#005bb5] flex items-center gap-1 text-[11.5px] font-medium transition cursor-pointer"
+              className="text-[#b5563a] hover:text-[#9e462e] flex items-center gap-1 text-[11.5px] font-bold transition cursor-pointer"
             >
               <RefreshCw className="w-3 h-3" />
               <span>重新生成</span>
             </button>
           </div>
 
-          <div className="p-4 bg-white rounded-2xl border border-black/[0.06] shadow-sm space-y-3 font-editorial">
+          <div className="p-4 bg-white rounded-xl border border-[#eae5db] shadow-2xs space-y-3 font-editorial">
             {(customMindmap || currentDoc.mindmap || [
               {
                 title: currentDoc.fileName.replace('.pdf', ''),
@@ -344,13 +344,13 @@ export default function WorkspaceAiSidebar({
               }
             ]).map((root, rIdx) => (
               <div key={rIdx}>
-                <div className="font-semibold text-[#1D1D1F] flex items-center gap-2 pb-1 text-[13px]">
-                  <span className="w-2 h-2 rounded-full bg-[#0071E3]" />
+                <div className="font-bold text-[#2b2722] flex items-center gap-2 pb-1 text-[13px]">
+                  <span className="w-2 h-2 rounded-full bg-[#b5563a]" />
                   {root.title}
                 </div>
                 {root.children &&
                   root.children.map((c, cIdx) => (
-                    <div key={cIdx} className="mindmap-node text-neutral-700 text-[12.5px]">
+                    <div key={cIdx} className="mindmap-node text-[#2b2722] text-[12.5px]">
                       {typeof c === 'string' ? c : c.title}
                     </div>
                   ))}
@@ -364,10 +364,10 @@ export default function WorkspaceAiSidebar({
       {activeAiTab === 'notes' && (
         <div className="flex-1 flex flex-col overflow-hidden p-4">
           <div className="flex items-center justify-between mb-3 font-ui">
-            <span className="text-[13px] font-semibold text-[#1D1D1F]">研读笔记与批注</span>
+            <span className="text-[13px] font-bold text-[#2b2722]">研读笔记与批注</span>
             <button
               onClick={addNote}
-              className="text-[#0071E3] hover:text-[#005bb5] font-medium flex items-center gap-1 text-[12px] cursor-pointer"
+              className="text-[#b5563a] hover:text-[#9e462e] font-bold flex items-center gap-1 text-[12px] cursor-pointer"
             >
               <Plus className="w-3.5 h-3.5" />
               <span>添加笔记</span>
@@ -376,17 +376,17 @@ export default function WorkspaceAiSidebar({
 
           <div className="flex-1 overflow-y-auto space-y-2.5 custom-scrollbar select-text pr-1.5">
             {notes.length === 0 ? (
-              <div className="p-8 text-center text-neutral-400 text-[12.5px] font-editorial">
+              <div className="p-8 text-center text-[#7d7468] text-[12.5px] font-editorial">
                 暂无笔记批注，点击右上角「添加笔记」或在左侧阅读时划线批注
               </div>
             ) : (
               notes.map(n => (
-                <div key={n.id} className="p-3 rounded-xl bg-white border border-black/[0.06] shadow-2xs space-y-1">
-                  <div className="flex items-center justify-between text-[11px] text-neutral-400 font-ui">
-                    <span className="font-medium text-[#0071E3]">P.{n.page}</span>
-                    <span>{n.time}</span>
+                <div key={n.id} className="p-3 rounded-xl bg-white border border-[#eae5db] shadow-2xs space-y-1">
+                  <div className="flex items-center justify-between text-[11px] text-[#7d7468] font-ui">
+                    <span className="font-bold font-mono text-[#b5563a]">P.{n.page}</span>
+                    <span className="font-mono">{n.time}</span>
                   </div>
-                  <p className="text-neutral-800 leading-relaxed text-[12.5px]">{n.text}</p>
+                  <p className="text-[#2b2722] leading-relaxed text-[12.5px]">{n.text}</p>
                 </div>
               ))
             )}

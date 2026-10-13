@@ -32,10 +32,10 @@ export default function KeySettingsModal({
 
   return (
     <div className="fixed inset-0 bg-[#2b2722]/60 flex items-center justify-center z-50 p-2 sm:p-4 animate-fadeIn">
-      <div role="dialog" aria-modal="true" aria-labelledby="key-settings-title" className="bg-white w-[96vw] max-w-[1360px] rounded-2xl shadow-[0_24px_64px_rgba(43,39,34,0.24)] border border-[#eae5db] overflow-hidden flex flex-col max-h-[94dvh] font-ui text-[#2b2722]">
+      <div role="dialog" aria-modal="true" aria-labelledby="key-settings-title" className="bg-[#fbfaf7] w-[96vw] max-w-[1360px] rounded-xl shadow-[0_24px_64px_rgba(43,39,34,0.24)] border border-[#eae5db] overflow-hidden flex flex-col max-h-[94dvh] font-ui text-[#2b2722]">
         {/* Editorial Print Masthead with Dark Ink Bar */}
         <header className="border-t-4 border-[#2b2722] border-b border-[#eae5db] bg-white px-6 py-4 flex items-center gap-3.5 shrink-0">
-          <div className="hidden sm:flex p-2.5 rounded-xl bg-[#b5563a]/10 text-[#b5563a] border border-[#b5563a]/20">
+          <div className="hidden sm:flex p-2.5 rounded-lg bg-[#b5563a]/10 text-[#b5563a] border border-[#b5563a]/20">
             <Keyboard className="w-5 h-5" />
           </div>
           <div className="min-w-0 flex-1">
@@ -75,8 +75,8 @@ export default function KeySettingsModal({
           </div>
         </header>
 
-        <div className="flex flex-col lg:flex-row min-h-0 overflow-y-auto lg:overflow-hidden bg-white">
-          <main className="min-w-0 flex-1 p-5 sm:p-6 space-y-5 lg:overflow-y-auto custom-scrollbar">
+        <div className="flex flex-col lg:flex-row min-h-0 overflow-y-auto lg:overflow-hidden bg-[#fbfaf7]">
+          <main className="min-w-0 flex-1 p-4 sm:p-5 space-y-4 lg:overflow-y-auto custom-scrollbar">
             <HardwareVisualizer
               scrollToCard={scrollToCard}
               hoveredToken={hoveredToken}

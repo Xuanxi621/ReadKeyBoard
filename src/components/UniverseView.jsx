@@ -129,22 +129,18 @@ function UniverseView({
 
   return (
     <div
-      className="relative flex-1 flex flex-col justify-between overflow-hidden bg-gradient-to-b from-[#F3F8FD] via-[#F8FBFE] to-[#FAFBFD] select-none"
+      className="relative flex-1 flex flex-col justify-between overflow-hidden bg-[#fbfaf7] select-none"
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
     >
-      {/* Subtle Apple Light-Blue Ambient Glows (优雅微蓝、通透克制) */}
-      <div className="absolute top-[-20%] left-[22%] w-[760px] h-[540px] bg-sky-200/18 rounded-full blur-[160px] pointer-events-none" />
-      <div className="absolute bottom-[-15%] right-[10%] w-[640px] h-[500px] bg-blue-100/15 rounded-full blur-[160px] pointer-events-none" />
-
       {/* Top Area */}
       <header className="w-full px-8 py-5 flex items-center justify-end z-30 flex-shrink-0 font-ui">
         <button
           onClick={onOpenKeySettings}
-          className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border border-black/[0.08] hover:border-black/20 bg-white/80 backdrop-blur-md hover:bg-white text-neutral-700 text-xs font-medium shadow-2xs transition cursor-pointer active:scale-95"
+          className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg border border-[#eae5db] hover:border-[#b5563a] bg-white hover:bg-[#fbfaf7] text-[#2b2722] text-xs font-semibold shadow-2xs transition cursor-pointer active:scale-95"
         >
-          <Keyboard className="w-3.5 h-3.5 text-neutral-600" />
+          <Keyboard className="w-3.5 h-3.5 text-[#b5563a]" />
           <span>按键设置</span>
         </button>
       </header>
@@ -157,18 +153,17 @@ function UniverseView({
         onTouchStart={handleStageMouseDown}
         className="relative flex-1 w-full flex items-center justify-center overflow-hidden"
       >
-        {/* Luminous Apple Blue Orbit Track (严格与卡片中心 1:1 同心贴合) */}
+        {/* Editorial Warm Terracotta & Ink Orbit Track */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
           <svg className="w-[1440px] h-[780px] overflow-visible max-w-none" viewBox="0 0 1440 780" fill="none">
             <defs>
-              <linearGradient id="orbitTrackBlue" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="#0071E3" stopOpacity="0.45" />
-                <stop offset="35%" stopColor="#38BDF8" stopOpacity="0.30" />
-                <stop offset="70%" stopColor="#6366F1" stopOpacity="0.35" />
-                <stop offset="100%" stopColor="#0071E3" stopOpacity="0.20" />
+              <linearGradient id="orbitTrackWarm" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#b5563a" stopOpacity="0.40" />
+                <stop offset="50%" stopColor="#7d7468" stopOpacity="0.30" />
+                <stop offset="100%" stopColor="#b5563a" stopOpacity="0.25" />
               </linearGradient>
               <filter id="orbitGlow" x="-20%" y="-20%" width="140%" height="140%">
-                <feGaussianBlur stdDeviation="1.8" result="blur" />
+                <feGaussianBlur stdDeviation="1.5" result="blur" />
                 <feMerge>
                   <feMergeNode in="blur" />
                   <feMergeNode in="SourceGraphic" />
@@ -182,9 +177,9 @@ function UniverseView({
               cy="390"
               rx="590"
               ry="260"
-              stroke="url(#orbitTrackBlue)"
+              stroke="url(#orbitTrackWarm)"
               strokeWidth="1.5"
-              strokeDasharray="7 6"
+              strokeDasharray="6 6"
               filter="url(#orbitGlow)"
               className="orbit-track-luminous"
             />
@@ -195,17 +190,17 @@ function UniverseView({
               cy="390"
               rx="535"
               ry="235"
-              stroke="rgba(0, 113, 227, 0.10)"
+              stroke="rgba(181, 86, 58, 0.12)"
               strokeWidth="1"
               strokeDasharray="4 8"
             />
 
-            {/* Luminous Blue Celestial Beads (精密四极节点) */}
-            <circle cx="1310" cy="390" r="3" fill="#0071E3" opacity="0.75" />
-            <circle cx="1310" cy="390" r="1.8" fill="#38BDF8" />
-            <circle cx="130" cy="390" r="2.5" fill="#38BDF8" opacity="0.80" />
-            <circle cx="720" cy="130" r="2.2" fill="#6366F1" opacity="0.65" />
-            <circle cx="720" cy="650" r="2.8" fill="#0071E3" opacity="0.75" />
+            {/* Editorial Celestial Beads */}
+            <circle cx="1310" cy="390" r="3" fill="#b5563a" opacity="0.80" />
+            <circle cx="1310" cy="390" r="1.6" fill="#fbfaf7" />
+            <circle cx="130" cy="390" r="2.5" fill="#b5563a" opacity="0.75" />
+            <circle cx="720" cy="130" r="2.2" fill="#7d7468" opacity="0.65" />
+            <circle cx="720" cy="650" r="2.8" fill="#b5563a" opacity="0.75" />
           </svg>
         </div>
 
@@ -227,8 +222,8 @@ function UniverseView({
         {/* Empty State Prompt */}
         {documents.length === 0 && (
           <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none z-10 transition-opacity duration-300">
-            <div className="mt-80 p-3 rounded-full bg-white/80 backdrop-blur-md border border-black/[0.06] text-xs text-neutral-400 flex items-center gap-2 shadow-2xs font-editorial">
-              <UploadCloud className="w-4 h-4 text-[#0071E3]" />
+            <div className="mt-80 p-3 rounded-xl bg-white border border-[#eae5db] text-xs text-[#7d7468] flex items-center gap-2 shadow-2xs font-editorial">
+              <UploadCloud className="w-4 h-4 text-[#b5563a]" />
               <span>拖拽或上传 PDF 即可开启智能研读星轨</span>
             </div>
           </div>

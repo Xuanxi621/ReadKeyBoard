@@ -10,8 +10,8 @@
 
 body {
   font-family: var(--font-serif);
-  background-color: #FBFBFD;
-  color: #1D1D1F;
+  background-color: #fbfaf7;
+  color: #2b2722;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
@@ -25,77 +25,53 @@ body {
   font-family: var(--font-sans);
 }
 
-/* Apple Frosted Glass Utilities */
-.apple-glass {
-  background: rgba(255, 255, 255, 0.78);
-  backdrop-filter: blur(24px) saturate(180%);
-  -webkit-backdrop-filter: blur(24px) saturate(180%);
+/* EasyInput Print Utilities */
+.ei-panel {
+  background-color: #fbfaf7;
+  border: 1px solid #eae5db;
 }
 
-.apple-glass-subtle {
-  background: rgba(255, 255, 255, 0.65);
-  backdrop-filter: blur(16px) saturate(160%);
-  -webkit-backdrop-filter: blur(16px) saturate(160%);
-}
-
-.apple-border {
-  border-color: rgba(0, 0, 0, 0.07);
-}
-
-.apple-shadow {
-  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0, 0, 0, 0.02);
-}
-
-.apple-shadow-lg {
-  box-shadow: 0 12px 36px -4px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.03);
-}
-
-/* Ergonomic Apple Tactile Scrollbars */
-.no-scrollbar::-webkit-scrollbar {
-  display: none;
-}
-.no-scrollbar {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
+.ei-hairline {
+  border-color: #eae5db;
 }
 
 /* Global readable scrollbar */
 ::-webkit-scrollbar {
-  width: 7px;
-  height: 7px;
+  width: 6px;
+  height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.03);
+  background: rgba(43, 39, 34, 0.03);
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.22);
+  background: rgba(43, 39, 34, 0.20);
   border-radius: 9999px;
   transition: background-color 0.2s ease;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 113, 227, 0.65);
+  background: rgba(181, 86, 58, 0.65);
 }
 
 /* Dedicated High-Visibility Smooth Scrollbar for AI Q&A Sidebar */
 .custom-scrollbar {
   scrollbar-width: thin;
-  scrollbar-color: rgba(0, 0, 0, 0.25) rgba(0, 0, 0, 0.04);
+  scrollbar-color: rgba(43, 39, 34, 0.25) rgba(43, 39, 34, 0.04);
 }
 
 .custom-scrollbar::-webkit-scrollbar {
-  width: 7px;
-  height: 7px;
+  width: 6px;
+  height: 6px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.04);
+  background: rgba(43, 39, 34, 0.04);
   border-radius: 9999px;
   margin: 6px 0;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.25);
+  background: rgba(43, 39, 34, 0.25);
   border-radius: 9999px;
   border: 1px solid transparent;
   background-clip: padding-box;
@@ -103,11 +79,11 @@ body {
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 113, 227, 0.75);
+  background: rgba(181, 86, 58, 0.75);
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:active {
-  background: #0071E3;
+  background: #b5563a;
 }
 
 /* Orbit Stage */
@@ -135,14 +111,14 @@ body {
   transition: box-shadow 0.25s ease, border-color 0.25s ease;
 }
 
-/* Paper card styling: Apple-grade subtle border & shadow */
+/* Paper card styling: Inset Hairline & Editorial Sheet */
 .orbit-card-inner {
   width: 100%;
   height: 100%;
-  border-radius: 16px;
+  border-radius: 12px;
   background: #ffffff;
-  border: 1px solid rgba(0, 0, 0, 0.06);
-  box-shadow: 0 16px 36px -8px rgba(0, 0, 0, 0.09), 0 2px 8px rgba(0, 0, 0, 0.03);
+  border: 1px solid #eae5db;
+  box-shadow: 0 4px 18px -2px rgba(43, 39, 34, 0.07), 0 1px 3px rgba(43, 39, 34, 0.03);
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -152,8 +128,8 @@ body {
 
 .orbit-card:hover .orbit-card-inner,
 .orbit-card-inner.ring-4 {
-  box-shadow: 0 24px 50px -10px rgba(0, 113, 227, 0.25), 0 6px 18px rgba(0, 0, 0, 0.06);
-  border-color: rgba(0, 113, 227, 0.6);
+  box-shadow: 0 16px 36px -6px rgba(181, 86, 58, 0.22), 0 4px 12px rgba(43, 39, 34, 0.06);
+  border-color: #b5563a;
 }
 
 /* Central Console */
@@ -167,7 +143,7 @@ body {
   position: relative;
   padding-left: 1rem;
   margin-top: 0.4rem;
-  border-left: 1.5px solid rgba(0, 113, 227, 0.3);
+  border-left: 1.5px solid rgba(181, 86, 58, 0.4);
 }
 .mindmap-node::before {
   content: '';
@@ -176,7 +152,7 @@ body {
   left: 0;
   width: 0.65rem;
   height: 1.5px;
-  background-color: rgba(0, 113, 227, 0.3);
+  background-color: rgba(181, 86, 58, 0.4);
 }
 
 /* Text layer for PDF selection */
